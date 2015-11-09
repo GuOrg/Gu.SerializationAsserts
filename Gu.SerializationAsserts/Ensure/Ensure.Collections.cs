@@ -1,0 +1,44 @@
+﻿namespace Gu.SerializationAsserts
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+
+    internal static partial class Ensure
+    {
+        internal static void NotNullOrEmpty<T>(IReadOnlyCollection<T> value, string parameterName)
+        {
+            Debug.Assert(!string.IsNullOrEmpty(parameterName), $"{nameof(parameterName)} cannot be null");
+            Ensure.NotNull(value, parameterName);
+
+            if (value.Count == 0)
+            {
+                throw new ArgumentNullException(parameterName);
+            }
+        }
+
+        internal static void MinCount<T>(IReadOnlyCollection<T> value, int min, string parameterName)
+        {
+            Debug.Assert(!string.IsNullOrEmpty(parameterName), $"{nameof(parameterName)} cannot be null");
+            Ensure.NotNull(value, parameterName);
+
+            if (value.Count < min)
+            {
+                var message = $"Expected {nameof(value)}.{nameof(value.Count)} to be at least {min}";
+                throw new ArgumentException(parameterName, message);
+            }
+        }
+
+        internal static void MaxCount<T>(IReadOnlyCollection<T> value, int max, string parameterName)
+        {
+            Debug.Assert(!string.IsNullOrEmpty(parameterName), $"{nameof(parameterName)} cannot be null");
+            Ensure.NotNull(value, parameterName);
+
+            if (value.Count > max)
+            {
+                var message = $"Expected {nameof(value)}.{nameof(value.Count)} to be less than {max}";
+                throw new ArgumentException(parameterName, message);
+            }
+        }
+    }
+}

@@ -1,0 +1,5 @@
+NUGET
+  remote: http://packages.nuget.org/v1/FeedService.svc
+  specs:
+    JetBrains.Annotations (10.0.0)
+    NUnit (2.6.4)

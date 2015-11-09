@@ -1,0 +1,5 @@
+source C:\Tfs\Coromatic\Common\GuGet
+source http://packages.nuget.org/v1/FeedService.svc/
+
+nuget JetBrains.Annotations @= 10.0.0
+nuget NUnit @= 2.6.4

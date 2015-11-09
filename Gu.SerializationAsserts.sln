@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".paket", ".paket", "{D22F2B83-060F-40EA-95FE-A451A93A5011}"
+	ProjectSection(SolutionItems) = preProject
+		paket.dependencies = paket.dependencies
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gu.SerializationAsserts", "Gu.SerializationAsserts\Gu.SerializationAsserts.csproj", "{9F31DCCF-9B87-425A-AA2F-CEF6CB9BA4A1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gu.SerializationAsserts.Tests", "Gu.SerializationAsserts.Tests\Gu.SerializationAsserts.Tests.csproj", "{979DDE39-CC69-498E-A714-C08F6E113ADA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		CreateNugetPackage|Any CPU = CreateNugetPackage|Any CPU
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9F31DCCF-9B87-425A-AA2F-CEF6CB9BA4A1}.CreateNugetPackage|Any CPU.ActiveCfg = CreateNugetPackage|Any CPU
+		{9F31DCCF-9B87-425A-AA2F-CEF6CB9BA4A1}.CreateNugetPackage|Any CPU.Build.0 = CreateNugetPackage|Any CPU
+		{9F31DCCF-9B87-425A-AA2F-CEF6CB9BA4A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F31DCCF-9B87-425A-AA2F-CEF6CB9BA4A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F31DCCF-9B87-425A-AA2F-CEF6CB9BA4A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F31DCCF-9B87-425A-AA2F-CEF6CB9BA4A1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{979DDE39-CC69-498E-A714-C08F6E113ADA}.CreateNugetPackage|Any CPU.ActiveCfg = Release|Any CPU
+		{979DDE39-CC69-498E-A714-C08F6E113ADA}.CreateNugetPackage|Any CPU.Build.0 = Release|Any CPU
+		{979DDE39-CC69-498E-A714-C08F6E113ADA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{979DDE39-CC69-498E-A714-C08F6E113ADA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{979DDE39-CC69-498E-A714-C08F6E113ADA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{979DDE39-CC69-498E-A714-C08F6E113ADA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
