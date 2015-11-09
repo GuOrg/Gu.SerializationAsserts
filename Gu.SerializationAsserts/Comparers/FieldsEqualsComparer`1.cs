@@ -51,15 +51,16 @@
                     continue;
                 }
 
+                if (xValue == null || yValue == null)
+                {
+                    return false;
+                }
+
                 if (checkedX.Any(item => ReferenceEquals(item, xValue)) && checkedY.Any(item => ReferenceEquals(item, yValue)))
                 {
                     continue;
                 }
 
-                if (xValue == null || yValue == null)
-                {
-                    return false;
-                }
 
                 var xType = xValue.GetType();
                 var yType = yValue.GetType();

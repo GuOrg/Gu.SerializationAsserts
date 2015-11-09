@@ -48,8 +48,10 @@
     <Compile Include="Comparers\FieldsEqualsComparerTests.cs" />
     <Compile Include="Dtos\Dummy.cs" />
     <Compile Include="Dtos\Level.cs" />
+    <Compile Include="Dtos\SerializableDummy.cs" />
     <Compile Include="Internals\StringExtTests.cs" />
     <Compile Include="Internals\TypeExtTests.cs" />
+    <Compile Include="BinaryFormatterAssertTests.cs" />
     <Compile Include="Reminders.cs" />
     <Compile Include="XmlAssertTests.string.cs" />
     <Compile Include="XmlSerializerAssertTests.cs" />

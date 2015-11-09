@@ -5,13 +5,13 @@
 
     internal static class ListExt
     {
-        internal static T ElementAtOrDefault<T>(this IReadOnlyList<T> items, int index)
+        internal static T ElementAtOrDefault<T>(this IReadOnlyList<T> items, int index, T @default = default(T))
         {
             if (items.Count > index)
             {
                 return items[index];
             }
-            return default(T);
+            return @default;
         }
 
         internal static void AddIfNotExists<T>(this List<T> list, T item)

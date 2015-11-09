@@ -52,6 +52,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Comparers\BinaryEqualsComparer.cs" />
+    <Compile Include="Exceptions\AssertException.cs" />
     <Compile Include="AssertSerialization.cs" />
     <Compile Include="FieldAssert.cs" />
     <Compile Include="Comparers\FieldsEqualsComparer`1.cs" />

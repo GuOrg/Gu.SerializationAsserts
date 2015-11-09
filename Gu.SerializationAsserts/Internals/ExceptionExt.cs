@@ -13,23 +13,32 @@
         /// <returns></returns>
         public static string GetNestedMessages(this Exception e)
         {
-            using (var writer = new IndentedTextWriter(new StringWriter(), "  "))
+            using (var writer = new StringWriter())
             {
-                WriteMessages(e, writer);
-                return writer.InnerWriter.ToString();
+                WriteMessages(writer, e);
+                return writer.ToString();
             }
         }
 
-        private static void WriteMessages(Exception e, IndentedTextWriter writer)
+        internal static void WriteMessages(this StringWriter writer, Exception e)
         {
-            writer.WriteLine(e.GetType().Name);
-            writer.Write(e.Message);
-            Console.WriteLine();
-            Console.WriteLine();
-            if (e.InnerException != null)
+            using (var indentedWriter = new IndentedTextWriter(writer, "  "))
             {
+                WriteMessages(indentedWriter, e);
+            }
+        }
+
+        internal static void WriteMessages(this IndentedTextWriter writer, Exception e)
+        {
+            writer.Write(e.GetType().Name);
+            writer.Write(": ");
+            writer.Write(e.Message);
+            var innerException = e.InnerException;
+            if (innerException != null)
+            {
+                writer.WriteLine();
                 writer.Indent++;
-                WriteMessages(e.InnerException, writer);
+                WriteMessages(writer, innerException);
             }
         }
     }

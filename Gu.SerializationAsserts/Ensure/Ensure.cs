@@ -7,7 +7,7 @@
 
     internal static partial class Ensure
     {
-        internal static void NotNull<T>([NotNull]T value, string parameterName) where T : class
+        internal static void NotNull<T>([NotNull]T value, string parameterName)
         {
             Debug.Assert(!string.IsNullOrEmpty(parameterName), $"{nameof(parameterName)} cannot be null");
             if (value == null)

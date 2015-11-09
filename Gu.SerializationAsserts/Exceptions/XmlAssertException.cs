@@ -10,8 +10,8 @@
         {
         }
 
-        public XmlAssertException(string message, Exception innnerException)
-            : base(message, innnerException)
+        public XmlAssertException(string message, Exception innerException)
+            : base(message, innerException)
         {
         }
     }
