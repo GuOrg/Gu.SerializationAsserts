@@ -81,7 +81,7 @@
                 return rows[lineNumber - 1];
             }
 
-            return "";
+            return string.Empty;
         }
 
         internal static string[] Lines(this string text, string splitter = null, StringSplitOptions stringSplitOptions = StringSplitOptions.None)

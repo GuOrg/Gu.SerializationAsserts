@@ -45,6 +45,7 @@
     </When>
   </Choose>
   <ItemGroup>
+    <Compile Include="Comparers\BinaryEqualsComparerTests.cs" />
     <Compile Include="Comparers\FieldsEqualsComparerTests.cs" />
     <Compile Include="Dtos\Dummy.cs" />
     <Compile Include="Dtos\Level.cs" />

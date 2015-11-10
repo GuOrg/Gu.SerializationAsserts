@@ -91,7 +91,7 @@
                     continue;
                 }
 
-                if (!Object.Equals(xValue, yValue))
+                if (!object.Equals(xValue, yValue))
                 {
                     return false;
                 }

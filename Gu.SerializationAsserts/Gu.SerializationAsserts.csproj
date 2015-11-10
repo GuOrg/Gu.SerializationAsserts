@@ -52,17 +52,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BinaryAssert.cs" />
     <Compile Include="Comparers\BinaryEqualsComparer{T}.cs" />
     <Compile Include="Comparers\FieldsEqualsComparer{T}.cs" />
     <Compile Include="Exceptions\AssertException.cs" />
     <Compile Include="AssertSerialization.cs" />
     <Compile Include="FieldAssert.cs" />
-    <Compile Include="Internals\ContainerClass.cs" />
     <Compile Include="Ensure\Ensure.Collections.cs" />
     <Compile Include="Ensure\Ensure.Compare.cs" />
     <Compile Include="Ensure\Ensure.cs" />
     <Compile Include="Ensure\Ensure.Singleton.cs" />
     <Compile Include="Ensure\Ensure.String.cs" />
+    <Compile Include="Internals\ContainerClass{T}.cs" />
     <Compile Include="Internals\ExceptionExt.cs" />
     <Compile Include="Internals\ListExt.cs" />
     <Compile Include="Internals\StringExt.cs" />

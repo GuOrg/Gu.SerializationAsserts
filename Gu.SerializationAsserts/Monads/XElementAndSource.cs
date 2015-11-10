@@ -20,7 +20,6 @@
             this.Elements = this.Element.Elements()
                               .Select(x => new XElementAndSource(sourceXml, x))
                               .ToArray();
-
         }
 
         public string SourceXml { get; }

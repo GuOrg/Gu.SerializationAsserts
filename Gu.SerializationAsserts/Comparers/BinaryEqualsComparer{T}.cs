@@ -7,6 +7,12 @@
 
     public class BinaryEqualsComparer<T> : IEqualityComparer<T>, IComparer
     {
+        public static readonly BinaryEqualsComparer<T> Default = new BinaryEqualsComparer<T>();
+
+        private BinaryEqualsComparer()
+        {
+        }
+
         public bool Equals(T x, T y)
         {
             if (x == null && y == null)

@@ -12,9 +12,8 @@ namespace Gu.SerializationAsserts
         /// 2 Deserializes it from the stream using <see cref="BinaryFormatter"/>.
         /// 3 Returns roundtripped instance
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="item"></param>
-        /// <returns></returns>
+        /// <param name="item">The item to serialize</param>
+        /// <returns>The <see cref="T"/> read from the stream</returns>
         public static T Roundtrip<T>(T item)
         {
             var bytes = new byte[2][];
@@ -84,6 +83,13 @@ namespace Gu.SerializationAsserts
             throw new InvalidOperationException("Mega derp happend");
         }
 
+        /// <summary>
+        /// Compares two streams for equality.
+        /// 1. Length
+        /// 2. Contents
+        /// </summary>
+        /// <param name="expected">The expected stream</param>
+        /// <param name="actual">The actual stream</param>
         public static void Equals(MemoryStream expected, MemoryStream actual)
         {
             if (expected == null && actual == null)

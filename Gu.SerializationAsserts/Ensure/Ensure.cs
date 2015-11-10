@@ -33,7 +33,7 @@
             }
         }
 
-        public static void IsFalse(bool condition, string parameterName, string message)
+        internal static void IsFalse(bool condition, string parameterName, string message)
         {
             Debug.Assert(!string.IsNullOrEmpty(parameterName), $"{nameof(parameterName)} cannot be null");
             Debug.Assert(!string.IsNullOrEmpty(message), $"{nameof(message)} cannot be null");

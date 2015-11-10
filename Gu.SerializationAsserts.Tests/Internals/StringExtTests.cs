@@ -23,7 +23,6 @@
                     Console.WriteLine(code);
                     var escaped = text.Escape();
                     Console.WriteLine(escaped);
-                    var s = "a\r\n" + "b";
                     Assert.AreEqual(code, escaped);
                 }
             }

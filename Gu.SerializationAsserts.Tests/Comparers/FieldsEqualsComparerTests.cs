@@ -15,6 +15,7 @@
             Assert.AreEqual(true, FieldsEqualsComparer<Dummy>.Default.Equals(d1, d1));
             Assert.AreEqual(true, FieldsEqualsComparer<Dummy>.Default.Equals(d1, d2));
             Assert.AreEqual(true, FieldsEqualsComparer<Dummy>.Default.Equals(d2, d1));
+
             Assert.AreEqual(true, FieldAssert.Equals(d1, d1));
             Assert.AreEqual(true, FieldAssert.Equals(d2, d1));
             Assert.AreEqual(true, FieldAssert.Equals(d1, d2));
