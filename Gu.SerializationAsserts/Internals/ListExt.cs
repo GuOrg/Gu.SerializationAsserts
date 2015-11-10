@@ -11,6 +11,7 @@
             {
                 return items[index];
             }
+
             return @default;
         }
 
@@ -19,11 +20,12 @@
             Ensure.NotNull(list, nameof(list));
             if (typeof(T).IsValueType)
             {
-                if(list.All(x=>!Equals( x, item)))
+                if (list.All(x => !Equals(x, item)))
                 {
                     list.Add(item);
                 }
             }
+
             if (list.All(x => !ReferenceEquals(x, item)))
             {
                 list.Add(item);

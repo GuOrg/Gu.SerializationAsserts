@@ -1,10 +1,7 @@
-using System.CodeDom.Compiler;
-using System.Runtime.CompilerServices;
-
 namespace Gu.SerializationAsserts
 {
     using System;
-
+    using System.CodeDom.Compiler;
     using System.IO;
     using System.Runtime.Serialization.Formatters.Binary;
 
@@ -39,6 +36,7 @@ namespace Gu.SerializationAsserts
                             throw new AssertException(writer.InnerWriter.ToString(), e);
                         }
                     }
+
                     try
                     {
                         bytes[i] = stream.ToArray();
@@ -51,10 +49,11 @@ namespace Gu.SerializationAsserts
                             if (first.Length != second.Length)
                             {
                                 var message = $"  Expected stream lengthts to be same.\r\n" +
-                                              $"  {nameof(first)}:  { first.Length }.\r\n" +
-                                              $"  {nameof(second)}: { second.Length}.";
+                                              $"  {nameof(first)}:  {first.Length}.\r\n" +
+                                              $"  {nameof(second)}: {second.Length}.";
                                 throw new AssertException(message);
                             }
+
                             for (int j = 0; j < first.Length; j++)
                             {
                                 if (first[j] != second[j])
@@ -81,6 +80,7 @@ namespace Gu.SerializationAsserts
                     }
                 }
             }
+
             throw new InvalidOperationException("Mega derp happend");
         }
 
@@ -90,11 +90,13 @@ namespace Gu.SerializationAsserts
             {
                 return;
             }
+
             if (expected == null || actual == null)
             {
                 throw new AssertException($"  Expected was: {expected?.ToString() ?? "null"}\r\n" +
                                           $"Actual was: {actual?.ToString() ?? "null"}");
             }
+
             if (expected.Length != actual.Length)
             {
                 var message = $"  Expected stream lengthts to be equal.\r\n" +
@@ -102,6 +104,7 @@ namespace Gu.SerializationAsserts
                               $"  {nameof(actual)}:   {actual.Length}.";
                 throw new AssertException(message);
             }
+
             var expecteds = expected.ToArray();
             var actuals = actual.ToArray();
 

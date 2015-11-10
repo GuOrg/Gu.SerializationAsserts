@@ -5,28 +5,28 @@
 
     public class FieldComparison
     {
-        private readonly List<FieldInfo> _path;
-        private readonly List<object> _allChecked;
+        private readonly List<FieldInfo> path;
+        private readonly List<object> allChecked;
 
         public FieldComparison(object source)
         {
-            Source = source;
-            _path = new List<FieldInfo>();
-            _allChecked = new List<object> { source };
+            this.Source = source;
+            this.path = new List<FieldInfo>();
+            this.allChecked = new List<object> { source };
         }
 
         public FieldComparison(List<FieldInfo> path, List<object> allChecked, object source)
         {
-            _path = path;
-            _allChecked = allChecked;
-            _allChecked.Add(source);
-            Source = source;
+            this.path = path;
+            this.allChecked = allChecked;
+            this.allChecked.Add(source);
+            this.Source = source;
         }
 
         public object Source { get; }
 
-        public IReadOnlyList<object> AllChecked => _allChecked;
+        public IReadOnlyList<object> AllChecked => this.allChecked;
 
-        public IReadOnlyList<FieldInfo> Path => _path;
+        public IReadOnlyList<FieldInfo> Path => this.path;
     }
 }

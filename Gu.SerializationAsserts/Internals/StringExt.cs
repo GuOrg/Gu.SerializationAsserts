@@ -11,6 +11,7 @@
                                                                                     { '\\', "\\\\" },
                                                                                     { '\"', "\\\"" },
                                                                                 };
+
         /// <summary>
         /// http://stackoverflow.com/a/324812/1069200
         /// </summary>
@@ -30,6 +31,7 @@
                         writer.Write(escaped);
                         continue;
                     }
+
                     if (c == '\r' && input.Length > i + 1 && input[i + 1] == '\n')
                     {
                         writer.Write("\\r\\n\" +");
@@ -39,8 +41,10 @@
                         {
                             writer.Write("\"");
                         }
+
                         continue;
                     }
+
                     writer.Write(c);
                 }
 
@@ -63,6 +67,7 @@
                     return i;
                 }
             }
+
             return expectedRow.Length;
         }
 

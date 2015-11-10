@@ -7,7 +7,7 @@
     using System.Reflection;
 
     /// <summary>
-    /// A deep equals checking nested fields 
+    /// A deep equals checking nested fields
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public class FieldsEqualsComparer<T> : IEqualityComparer<T>, IComparer
@@ -22,7 +22,7 @@
 
         public bool Equals(T x, T y)
         {
-            return Equals(x, y, new List<object>(), new List<object>());
+            return this.Equals(x, y, new List<object>(), new List<object>());
         }
 
         /// <summary>
@@ -33,10 +33,11 @@
         /// <returns></returns>
         int IComparer.Compare(object x, object y)
         {
-            if (Equals((T)x, (T)y, new List<object>(), new List<object>()))
+            if (this.Equals((T)x, (T)y, new List<object>(), new List<object>()))
             {
                 return 0;
             }
+
             return 1;
         }
 
@@ -61,7 +62,6 @@
                     continue;
                 }
 
-
                 var xType = xValue.GetType();
                 var yType = yValue.GetType();
                 if (xType != yType)
@@ -73,14 +73,16 @@
                 {
                     checkedX.AddIfNotExists(xValue);
                     checkedY.AddIfNotExists(yValue);
-                    if (IsAnyIEnumerable(xValue, yValue))
+                    if (this.IsAnyIEnumerable(xValue, yValue))
                     {
                         if (!EnumerableEquals(xValue as IEnumerable, yValue as IEnumerable, checkedX, checkedY))
                         {
                             return false;
                         }
+
                         continue;
                     }
+
                     if (!ReflectionEquals(xValue, yValue, checkedX, checkedY))
                     {
                         return false;
@@ -114,6 +116,7 @@
             {
                 return false;
             }
+
             var type = x.GetType();
             if (y.GetType() != type)
             {
@@ -135,6 +138,7 @@
             {
                 return false;
             }
+
             for (int i = 0; i < Math.Max(xs.Length, ys.Length); i++)
             {
                 if (!ReflectionEquals(xs.ElementAtOrDefault(i), ys.ElementAtOrDefault(i), checkedX, checkedY))
@@ -142,6 +146,7 @@
                     return false;
                 }
             }
+
             return true;
         }
 

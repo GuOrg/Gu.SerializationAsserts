@@ -11,13 +11,13 @@
         {
             Ensure.NotNull(element, nameof(element));
             Ensure.NotNullOrEmpty(sourceXml, nameof(sourceXml));
-            SourceXml = sourceXml;
-            Element = element;
-            Attributes = Element.Attributes()
+            this.SourceXml = sourceXml;
+            this.Element = element;
+            this.Attributes = this.Element.Attributes()
                                 .Select(x => new XAttributeAndSource(sourceXml, x))
                                 .ToArray();
 
-            Elements = Element.Elements()
+            this.Elements = this.Element.Elements()
                               .Select(x => new XElementAndSource(sourceXml, x))
                               .ToArray();
 
@@ -31,6 +31,6 @@
 
         public IReadOnlyList<XElementAndSource> Elements { get; }
 
-        public int LineNumber => (Element as IXmlLineInfo)?.LineNumber ?? 0;
+        public int LineNumber => (this.Element as IXmlLineInfo)?.LineNumber ?? 0;
     }
 }

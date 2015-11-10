@@ -6,7 +6,7 @@ namespace Gu.SerializationAsserts
     {
         public static T[] RoundtripAll<T>(T item, bool assertAreEqual = true)
         {
-            throw new NotImplementedException("");
+            throw new NotImplementedException(string.Empty);
             //return new[]
             //           {
             //               BinaryFormatterRoundtrip(item, assertAreEqual),

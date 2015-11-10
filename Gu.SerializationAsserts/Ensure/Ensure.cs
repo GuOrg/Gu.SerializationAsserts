@@ -7,15 +7,6 @@
 
     internal static partial class Ensure
     {
-        internal static void NotNull<T>([NotNull]T value, string parameterName)
-        {
-            Debug.Assert(!string.IsNullOrEmpty(parameterName), $"{nameof(parameterName)} cannot be null");
-            if (value == null)
-            {
-                throw new ArgumentNullException(parameterName);
-            }
-        }
-
         public static void IsTrue(bool condition, string parameterName, string message)
         {
             Debug.Assert(!string.IsNullOrEmpty(parameterName), $"{nameof(parameterName)} cannot be null");
@@ -30,6 +21,15 @@
                 {
                     throw new ArgumentException(parameterName);
                 }
+            }
+        }
+
+        internal static void NotNull<T>([NotNull]T value, string parameterName)
+        {
+            Debug.Assert(!string.IsNullOrEmpty(parameterName), $"{nameof(parameterName)} cannot be null");
+            if (value == null)
+            {
+                throw new ArgumentNullException(parameterName);
             }
         }
 

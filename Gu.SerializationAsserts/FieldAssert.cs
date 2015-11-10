@@ -14,6 +14,6 @@ namespace Gu.SerializationAsserts
         public static bool Equals<T>(T x, T y)
         {
             return FieldsEqualsComparer<T>.Default.Equals(x, y);
-        } 
+        }
     }
 }

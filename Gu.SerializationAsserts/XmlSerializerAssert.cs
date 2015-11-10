@@ -4,7 +4,7 @@ namespace Gu.SerializationAsserts
     using System.Xml.Serialization;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public static class XmlSerializerAssert
     {
@@ -13,7 +13,7 @@ namespace Gu.SerializationAsserts
         /// 2 Compares the xml with <paramref name="expectedXml"/>
         /// 3 Creates a ContainerClass{T} this is to catch errors in ReadEndElement when implementing IXmlSerilizable
         /// 4 Serializes it to xml.
-        /// 5 Compares the xml 
+        /// 5 Compares the xml
         /// 6 Deserializes it to container class
         /// 7 Does 2 & 3 again, we repeat this to catch any errors from deserializing
         /// 8 Returns roundtripped instance

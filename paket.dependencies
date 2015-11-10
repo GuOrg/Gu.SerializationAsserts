@@ -1,5 +1,5 @@
-source C:\Tfs\Coromatic\Common\GuGet
-source http://packages.nuget.org/v1/FeedService.svc/
+source https://nuget.org/api/v2
 
 nuget JetBrains.Annotations @= 10.0.0
 nuget NUnit @= 2.6.4
+nuget StyleCop.Analyzers -prerelease

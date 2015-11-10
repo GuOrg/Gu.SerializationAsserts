@@ -1,4 +1,4 @@
-namespace Gu.SerializationAsserts
+﻿namespace Gu.SerializationAsserts
 {
     using System.CodeDom.Compiler;
     using System.IO;
@@ -10,14 +10,14 @@ namespace Gu.SerializationAsserts
     /// <typeparam name="T"></typeparam>
     public class ContainerClass<T>
     {
-        private ContainerClass()
-        {
-        }
-
         public ContainerClass(T item)
         {
-            First = item;
-            Other = item;
+            this.First = item;
+            this.Other = item;
+        }
+
+        private ContainerClass()
+        {
         }
 
         public T First { get; set; }
@@ -29,7 +29,7 @@ namespace Gu.SerializationAsserts
             return CreateExpectedXml(itemXml);
         }
 
-        internal static string CreateExpectedXml(string actual)
+        private static string CreateExpectedXml(string actual)
         {
             using (var writer = new IndentedTextWriter(new StringWriter(), "  "))
             {
@@ -44,8 +44,10 @@ namespace Gu.SerializationAsserts
                         var row = actual.Lines()[i];
                         writer.WriteLine(row);
                     }
+
                     writer.WriteLine($"</{element}>");
                 }
+
                 writer.Indent--;
                 writer.WriteLine($"</ContainerClassOf{typeof(T).Name}>");
                 return writer.InnerWriter.ToString();

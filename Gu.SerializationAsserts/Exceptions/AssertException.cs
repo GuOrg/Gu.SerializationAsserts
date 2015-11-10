@@ -1,7 +1,7 @@
-using System;
-
 namespace Gu.SerializationAsserts
 {
+    using System;
+
     [Serializable]
     public class AssertException : Exception
     {

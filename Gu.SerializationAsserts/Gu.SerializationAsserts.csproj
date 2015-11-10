@@ -52,11 +52,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Comparers\BinaryEqualsComparer.cs" />
+    <Compile Include="Comparers\BinaryEqualsComparer{T}.cs" />
+    <Compile Include="Comparers\FieldsEqualsComparer{T}.cs" />
     <Compile Include="Exceptions\AssertException.cs" />
     <Compile Include="AssertSerialization.cs" />
     <Compile Include="FieldAssert.cs" />
-    <Compile Include="Comparers\FieldsEqualsComparer`1.cs" />
     <Compile Include="Internals\ContainerClass.cs" />
     <Compile Include="Ensure\Ensure.Collections.cs" />
     <Compile Include="Ensure\Ensure.Compare.cs" />
@@ -79,6 +79,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="paket.references" />
+    <None Include="stylecop.json" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -117,4 +118,16 @@
       </ItemGroup>
     </When>
   </Choose>
+  <Import Project="..\packages\StyleCop.Analyzers\build\StyleCop.Analyzers.targets" Condition="Exists('..\packages\StyleCop.Analyzers\build\StyleCop.Analyzers.targets')" Label="Paket" />
+  <ItemGroup>
+    <Analyzer Include="..\packages\StyleCop.Analyzers\analyzers\dotnet\cs\Newtonsoft.Json.dll">
+      <Paket>True</Paket>
+    </Analyzer>
+    <Analyzer Include="..\packages\StyleCop.Analyzers\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll">
+      <Paket>True</Paket>
+    </Analyzer>
+    <Analyzer Include="..\packages\StyleCop.Analyzers\analyzers\dotnet\cs\StyleCop.Analyzers.dll">
+      <Paket>True</Paket>
+    </Analyzer>
+  </ItemGroup>
 </Project>

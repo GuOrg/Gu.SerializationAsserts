@@ -9,14 +9,14 @@ namespace Gu.SerializationAsserts
         {
             Ensure.NotNull(attribute, nameof(attribute));
             Ensure.NotNullOrEmpty(sourceXml, nameof(sourceXml));
-            SourceXml = sourceXml;
-            Attribute = attribute;
+            this.SourceXml = sourceXml;
+            this.Attribute = attribute;
         }
 
         public string SourceXml { get; }
 
         public XAttribute Attribute { get; }
 
-        public int LineNumber => (Attribute as IXmlLineInfo)?.LineNumber ?? 0;
+        public int LineNumber => (this.Attribute as IXmlLineInfo)?.LineNumber ?? 0;
     }
 }

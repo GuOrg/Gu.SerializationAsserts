@@ -31,7 +31,7 @@
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="type"></param>
         /// <param name="genericTypeDefinition"></param>

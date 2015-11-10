@@ -40,6 +40,7 @@
                     var message = CreateMessage(expected.LineNumber, expected.SourceXml, actual.SourceXml);
                     throw new XmlAssertException(message);
                 }
+
                 return;
             }
 
@@ -104,6 +105,7 @@
                 {
                     writer.WriteLine($"  String lengths are both {expected.Length}.");
                 }
+
                 writer.WriteLine($"  Strings differ at line {lineNumber} index {index}.");
                 writer.WriteLine($"  Expected: {expectedLine}");
                 writer.WriteLine($"  But was:  {actualLine}");
