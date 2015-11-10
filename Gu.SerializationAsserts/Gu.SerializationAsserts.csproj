@@ -54,7 +54,11 @@
   <ItemGroup>
     <Compile Include="BinaryAssert.cs" />
     <Compile Include="Comparers\BinaryEqualsComparer{T}.cs" />
+    <Compile Include="Comparers\DeepEquals\ComparedField.cs" />
+    <Compile Include="Comparers\DeepEquals\ComparisonTracker.cs" />
+    <Compile Include="Comparers\DeepEquals\Comparison.cs" />
     <Compile Include="Comparers\FieldsEqualsComparer{T}.cs" />
+    <Compile Include="Comparers\DeepEquals\ICompared.cs" />
     <Compile Include="Exceptions\AssertException.cs" />
     <Compile Include="AssertSerialization.cs" />
     <Compile Include="FieldAssert.cs" />
@@ -68,7 +72,7 @@
     <Compile Include="Internals\ListExt.cs" />
     <Compile Include="Internals\StringExt.cs" />
     <Compile Include="Internals\TypeExt.cs" />
-    <Compile Include="Comparers\FieldComparison.cs" />
+    <Compile Include="Comparers\DeepEquals\ComparedItem.cs" />
     <Compile Include="Monads\XAttributeAndSource.cs" />
     <Compile Include="Monads\XDocumentAndSource.cs" />
     <Compile Include="Monads\XElementAndSource.cs" />
@@ -80,6 +84,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="paket.references" />
+    <None Include="paket.template" />
     <None Include="stylecop.json" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

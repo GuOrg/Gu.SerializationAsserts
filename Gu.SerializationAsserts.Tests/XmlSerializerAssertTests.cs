@@ -53,9 +53,9 @@
 <Dummy xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
   <Value>2</Value>
 </Dummy>";
-            var roundtrip = XmlSerializerAssert.Roundtrip(dummy, xml);
+            var roundtrip = XmlSerializerAssert.Equal(dummy, xml);
             Assert.AreEqual(roundtrip.Value, dummy.Value);
-            FieldAssert.Equals(dummy, roundtrip);
+            FieldAssert.Equal(dummy, roundtrip);
         }
     }
 }

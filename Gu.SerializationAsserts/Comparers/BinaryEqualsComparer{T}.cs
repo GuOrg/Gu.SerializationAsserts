@@ -25,8 +25,8 @@
                 return false;
             }
 
-            var xs = this.ToBytes(x);
-            var ys = this.ToBytes(y);
+            var xs = ToBytes(x);
+            var ys = ToBytes(y);
             if (xs.Length != ys.Length)
             {
                 return false;
@@ -46,7 +46,7 @@
         public int GetHashCode(T obj)
         {
             Ensure.NotNull(obj, nameof(obj));
-            var bytes = this.ToBytes(obj);
+            var bytes = ToBytes(obj);
             unchecked
             {
                 var result = 0;
@@ -64,7 +64,7 @@
             return this.Equals((T)x, (T)y) ? 0 : 1;
         }
 
-        private byte[] ToBytes(object o)
+        private static byte[] ToBytes(object o)
         {
             var formatter = new BinaryFormatter();
             using (var stream = new MemoryStream())

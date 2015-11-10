@@ -7,12 +7,12 @@
 
     public static class XmlAssert
     {
-        public static void AreEqual(string expected, string actual)
+        public static void Equal(string expected, string actual)
         {
-            AreEqual(ParseDocument(expected, nameof(expected)), ParseDocument(actual, nameof(actual)));
+            Equal(ParseDocument(expected, nameof(expected)), ParseDocument(actual, nameof(actual)));
         }
 
-        private static void AreEqual(XDocumentAndSource expected, XDocumentAndSource actual)
+        private static void Equal(XDocumentAndSource expected, XDocumentAndSource actual)
         {
             if (!FieldsEqualsComparer<XDeclaration>.Default.Equals(expected.Document.Declaration, actual.Document.Declaration))
             {
@@ -20,10 +20,10 @@
                 throw new XmlAssertException(message);
             }
 
-            AreEqual(expected.Element, actual.Element);
+            Equal(expected.Element, actual.Element);
         }
 
-        private static void AreEqual(XElementAndSource expected, XElementAndSource actual)
+        private static void Equal(XElementAndSource expected, XElementAndSource actual)
         {
             if (expected.Element.Name != actual.Element.Name)
             {
@@ -31,7 +31,7 @@
                 throw new XmlAssertException(message);
             }
 
-            AreEqual(expected.Attributes, actual.Attributes);
+            Equal(expected.Attributes, actual.Attributes);
 
             if (expected.Elements.Count == 0 && actual.Elements.Count == 0)
             {
@@ -44,20 +44,20 @@
                 return;
             }
 
-            AreEqual(expected.Elements, actual.Elements);
+            Equal(expected.Elements, actual.Elements);
         }
 
-        private static void AreEqual(IReadOnlyList<XAttributeAndSource> expecteds, IReadOnlyList<XAttributeAndSource> actuals)
+        private static void Equal(IReadOnlyList<XAttributeAndSource> expecteds, IReadOnlyList<XAttributeAndSource> actuals)
         {
             for (int i = 0; i < Math.Max(expecteds.Count, actuals.Count); i++)
             {
                 var expected = expecteds.ElementAtOrDefault(i);
                 var actual = actuals.ElementAtOrDefault(i);
-                AreEqual(expected, actual);
+                Equal(expected, actual);
             }
         }
 
-        private static void AreEqual(XAttributeAndSource expected, XAttributeAndSource actual)
+        private static void Equal(XAttributeAndSource expected, XAttributeAndSource actual)
         {
             if (expected.Attribute.Name != actual.Attribute.Name ||
                 expected.Attribute.Value != actual.Attribute.Value)
@@ -67,13 +67,13 @@
             }
         }
 
-        private static void AreEqual(IReadOnlyList<XElementAndSource> expecteds, IReadOnlyList<XElementAndSource> actuals)
+        private static void Equal(IReadOnlyList<XElementAndSource> expecteds, IReadOnlyList<XElementAndSource> actuals)
         {
             for (int i = 0; i < Math.Max(expecteds.Count, actuals.Count); i++)
             {
                 var expected = expecteds.ElementAtOrDefault(i);
                 var actual = actuals.ElementAtOrDefault(i);
-                AreEqual(expected, actual);
+                Equal(expected, actual);
             }
         }
 
@@ -112,6 +112,12 @@
                 writer.Write($"  {new string('-', index + 10)}^");
                 return writer.ToString();
             }
+        }
+
+        // Using new here to hide it so it not called by mistake
+        private new static void Equals(object x, object y)
+        {
+            throw new NotSupportedException($"{x}, {y}");
         }
     }
 }

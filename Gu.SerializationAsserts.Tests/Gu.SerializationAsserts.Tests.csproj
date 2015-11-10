@@ -45,7 +45,12 @@
     </When>
   </Choose>
   <ItemGroup>
+    <Compile Include="BinaryAssertTests.MemoryStream.cs" />
+    <Compile Include="BinaryAssertTests.T.cs" />
     <Compile Include="Comparers\BinaryEqualsComparerTests.cs" />
+    <Compile Include="Comparers\DeepEquals\ComparisonTest.cs" />
+    <Compile Include="Dtos\Parent.cs" />
+    <Compile Include="FieldsAssertTests.cs" />
     <Compile Include="Comparers\FieldsEqualsComparerTests.cs" />
     <Compile Include="Dtos\Dummy.cs" />
     <Compile Include="Dtos\Level.cs" />
@@ -130,4 +135,5 @@
       <Paket>True</Paket>
     </Reference>
   </ItemGroup>
+  <ItemGroup />
 </Project>

@@ -1,5 +1,7 @@
 ﻿namespace Gu.SerializationAsserts.Tests.Comparers
 {
+    using System.Collections;
+
     using Gu.SerializationAsserts.Tests.Dtos;
 
     using NUnit.Framework;
@@ -16,9 +18,9 @@
             Assert.AreEqual(true, FieldsEqualsComparer<Dummy>.Default.Equals(d1, d2));
             Assert.AreEqual(true, FieldsEqualsComparer<Dummy>.Default.Equals(d2, d1));
 
-            Assert.AreEqual(true, FieldAssert.Equals(d1, d1));
-            Assert.AreEqual(true, FieldAssert.Equals(d2, d1));
-            Assert.AreEqual(true, FieldAssert.Equals(d1, d2));
+            Assert.AreEqual(0, ((IComparer)FieldsEqualsComparer<Dummy>.Default).Compare(d1, d1));
+            Assert.AreEqual(0, ((IComparer)FieldsEqualsComparer<Dummy>.Default).Compare(d1, d2));
+            Assert.AreEqual(0, ((IComparer)FieldsEqualsComparer<Dummy>.Default).Compare(d2, d1));
         }
 
         [Test]
@@ -30,8 +32,8 @@
             Assert.AreEqual(false, FieldsEqualsComparer<Dummy>.Default.Equals(d1, d2));
             Assert.AreEqual(false, FieldsEqualsComparer<Dummy>.Default.Equals(d2, d1));
 
-            Assert.AreEqual(false, FieldAssert.Equals(d2, d1));
-            Assert.AreEqual(false, FieldAssert.Equals(d1, d2));
+            Assert.AreEqual(1, ((IComparer)FieldsEqualsComparer<Dummy>.Default).Compare(d1, d2));
+            Assert.AreEqual(1, ((IComparer)FieldsEqualsComparer<Dummy>.Default).Compare(d2, d1));
         }
 
         [Test]
@@ -44,9 +46,9 @@
             Assert.AreEqual(true, FieldsEqualsComparer<Level>.Default.Equals(l1, l2));
             Assert.AreEqual(true, FieldsEqualsComparer<Level>.Default.Equals(l2, l1));
 
-            Assert.AreEqual(true, FieldAssert.Equals(l1, l1));
-            Assert.AreEqual(true, FieldAssert.Equals(l2, l1));
-            Assert.AreEqual(true, FieldAssert.Equals(l1, l2));
+            Assert.AreEqual(0, ((IComparer)FieldsEqualsComparer<Level>.Default).Compare(l1, l1));
+            Assert.AreEqual(0, ((IComparer)FieldsEqualsComparer<Level>.Default).Compare(l1, l2));
+            Assert.AreEqual(0, ((IComparer)FieldsEqualsComparer<Level>.Default).Compare(l2, l1));
         }
 
         [Test]
@@ -58,8 +60,8 @@
             Assert.AreEqual(false, FieldsEqualsComparer<Level>.Default.Equals(l1, l2));
             Assert.AreEqual(false, FieldsEqualsComparer<Level>.Default.Equals(l2, l1));
 
-            Assert.AreEqual(false, FieldAssert.Equals(l2, l1));
-            Assert.AreEqual(false, FieldAssert.Equals(l1, l2));
+            Assert.AreEqual(1, ((IComparer)FieldsEqualsComparer<Level>.Default).Compare(l1, l2));
+            Assert.AreEqual(1, ((IComparer)FieldsEqualsComparer<Level>.Default).Compare(l2, l1));
         }
 
         [Test]
@@ -67,13 +69,14 @@
         {
             var l1 = new Level { Value = 2 };
             var l2 = new Level { Value = 2 };
+
             Assert.AreEqual(true, FieldsEqualsComparer<Level>.Default.Equals(l1, l1));
             Assert.AreEqual(true, FieldsEqualsComparer<Level>.Default.Equals(l1, l2));
             Assert.AreEqual(true, FieldsEqualsComparer<Level>.Default.Equals(l2, l1));
 
-            Assert.AreEqual(true, FieldAssert.Equals(l1, l1));
-            Assert.AreEqual(true, FieldAssert.Equals(l2, l1));
-            Assert.AreEqual(true, FieldAssert.Equals(l1, l2));
+            Assert.AreEqual(0, ((IComparer)FieldsEqualsComparer<Level>.Default).Compare(l1, l1));
+            Assert.AreEqual(0, ((IComparer)FieldsEqualsComparer<Level>.Default).Compare(l1, l2));
+            Assert.AreEqual(0, ((IComparer)FieldsEqualsComparer<Level>.Default).Compare(l2, l1));
         }
 
         [Test]
@@ -86,9 +89,9 @@
             Assert.AreEqual(true, FieldsEqualsComparer<Level>.Default.Equals(l1, l2));
             Assert.AreEqual(true, FieldsEqualsComparer<Level>.Default.Equals(l2, l1));
 
-            Assert.AreEqual(true, FieldAssert.Equals(l1, l1));
-            Assert.AreEqual(true, FieldAssert.Equals(l2, l1));
-            Assert.AreEqual(true, FieldAssert.Equals(l1, l2));
+            Assert.AreEqual(0, ((IComparer)FieldsEqualsComparer<Level>.Default).Compare(l1, l1));
+            Assert.AreEqual(0, ((IComparer)FieldsEqualsComparer<Level>.Default).Compare(l1, l2));
+            Assert.AreEqual(0, ((IComparer)FieldsEqualsComparer<Level>.Default).Compare(l2, l1));
         }
 
         [Test]
@@ -96,11 +99,12 @@
         {
             var l1 = new Level { Value = 1, Next = new Level() };
             var l2 = new Level { Value = 2, Next = new Level() };
+
             Assert.AreEqual(false, FieldsEqualsComparer<Level>.Default.Equals(l1, l2));
             Assert.AreEqual(false, FieldsEqualsComparer<Level>.Default.Equals(l2, l1));
 
-            Assert.AreEqual(false, FieldAssert.Equals(l2, l1));
-            Assert.AreEqual(false, FieldAssert.Equals(l1, l2));
+            Assert.AreEqual(1, ((IComparer)FieldsEqualsComparer<Level>.Default).Compare(l1, l2));
+            Assert.AreEqual(1, ((IComparer)FieldsEqualsComparer<Level>.Default).Compare(l2, l1));
         }
 
         [Test]
@@ -108,11 +112,12 @@
         {
             var l1 = new Level { Value = 2, Next = null };
             var l2 = new Level { Value = 2, Next = new Level() };
+
             Assert.AreEqual(false, FieldsEqualsComparer<Level>.Default.Equals(l1, l2));
             Assert.AreEqual(false, FieldsEqualsComparer<Level>.Default.Equals(l2, l1));
 
-            Assert.AreEqual(false, FieldAssert.Equals(l2, l1));
-            Assert.AreEqual(false, FieldAssert.Equals(l1, l2));
+            Assert.AreEqual(1, ((IComparer)FieldsEqualsComparer<Level>.Default).Compare(l1, l2));
+            Assert.AreEqual(1, ((IComparer)FieldsEqualsComparer<Level>.Default).Compare(l2, l1));
         }
 
         [Test]
@@ -120,11 +125,12 @@
         {
             var l1 = new Level { Value = 1, Next = new Level { Value = 2 } };
             var l2 = new Level { Value = 1, Next = new Level { Value = 3 } };
+
             Assert.AreEqual(false, FieldsEqualsComparer<Level>.Default.Equals(l1, l2));
             Assert.AreEqual(false, FieldsEqualsComparer<Level>.Default.Equals(l2, l1));
 
-            Assert.AreEqual(false, FieldAssert.Equals(l2, l1));
-            Assert.AreEqual(false, FieldAssert.Equals(l1, l2));
+            Assert.AreEqual(1, ((IComparer)FieldsEqualsComparer<Level>.Default).Compare(l1, l2));
+            Assert.AreEqual(1, ((IComparer)FieldsEqualsComparer<Level>.Default).Compare(l2, l1));
         }
     }
 }

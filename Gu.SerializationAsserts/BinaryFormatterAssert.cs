@@ -84,45 +84,27 @@ namespace Gu.SerializationAsserts
         }
 
         /// <summary>
+        /// 1. Serializes <paramref name="expected"/> and <paramref name="actual"/> to bytes strings using <see cref="BinaryFormatter"/>
+        /// 2. Compares the bytes using <see cref="BinaryAssert"/>
+        /// </summary>
+        /// <typeparam name="T">The type</typeparam>
+        /// <param name="expected">The expected value</param>
+        /// <param name="actual">The actual value</param>
+        public static void Equal<T>(T expected, T actual)
+        {
+            BinaryAssert.Equal(expected, actual);
+        }
+
+        /// <summary>
         /// Compares two streams for equality.
         /// 1. Length
         /// 2. Contents
         /// </summary>
         /// <param name="expected">The expected stream</param>
         /// <param name="actual">The actual stream</param>
-        public static void Equals(MemoryStream expected, MemoryStream actual)
+        public static void Equal(MemoryStream expected, MemoryStream actual)
         {
-            if (expected == null && actual == null)
-            {
-                return;
-            }
-
-            if (expected == null || actual == null)
-            {
-                throw new AssertException($"  Expected was: {expected?.ToString() ?? "null"}\r\n" +
-                                          $"Actual was: {actual?.ToString() ?? "null"}");
-            }
-
-            if (expected.Length != actual.Length)
-            {
-                var message = $"  Expected stream lengthts to be equal.\r\n" +
-                              $"  {nameof(expected)}: {expected.Length}.\r\n" +
-                              $"  {nameof(actual)}:   {actual.Length}.";
-                throw new AssertException(message);
-            }
-
-            var expecteds = expected.ToArray();
-            var actuals = actual.ToArray();
-
-            for (int i = 0; i < expecteds.Length; i++)
-            {
-                if (!Equals(expecteds[i], actuals[i]))
-                {
-                    var message = $"  Expected streams to be equal.\r\n" +
-                                  $"  Streams differ at index {i}";
-                    throw new AssertException(message);
-                }
-            }
+            BinaryAssert.Equal(expected, actual);
         }
 
         private static void ToStream<T>(T item, Stream stream)
@@ -137,6 +119,12 @@ namespace Gu.SerializationAsserts
             var binaryFormatter = new BinaryFormatter();
             var value = (T)binaryFormatter.Deserialize(stream);
             return value;
+        }
+
+        // Using new here to hide it so it not called by mistake
+        private new static void Equals(object x, object y)
+        {
+            throw new NotSupportedException($"{x}, {y}");
         }
     }
 }

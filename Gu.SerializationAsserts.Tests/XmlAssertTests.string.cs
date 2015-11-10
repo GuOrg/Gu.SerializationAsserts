@@ -14,7 +14,7 @@
     <Value Attribute=""1"">2</Value>
   </Outer>  
 </Dummy>";
-            XmlAssert.AreEqual(xml, xml);
+            XmlAssert.Equal(xml, xml);
         }
 
         [Test]
@@ -23,7 +23,7 @@
             var actualXml = @"<?xml version=""1.0"" encoding=""utf-8""?><Dummy />";
             var expectedXml = @"<?xml version=""1.0"" encoding=""utf-16""?><Dummy />";
 
-            var xmlExt = Assert.Throws<XmlAssertException>(() => XmlAssert.AreEqual(expectedXml, actualXml));
+            var xmlExt = Assert.Throws<XmlAssertException>(() => XmlAssert.Equal(expectedXml, actualXml));
             var expected = @"  Expected string length 48 but was 47.
   Strings differ at line 1 index 34.
   Expected: <?xml version=""1.0"" encoding=""utf-16""?><Dummy />
@@ -46,7 +46,7 @@
 </Wrong>";
 
 
-            var xmlExt = Assert.Throws<XmlAssertException>(() => XmlAssert.AreEqual(expectedXml, actualXml));
+            var xmlExt = Assert.Throws<XmlAssertException>(() => XmlAssert.Equal(expectedXml, actualXml));
             var expected = @"  String lengths are both 176.
   Strings differ at line 2 index 1.
   Expected: <Dummy xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
@@ -69,7 +69,7 @@
 </Dummy>";
 
 
-            var xmlExt = Assert.Throws<XmlAssertException>(() => XmlAssert.AreEqual(expectedXml, actualXml));
+            var xmlExt = Assert.Throws<XmlAssertException>(() => XmlAssert.Equal(expectedXml, actualXml));
             var expected = @"  String lengths are both 176.
   Strings differ at line 3 index 1.
   Expected: <Value>2</Value>
@@ -96,7 +96,7 @@
 </Dummy>";
 
 
-            var xmlExt = Assert.Throws<XmlAssertException>(() => XmlAssert.AreEqual(expectedXml, actualXml));
+            var xmlExt = Assert.Throws<XmlAssertException>(() => XmlAssert.Equal(expectedXml, actualXml));
             var expected = @"  String lengths are both 233.
   Strings differ at line 4 index 1.
   Expected: <Value Attribute=""1"">2</Value>
@@ -123,7 +123,7 @@
 </Dummy>";
 
 
-            var xmlExt = Assert.Throws<XmlAssertException>(() => XmlAssert.AreEqual(expectedXml, actualXml));
+            var xmlExt = Assert.Throws<XmlAssertException>(() => XmlAssert.Equal(expectedXml, actualXml));
             var expected = @"  Expected string length 233 but was 237.
   Strings differ at line 4 index 21.
   Expected: <Value Attribute=""1"">2</Value>
@@ -150,7 +150,7 @@
 </Dummy>";
 
 
-            var xmlExt = Assert.Throws<XmlAssertException>(() => XmlAssert.AreEqual(expectedXml, actualXml));
+            var xmlExt = Assert.Throws<XmlAssertException>(() => XmlAssert.Equal(expectedXml, actualXml));
             var expected = @"  Expected string length 233 but was 229.
   Strings differ at line 4 index 7.
   Expected: <Value Attribute=""1"">2</Value>
@@ -177,7 +177,7 @@
 </Dummy>";
 
 
-            var xmlExt = Assert.Throws<XmlAssertException>(() => XmlAssert.AreEqual(expectedXml, actualXml));
+            var xmlExt = Assert.Throws<XmlAssertException>(() => XmlAssert.Equal(expectedXml, actualXml));
             var expected = @"  Expected string length 233 but was 237.
   Strings differ at line 4 index 18.
   Expected: <Value Attribute=""1"">2</Value>
@@ -200,7 +200,7 @@
 </Dummy>";
 
 
-            var xmlExt = Assert.Throws<XmlAssertException>(() => XmlAssert.AreEqual(expectedXml, actualXml));
+            var xmlExt = Assert.Throws<XmlAssertException>(() => XmlAssert.Equal(expectedXml, actualXml));
             var expected = @"  Expected string length 176 but was 180.
   Strings differ at line 3 index 7.
   Expected: <Value>1</Value>

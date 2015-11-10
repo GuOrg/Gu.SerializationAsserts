@@ -6,6 +6,7 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".paket", ".paket", "{D22F2B83-060F-40EA-95FE-A451A93A5011}"
 	ProjectSection(SolutionItems) = preProject
 		paket.dependencies = paket.dependencies
+		.paket\Readme.paket.md = .paket\Readme.paket.md
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gu.SerializationAsserts", "Gu.SerializationAsserts\Gu.SerializationAsserts.csproj", "{9F31DCCF-9B87-425A-AA2F-CEF6CB9BA4A1}"

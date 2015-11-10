@@ -14,10 +14,6 @@ namespace Gu.SerializationAsserts.Tests.Comparers
             Assert.AreEqual(true, BinaryEqualsComparer<SerializableDummy>.Default.Equals(d1, d1));
             Assert.AreEqual(true, BinaryEqualsComparer<SerializableDummy>.Default.Equals(d1, d2));
             Assert.AreEqual(true, BinaryEqualsComparer<SerializableDummy>.Default.Equals(d2, d1));
-
-            Assert.AreEqual(true, BinaryAssert.Equals(d1, d1));
-            Assert.AreEqual(true, BinaryAssert.Equals(d2, d1));
-            Assert.AreEqual(true, BinaryAssert.Equals(d1, d2));
         }
 
         [Test]
@@ -28,9 +24,6 @@ namespace Gu.SerializationAsserts.Tests.Comparers
 
             Assert.AreEqual(false, BinaryEqualsComparer<SerializableDummy>.Default.Equals(d1, d2));
             Assert.AreEqual(false, BinaryEqualsComparer<SerializableDummy>.Default.Equals(d2, d1));
-
-            Assert.AreEqual(false, BinaryAssert.Equals(d2, d1));
-            Assert.AreEqual(false, BinaryAssert.Equals(d1, d2));
         }
 
         [Test]
@@ -42,10 +35,6 @@ namespace Gu.SerializationAsserts.Tests.Comparers
             Assert.AreEqual(true, BinaryEqualsComparer<Level>.Default.Equals(l1, l1));
             Assert.AreEqual(true, BinaryEqualsComparer<Level>.Default.Equals(l1, l2));
             Assert.AreEqual(true, BinaryEqualsComparer<Level>.Default.Equals(l2, l1));
-
-            Assert.AreEqual(true, BinaryAssert.Equals(l1, l1));
-            Assert.AreEqual(true, BinaryAssert.Equals(l2, l1));
-            Assert.AreEqual(true, BinaryAssert.Equals(l1, l2));
         }
 
         [Test]
@@ -56,9 +45,6 @@ namespace Gu.SerializationAsserts.Tests.Comparers
 
             Assert.AreEqual(false, BinaryEqualsComparer<Level>.Default.Equals(l1, l2));
             Assert.AreEqual(false, BinaryEqualsComparer<Level>.Default.Equals(l2, l1));
-
-            Assert.AreEqual(false, BinaryAssert.Equals(l2, l1));
-            Assert.AreEqual(false, BinaryAssert.Equals(l1, l2));
         }
 
         [Test]
@@ -70,10 +56,6 @@ namespace Gu.SerializationAsserts.Tests.Comparers
             Assert.AreEqual(true, BinaryEqualsComparer<Level>.Default.Equals(l1, l1));
             Assert.AreEqual(true, BinaryEqualsComparer<Level>.Default.Equals(l1, l2));
             Assert.AreEqual(true, BinaryEqualsComparer<Level>.Default.Equals(l2, l1));
-
-            Assert.AreEqual(true, BinaryAssert.Equals(l1, l1));
-            Assert.AreEqual(true, BinaryAssert.Equals(l2, l1));
-            Assert.AreEqual(true, BinaryAssert.Equals(l1, l2));
         }
 
         [Test]
@@ -85,10 +67,6 @@ namespace Gu.SerializationAsserts.Tests.Comparers
             Assert.AreEqual(true, BinaryEqualsComparer<Level>.Default.Equals(l1, l1));
             Assert.AreEqual(true, BinaryEqualsComparer<Level>.Default.Equals(l1, l2));
             Assert.AreEqual(true, BinaryEqualsComparer<Level>.Default.Equals(l2, l1));
-
-            Assert.AreEqual(true, BinaryAssert.Equals(l1, l1));
-            Assert.AreEqual(true, BinaryAssert.Equals(l2, l1));
-            Assert.AreEqual(true, BinaryAssert.Equals(l1, l2));
         }
 
         [Test]
@@ -99,9 +77,6 @@ namespace Gu.SerializationAsserts.Tests.Comparers
 
             Assert.AreEqual(false, BinaryEqualsComparer<Level>.Default.Equals(l1, l2));
             Assert.AreEqual(false, BinaryEqualsComparer<Level>.Default.Equals(l2, l1));
-
-            Assert.AreEqual(false, BinaryAssert.Equals(l2, l1));
-            Assert.AreEqual(false, BinaryAssert.Equals(l1, l2));
         }
 
         [Test]
@@ -112,9 +87,6 @@ namespace Gu.SerializationAsserts.Tests.Comparers
 
             Assert.AreEqual(false, BinaryEqualsComparer<Level>.Default.Equals(l1, l2));
             Assert.AreEqual(false, BinaryEqualsComparer<Level>.Default.Equals(l2, l1));
-
-            Assert.AreEqual(false, BinaryAssert.Equals(l2, l1));
-            Assert.AreEqual(false, BinaryAssert.Equals(l1, l2));
         }
 
         [Test]
@@ -125,9 +97,6 @@ namespace Gu.SerializationAsserts.Tests.Comparers
 
             Assert.AreEqual(false, BinaryEqualsComparer<Level>.Default.Equals(l1, l2));
             Assert.AreEqual(false, BinaryEqualsComparer<Level>.Default.Equals(l2, l1));
-
-            Assert.AreEqual(false, BinaryAssert.Equals(l2, l1));
-            Assert.AreEqual(false, BinaryAssert.Equals(l1, l2));
         }
     }
 }

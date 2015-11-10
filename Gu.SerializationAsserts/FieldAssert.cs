@@ -1,5 +1,7 @@
 namespace Gu.SerializationAsserts
 {
+    using System;
+
     public static class FieldAssert
     {
         /// <summary>
@@ -11,9 +13,21 @@ namespace Gu.SerializationAsserts
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <returns></returns>
-        public static bool Equals<T>(T x, T y)
+        public static void Equal<T>(T x, T y)
         {
-            return FieldsEqualsComparer<T>.Default.Equals(x, y);
+            var comparison = Comparison.CreateFor(x, y);
+            if (comparison.Matches())
+            {
+                return;
+            }
+
+            throw new AssertException("x and y not equal");
+        }
+
+        // Using new here to hide it so it not called by mistake
+        private new static void Equals(object x, object y)
+        {
+            throw new NotSupportedException($"{x}, {y}");
         }
     }
 }

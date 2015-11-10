@@ -1,3 +1,5 @@
+using System;
+
 namespace Gu.SerializationAsserts
 {
     using System.IO;
@@ -8,6 +10,20 @@ namespace Gu.SerializationAsserts
     /// </summary>
     public static class XmlSerializerAssert
     {
+        /// <summary>
+        /// 1. serializes <paramref name="expected"/> and <paramref name="actual"/> to xml strings using <see cref="XmlSerializer"/>
+        /// 2. Compares the xml using <see cref="XmlAssert"/>
+        /// </summary>
+        /// <typeparam name="T">The type</typeparam>
+        /// <param name="expected">The expected value</param>
+        /// <param name="actual">The actual value</param>
+        public static void Equal<T>(T expected, T actual)
+        {
+            var exml = ToXml(expected);
+            var axml = ToXml(actual);
+            XmlAssert.Equal(exml, axml);
+        }
+
         /// <summary>
         /// 1 Serializes <paramref name="item"/> to an xml string using <see cref="XmlSerializer"/>
         /// 2 Compares the xml with <paramref name="expectedXml"/>
@@ -21,11 +37,11 @@ namespace Gu.SerializationAsserts
         /// <typeparam name="T"></typeparam>
         /// <param name="item"></param>
         /// <param name="expectedXml">The expected xml</param>
-        /// <returns></returns>
-        public static T Roundtrip<T>(T item, string expectedXml)
+        /// <returns>The roundtripped instance</returns>
+        public static T Equal<T>(T item, string expectedXml)
         {
             var actual = ToXml(item);
-            XmlAssert.AreEqual(expectedXml, actual);
+            XmlAssert.Equal(expectedXml, actual);
 
             var container = new ContainerClass<T>(item);
             var expectedContainerXml = container.CreateExpectedXmlFor(actual);
@@ -33,7 +49,7 @@ namespace Gu.SerializationAsserts
             for (int i = 0; i < 2; i++)
             {
                 var actualContainerXml = ToXml(container);
-                XmlAssert.AreEqual(expectedContainerXml, actualContainerXml);
+                XmlAssert.Equal(expectedContainerXml, actualContainerXml);
                 container = FromXml<ContainerClass<T>>(actualContainerXml);
             }
 
@@ -83,6 +99,12 @@ namespace Gu.SerializationAsserts
             {
                 return (T)serializer.Deserialize(reader);
             }
+        }
+
+        // Using new here to hide it so it not called by mistake
+        private new static void Equals(object x, object y)
+        {
+            throw new NotSupportedException($"{x}, {y}");
         }
     }
 }
