@@ -55,8 +55,9 @@
     <Compile Include="BinaryAssert.cs" />
     <Compile Include="Comparers\BinaryEqualsComparer{T}.cs" />
     <Compile Include="Comparers\DeepEquals\ComparedField.cs" />
+    <Compile Include="Comparers\DeepEquals\ComparedIEnumerable.cs" />
     <Compile Include="Comparers\DeepEquals\ComparisonTracker.cs" />
-    <Compile Include="Comparers\DeepEquals\Comparison.cs" />
+    <Compile Include="Comparers\DeepEquals\DeepEqualsNode.cs" />
     <Compile Include="Comparers\FieldsEqualsComparer{T}.cs" />
     <Compile Include="Comparers\DeepEquals\ICompared.cs" />
     <Compile Include="Exceptions\AssertException.cs" />

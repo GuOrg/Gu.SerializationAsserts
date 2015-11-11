@@ -8,9 +8,9 @@
     using System.Reflection;
 
     [DebuggerDisplay("Type: {Type} Field: {ParentField}}")]
-    internal class Comparison
+    internal class DeepEqualsNode
     {
-        private Comparison(ICompared expected, ICompared actual)
+        private DeepEqualsNode(ICompared expected, ICompared actual)
         {
             this.Expected = expected;
             this.Actual = actual;
@@ -24,8 +24,8 @@
                                      ?? new FieldInfo[0];
         }
 
-        private Comparison(
-            Comparison parent,
+        private DeepEqualsNode(
+            DeepEqualsNode parent,
             FieldInfo parentField,
             ICompared expected,
             ICompared actual)
@@ -41,17 +41,17 @@
 
         internal Type Type { get; }
 
-        internal Comparison Parent { get; }
+        internal DeepEqualsNode Parent { get; }
 
         internal FieldInfo ParentField { get; }
 
         internal IReadOnlyList<FieldInfo> Fields { get; }
 
-        internal static Comparison CreateFor(object expected, object actual)
+        internal static DeepEqualsNode CreateFor(object expected, object actual)
         {
             var ec = new ComparedField(expected, null);
             var ac = new ComparedField(actual, null);
-            return new Comparison(ec, ac);
+            return new DeepEqualsNode(ec, ac);
         }
 
         internal bool Matches()
@@ -62,6 +62,11 @@
             }
 
             if (this.Expected.Value == null || this.Actual.Value == null)
+            {
+                return false;
+            }
+
+            if (this.Expected is ComparedIEnumerable && this.Actual is ComparedIEnumerable)
             {
                 return false;
             }
@@ -82,7 +87,7 @@
             return true;
         }
 
-        public IEnumerable<Comparison> AllChildren()
+        public IEnumerable<DeepEqualsNode> AllChildren()
         {
             foreach (var child in this.GetChildren())
             {
@@ -94,7 +99,7 @@
             }
         }
 
-        internal IEnumerable<Comparison> GetChildren()
+        internal IEnumerable<DeepEqualsNode> GetChildren()
         {
             var expected = this.Expected.Value;
             var actual = this.Actual.Value;
@@ -108,6 +113,11 @@
                 yield break;
             }
 
+            if (this.Expected is ComparedIEnumerable && this.Actual is ComparedIEnumerable)
+            {
+                yield break;
+            }
+
             if (IsAnyIEnumerable(expected, actual))
             {
                 if (!IsBothIEnumerable(expected, actual))
@@ -117,13 +127,19 @@
 
                 var expectedChildren = ((IEnumerable)expected).OfType<object>().ToArray();
                 var actualChildren = ((IEnumerable)actual).OfType<object>().ToArray();
-
-                for (int i = 0; i < Math.Max(expectedChildren.Length, actualChildren.Length); i++)
+                if (expectedChildren.Length != actualChildren.Length)
                 {
-                    var expectedChild = expectedChildren.ElementAtOrDefault(i);
-                    var actualChild = actualChildren.ElementAtOrDefault(i);
+                    yield return this.CreateIEnumerableChild(expectedChildren, actualChildren, this.ParentField);
+                }
+                else
+                {
+                    for (int i = 0; i < Math.Max(expectedChildren.Length, actualChildren.Length); i++)
+                    {
+                        var expectedChild = expectedChildren.ElementAtOrDefault(i);
+                        var actualChild = actualChildren.ElementAtOrDefault(i);
 
-                    yield return this.CreateIndexChild(expectedChild, actualChild, this.ParentField, i);
+                        yield return this.CreateIndexChild(expectedChild, actualChild, this.ParentField, i);
+                    }
                 }
             }
 
@@ -171,18 +187,25 @@
             return a is IEnumerable && b is IEnumerable;
         }
 
-        private Comparison CreateFieldChild(object expected, object actual, FieldInfo field)
+        private DeepEqualsNode CreateIEnumerableChild(object[] expected, object[] actual, FieldInfo field)
+        {
+            var ecf = new ComparedIEnumerable(expected, field);
+            var acf = new ComparedIEnumerable(actual, field);
+            return new DeepEqualsNode(this, field, ecf, acf);
+        }
+
+        private DeepEqualsNode CreateFieldChild(object expected, object actual, FieldInfo field)
         {
             var ecf = new ComparedField(expected, field);
             var acf = new ComparedField(actual, field);
-            return new Comparison(this, field, ecf, acf);
+            return new DeepEqualsNode(this, field, ecf, acf);
         }
 
-        private Comparison CreateIndexChild(object expected, object actual, FieldInfo field, int index)
+        private DeepEqualsNode CreateIndexChild(object expected, object actual, FieldInfo field, int index)
         {
             var ecf = new ComparedItem(expected, index);
             var acf = new ComparedItem(actual, index);
-            return new Comparison(this, field, ecf, acf);
+            return new DeepEqualsNode(this, field, ecf, acf);
         }
 
         // Using new here to hide it so it not called by mistake

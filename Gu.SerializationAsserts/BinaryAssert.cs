@@ -1,7 +1,6 @@
-using System;
-
 namespace Gu.SerializationAsserts
 {
+    using System;
     using System.CodeDom.Compiler;
     using System.IO;
     using System.Runtime.Serialization.Formatters.Binary;
@@ -84,13 +83,7 @@ namespace Gu.SerializationAsserts
             }
         }
 
-        // Using new here to hide it so it not called by mistake
-        private new static void Equals(object x, object y)
-        {
-            throw new NotSupportedException($"{x}, {y}");
-        }
-
-        private static byte[] ToBytes(object o, string parameterName)
+        internal static byte[] ToBytes(object o, string parameterName)
         {
             try
             {
@@ -103,14 +96,14 @@ namespace Gu.SerializationAsserts
             }
             catch (Exception e)
             {
-                using (var writer = new IndentedTextWriter(new StringWriter(), "  "))
-                {
-                    writer.WriteLine($"  Writing {parameterName} to a stream failed.");
-                    writer.Indent++;
-                    writer.WriteMessages(e);
-                    throw new AssertException(writer.InnerWriter.ToString(), e);
-                }
+                throw AssertException.CreateFromException($"Writing {parameterName} to a stream failed.", e);
             }
+        }
+
+        // Using new here to hide it so it not called by mistake
+        private new static void Equals(object x, object y)
+        {
+            throw new NotSupportedException($"{x}, {y}");
         }
     }
 }

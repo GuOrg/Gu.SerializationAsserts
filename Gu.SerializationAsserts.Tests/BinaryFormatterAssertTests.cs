@@ -1,9 +1,8 @@
-using System.IO;
-using Gu.SerializationAsserts.Tests.Dtos;
-using NUnit.Framework;
-
 namespace Gu.SerializationAsserts.Tests
 {
+    using Gu.SerializationAsserts.Tests.Dtos;
+    using NUnit.Framework;
+
     public class BinaryFormatterAssertTests
     {
         [Test]

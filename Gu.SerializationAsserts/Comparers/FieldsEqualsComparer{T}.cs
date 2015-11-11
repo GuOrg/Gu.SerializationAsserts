@@ -20,7 +20,7 @@
 
         public bool Equals(T x, T y)
         {
-            var comparison = Comparison.CreateFor(x, y);
+            var comparison = DeepEqualsNode.CreateFor(x, y);
             return comparison.Matches();
         }
 
@@ -32,7 +32,7 @@
         /// <returns></returns>
         int IComparer.Compare(object x, object y)
         {
-            var comparison = Comparison.CreateFor(x, y);
+            var comparison = DeepEqualsNode.CreateFor(x, y);
             if (comparison.Matches())
             {
                 return 0;

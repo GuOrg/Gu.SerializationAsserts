@@ -1,8 +1,7 @@
-﻿using System.CodeDom.Compiler;
-
-namespace Gu.SerializationAsserts
+﻿namespace Gu.SerializationAsserts
 {
     using System;
+    using System.CodeDom.Compiler;
     using System.Collections.Generic;
     using System.IO;
     using System.Xml.Linq;
@@ -89,14 +88,7 @@ namespace Gu.SerializationAsserts
             }
             catch (Exception e)
             {
-                using (var writer = new IndentedTextWriter(new StringWriter(), "  "))
-                {
-                    writer.WriteLine($"  {parameterName} is not valid xml.");
-                    writer.Indent++;
-                    writer.WriteMessages(e);
-                    var message = writer.InnerWriter.ToString();
-                    throw new AssertException(message, e);
-                }
+                throw AssertException.CreateFromException($"{parameterName} is not valid xml.", e);
             }
         }
 
@@ -128,7 +120,7 @@ namespace Gu.SerializationAsserts
         // Using new here to hide it so it not called by mistake
         private new static void Equals(object x, object y)
         {
-            throw new NotSupportedException($"{x}, {y}");
+            throw new AssertException($"{x}, {y}");
         }
     }
 }

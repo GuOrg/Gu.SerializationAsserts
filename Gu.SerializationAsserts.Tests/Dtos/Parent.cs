@@ -7,6 +7,8 @@ namespace Gu.SerializationAsserts.Tests.Dtos
     {
         private readonly List<Child> children = new List<Child>();
 
+        private int value;
+
         public Parent()
         {
         }
@@ -16,7 +18,11 @@ namespace Gu.SerializationAsserts.Tests.Dtos
             this.Add(child);
         }
 
-        public int Value { get; set; }
+        public int Value
+        {
+            get { return this.value; }
+            set { this.value = value; }
+        }
 
         public IReadOnlyList<Child> Children => this.children;
 
@@ -33,13 +39,23 @@ namespace Gu.SerializationAsserts.Tests.Dtos
 
     public class Child
     {
+        private readonly int value;
+        private Parent parent;
+
         public Child(int value)
         {
-            this.Value = value;
+            this.value = value;
         }
 
-        public int Value { get; }
+        public int Value
+        {
+            get { return this.value; }
+        }
 
-        public Parent Parent { get; internal set; }
+        public Parent Parent
+        {
+            get { return this.parent; }
+            internal set { this.parent = value; }
+        }
     }
 }
