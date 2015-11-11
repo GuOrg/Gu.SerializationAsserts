@@ -1,7 +1,6 @@
-using System;
-
 namespace Gu.SerializationAsserts
 {
+    using System;
     using System.IO;
     using System.Xml.Serialization;
 
@@ -19,8 +18,8 @@ namespace Gu.SerializationAsserts
         /// <param name="actual">The actual value</param>
         public static void Equal<T>(T expected, T actual)
         {
-            var exml = ToXml(expected);
-            var axml = ToXml(actual);
+            var exml = ToXml(expected, nameof(expected));
+            var axml = ToXml(actual, nameof(actual));
             XmlAssert.Equal(exml, axml);
         }
 
@@ -40,7 +39,7 @@ namespace Gu.SerializationAsserts
         /// <returns>The roundtripped instance</returns>
         public static T Equal<T>(string expectedXml, T actual)
         {
-            var actualXml = ToXml(actual);
+            var actualXml = ToXml(actual, nameof(actual));
             XmlAssert.Equal(expectedXml, actualXml);
 
             var container = new ContainerClass<T>(actual);
@@ -48,9 +47,9 @@ namespace Gu.SerializationAsserts
 
             for (int i = 0; i < 2; i++)
             {
-                var actualContainerXml = ToXml(container);
+                var actualContainerXml = ToXml(container, nameof(container));
                 XmlAssert.Equal(expectedContainerXml, actualContainerXml);
-                container = FromXml<ContainerClass<T>>(actualContainerXml);
+                container = FromXml<ContainerClass<T>>(actualContainerXml, nameof(container));
             }
 
             return container.Other;
@@ -61,17 +60,12 @@ namespace Gu.SerializationAsserts
         /// 2. Serialize <paramref name="item"/>
         /// 3. Returns the xml
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="item"></param>
+        /// <typeparam name="T">The type</typeparam>
+        /// <param name="item">The item to serialize</param>
         /// <returns>The xml representation of <paramref name="item>"/></returns>
         public static string ToXml<T>(T item)
         {
-            var serializer = new XmlSerializer(typeof(T));
-            using (var writer = new StringWriter())
-            {
-                serializer.Serialize(writer, item);
-                return writer.ToString();
-            }
+            return ToXml(item, nameof(item));
         }
 
         public static string ToEscapedXml<T>(T item)
@@ -89,15 +83,44 @@ namespace Gu.SerializationAsserts
         /// 2. Deserialize <paramref name="xml"/>
         /// 3. Returns the deserialized instance
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="xml"></param>
+        /// <typeparam name="T">The type</typeparam>
+        /// <param name="xml">The string containing the xml</param>
         /// <returns>The deserialized instance</returns>
         public static T FromXml<T>(string xml)
         {
-            var serializer = new XmlSerializer(typeof(T));
-            using (var reader = new StringReader(xml))
+            return FromXml<T>(xml, nameof(xml));
+        }
+
+        private static string ToXml<T>(T item, string parameterName)
+        {
+            try
             {
-                return (T)serializer.Deserialize(reader);
+                var serializer = new XmlSerializer(typeof(T));
+                using (var writer = new StringWriter())
+                {
+                    serializer.Serialize(writer, item);
+                    return writer.ToString();
+                }
+            }
+            catch (Exception e)
+            {
+                throw AssertException.CreateFromException($"Could not serialize{parameterName}.", e);
+            }
+        }
+
+        public static T FromXml<T>(string xml, string parameterName)
+        {
+            try
+            {
+                var serializer = new XmlSerializer(typeof(T));
+                using (var reader = new StringReader(xml))
+                {
+                    return (T)serializer.Deserialize(reader);
+                }
+            }
+            catch (Exception e)
+            {
+                throw AssertException.CreateFromException($"Could not deserialize {xml} to an instance of type {typeof(T)}", e);
             }
         }
 

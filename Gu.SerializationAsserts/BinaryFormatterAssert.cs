@@ -27,13 +27,7 @@ namespace Gu.SerializationAsserts
                     }
                     catch (Exception e)
                     {
-                        using (var writer = new IndentedTextWriter(new StringWriter(), "  "))
-                        {
-                            writer.WriteLine($"  Writing {typeof(T).Name} to a stream failed.");
-                            writer.Indent++;
-                            writer.WriteMessages(e);
-                            throw new AssertException(writer.InnerWriter.ToString(), e);
-                        }
+                        throw AssertException.CreateFromException($"Writing {typeof(T).Name} to a stream failed.", e);
                     }
 
                     try
@@ -70,12 +64,7 @@ namespace Gu.SerializationAsserts
                     }
                     catch (Exception e)
                     {
-                        using (var writer = new StringWriter())
-                        {
-                            writer.WriteLine($" Reading {typeof(T).Name} to a stream failed");
-                            writer.WriteMessages(e);
-                            throw new AssertException(writer.ToString(), e);
-                        }
+                        throw AssertException.CreateFromException($"Reading {typeof(T).Name} to a stream failed", e);
                     }
                 }
             }

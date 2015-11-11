@@ -1,7 +1,6 @@
-using System;
-
 namespace Gu.SerializationAsserts
 {
+    using System;
     using System.CodeDom.Compiler;
     using System.IO;
     using System.Runtime.Serialization.Formatters.Binary;
@@ -103,13 +102,7 @@ namespace Gu.SerializationAsserts
             }
             catch (Exception e)
             {
-                using (var writer = new IndentedTextWriter(new StringWriter(), "  "))
-                {
-                    writer.WriteLine($"  Writing {parameterName} to a stream failed.");
-                    writer.Indent++;
-                    writer.WriteMessages(e);
-                    throw new AssertException(writer.InnerWriter.ToString(), e);
-                }
+                throw AssertException.CreateFromException($"Writing {parameterName} to a stream failed.", e);
             }
         }
     }

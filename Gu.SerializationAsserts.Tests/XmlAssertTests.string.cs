@@ -97,11 +97,11 @@
 
 
             var xmlExt = Assert.Throws<AssertException>(() => XmlAssert.Equal(expectedXml, actualXml));
-            var expected = @"  String lengths are both 176.
-  Strings differ at line 3 index 1.
-  Expected: <Value>2</Value>
-  But was:  <Wrong>2</Wrong>
-  -----------^";
+            var expected = "  String lengths are both 176.\r\n" +
+                           "  Strings differ at line 3 index 1.\r\n" +
+                           "  Expected: <Value>2</Value>\r\n" +
+                           "  But was:  <Wrong>2</Wrong>\r\n" +
+                           "  -----------^";
             Assert.AreEqual(expected, xmlExt.Message);
         }
 
@@ -124,11 +124,59 @@
 
 
             var xmlExt = Assert.Throws<AssertException>(() => XmlAssert.Equal(expectedXml, actualXml));
-            var expected = @"  String lengths are both 233.
-  Strings differ at line 4 index 1.
-  Expected: <Value Attribute=""1"">2</Value>
-  But was:  <Wrong Attribute=""1"">2</Wrong>
-  -----------^";
+            var expected = "  String lengths are both 233.\r\n" +
+                           "  Strings differ at line 4 index 1.\r\n" +
+                           "  Expected: <Value Attribute=\"1\">2</Value>\r\n" +
+                           "  But was:  <Wrong Attribute=\"1\">2</Wrong>\r\n" +
+                           "  -----------^";
+            Assert.AreEqual(expected, xmlExt.Message);
+        }
+
+        [Test]
+        public void WrongElementOrder()
+        {
+            var expectedXml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n" +
+                              "<Dummy xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n" +
+                              "  <Value1>1</Value1>\r\n" +
+                              "  <Value2>2</Value2>\r\n" +
+                              "</Dummy>";
+
+            var actualXml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n" +
+                            "<Dummy xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n" +
+                            "  <Value2>2</Value2>\r\n" +
+                            "  <Value1>1</Value1>\r\n" +
+                            "</Dummy>";
+
+            var xmlExt = Assert.Throws<AssertException>(() => XmlAssert.Equal(expectedXml, actualXml));
+            var expected = "  String lengths are both 200.\r\n" +
+                           "  Strings differ at line 3 index 6.\r\n" +
+                           "  Expected: <Value1>1</Value1>\r\n" +
+                           "  But was:  <Value2>2</Value2>\r\n" +
+                           "  ----------------^";
+
+            Assert.AreEqual(expected, xmlExt.Message);
+        }
+
+        [Test]
+        public void WrongAttributeOrder()
+        {
+            var expectedXml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n" +
+                              "<Dummy xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n" +
+                              "  <Value1 Attribute1=\"1\" Attribute2=\"2\">1</Value1>\r\n" +
+                              "</Dummy>";
+
+            var actualXml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n" +
+                            "<Dummy xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n" +
+                            "  <Value1 Attribute2=\"2\" Attribute1=\"1\">1</Value1>\r\n" +
+                            "</Dummy>";
+
+            var xmlExt = Assert.Throws<AssertException>(() => XmlAssert.Equal(expectedXml, actualXml));
+            var expected = "  String lengths are both 208.\r\n" +
+                           "  Strings differ at line 3 index 17.\r\n" +
+                           "  Expected: <Value1 Attribute1=\"1\" Attribute2=\"2\">1</Value1>\r\n" +
+                           "  But was:  <Value1 Attribute2=\"2\" Attribute1=\"1\">1</Value1>\r\n" +
+                           "  ---------------------------^";
+
             Assert.AreEqual(expected, xmlExt.Message);
         }
 

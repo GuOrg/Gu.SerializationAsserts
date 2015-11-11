@@ -1,10 +1,9 @@
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-
 namespace Gu.SerializationAsserts
 {
     using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
 
     public static class FieldAssert
     {

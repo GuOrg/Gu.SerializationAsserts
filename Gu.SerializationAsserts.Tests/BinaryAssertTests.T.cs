@@ -55,7 +55,7 @@
             var ex1 = Assert.Throws<AssertException>(() => BinaryAssert.Equal(l1, l2));
             var ex2 = Assert.Throws<AssertException>(() => BinaryAssert.Equal(l2, l1));
             var expected = "  Expected bytes to be equal.\r\n" +
-                           "  Bytes differ at index 444.";
+                           "  Bytes differ at index 410.";
             foreach (var ex in new[] { ex1, ex2 })
             {
                 Assert.AreEqual(expected, ex.Message);
@@ -93,7 +93,7 @@
             var ex1 = Assert.Throws<AssertException>(() => BinaryAssert.Equal(l1, l2));
             var ex2 = Assert.Throws<AssertException>(() => BinaryAssert.Equal(l2, l1));
             var expected = "  Expected bytes to be equal.\r\n" +
-                           "  Bytes differ at index 444.";
+                           "  Bytes differ at index 410.";
             foreach (var ex in new[] { ex1, ex2 })
             {
                 Assert.AreEqual(expected, ex.Message);
@@ -108,12 +108,12 @@
 
             var ex = Assert.Throws<AssertException>(() => BinaryAssert.Equal(l1, l2));
             var expected = "  Expected bytes to have equal lengths.\r\n" +
-                           "  expected: 776.\r\n" +
-                           "  actual:   821.";
+                           "  expected: 742.\r\n" +
+                           "  actual:   787.";
             Assert.AreEqual(expected, ex.Message);
             expected = "  Expected bytes to have equal lengths.\r\n" +
-                       "  expected: 821.\r\n" +
-                       "  actual:   776.";
+                       "  expected: 787.\r\n" +
+                       "  actual:   742.";
 
             ex = Assert.Throws<AssertException>(() => BinaryAssert.Equal(l2, l1));
             Assert.AreEqual(expected, ex.Message);
@@ -128,7 +128,7 @@
             var ex1 = Assert.Throws<AssertException>(() => BinaryAssert.Equal(l1, l2));
             var ex2 = Assert.Throws<AssertException>(() => BinaryAssert.Equal(l2, l1));
             var expected = "  Expected bytes to be equal.\r\n" +
-                           "  Bytes differ at index 467.";
+                           "  Bytes differ at index 433.";
             foreach (var ex in new[] { ex1, ex2 })
             {
                 Assert.AreEqual(expected, ex.Message);

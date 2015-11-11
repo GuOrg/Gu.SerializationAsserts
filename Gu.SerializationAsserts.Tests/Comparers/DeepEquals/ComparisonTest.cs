@@ -17,7 +17,7 @@ namespace Gu.SerializationAsserts.Tests.Comparers.DeepEquals
             var dump = Dump(comparison);
             Console.Write(dump);
             var expectedDump = "Dummy Expected: Dummy Actual: Dummy\r\n" +
-                               "  <Value>k__BackingField: Int32 Expected: 1 Actual: 2";
+                               "  value: Int32 Expected: 1 Actual: 2";
             Assert.AreEqual(expectedDump, dump);
         }
 
