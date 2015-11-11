@@ -9,8 +9,8 @@
         /// <summary>
         /// Writes all InnerException messages indented as a string.
         /// </summary>
-        /// <param name="e"></param>
-        /// <returns></returns>
+        /// <param name="e">The exception</param>
+        /// <returns>A string with each inner exception on a new line indented</returns>
         public static string GetNestedMessages(this Exception e)
         {
             using (var writer = new StringWriter())

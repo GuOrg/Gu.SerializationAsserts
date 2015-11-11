@@ -82,6 +82,18 @@
             return true;
         }
 
+        public IEnumerable<Comparison> AllChildren()
+        {
+            foreach (var child in this.GetChildren())
+            {
+                yield return child;
+                foreach (var nested in child.AllChildren())
+                {
+                    yield return nested;
+                }
+            }
+        }
+
         internal IEnumerable<Comparison> GetChildren()
         {
             var expected = this.Expected.Value;

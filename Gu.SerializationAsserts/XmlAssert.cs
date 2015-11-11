@@ -1,4 +1,6 @@
-﻿namespace Gu.SerializationAsserts
+﻿using System.CodeDom.Compiler;
+
+namespace Gu.SerializationAsserts
 {
     using System;
     using System.Collections.Generic;
@@ -9,7 +11,9 @@
     {
         public static void Equal(string expected, string actual)
         {
-            Equal(ParseDocument(expected, nameof(expected)), ParseDocument(actual, nameof(actual)));
+            var expectedXml = ParseDocument(expected, nameof(expected));
+            var actualXml = ParseDocument(actual, nameof(actual));
+            Equal(expectedXml, actualXml);
         }
 
         private static void Equal(XDocumentAndSource expected, XDocumentAndSource actual)
@@ -17,7 +21,7 @@
             if (!FieldsEqualsComparer<XDeclaration>.Default.Equals(expected.Document.Declaration, actual.Document.Declaration))
             {
                 var message = CreateMessage(1, expected.SourceXml, actual.SourceXml);
-                throw new XmlAssertException(message);
+                throw new AssertException(message);
             }
 
             Equal(expected.Element, actual.Element);
@@ -28,7 +32,7 @@
             if (expected.Element.Name != actual.Element.Name)
             {
                 var message = CreateMessage(expected.LineNumber, expected.SourceXml, actual.SourceXml);
-                throw new XmlAssertException(message);
+                throw new AssertException(message);
             }
 
             Equal(expected.Attributes, actual.Attributes);
@@ -38,7 +42,7 @@
                 if (expected.Element.Value != actual.Element.Value)
                 {
                     var message = CreateMessage(expected.LineNumber, expected.SourceXml, actual.SourceXml);
-                    throw new XmlAssertException(message);
+                    throw new AssertException(message);
                 }
 
                 return;
@@ -63,7 +67,7 @@
                 expected.Attribute.Value != actual.Attribute.Value)
             {
                 var message = CreateMessage(expected.LineNumber, expected.SourceXml, actual.SourceXml);
-                throw new XmlAssertException(message);
+                throw new AssertException(message);
             }
         }
 
@@ -85,7 +89,14 @@
             }
             catch (Exception e)
             {
-                throw new XmlAssertException($"{parameterName} is not valid xml", e);
+                using (var writer = new IndentedTextWriter(new StringWriter(), "  "))
+                {
+                    writer.WriteLine($"  {parameterName} is not valid xml.");
+                    writer.Indent++;
+                    writer.WriteMessages(e);
+                    var message = writer.InnerWriter.ToString();
+                    throw new AssertException(message, e);
+                }
             }
         }
 

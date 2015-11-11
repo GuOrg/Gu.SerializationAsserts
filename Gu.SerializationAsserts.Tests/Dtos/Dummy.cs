@@ -2,6 +2,8 @@
 {
     public class Dummy
     {
+        private int value;
+
         public Dummy(int value)
         {
             this.Value = value;
@@ -11,6 +13,10 @@
         {
         }
 
-        public int Value { get; set; }
+        public int Value
+        {
+            get { return this.value; }
+            set { this.value = value; }
+        }
     }
 }

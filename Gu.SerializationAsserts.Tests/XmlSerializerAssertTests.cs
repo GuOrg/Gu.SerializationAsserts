@@ -48,14 +48,14 @@
         [Test]
         public void Roundtrip()
         {
-            var dummy = new Dummy { Value = 2 };
-            var xml = @"<?xml version=""1.0"" encoding=""utf-16""?>
-<Dummy xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
-  <Value>2</Value>
-</Dummy>";
-            var roundtrip = XmlSerializerAssert.Equal(dummy, xml);
-            Assert.AreEqual(roundtrip.Value, dummy.Value);
-            FieldAssert.Equal(dummy, roundtrip);
+            var actual = new Dummy { Value = 2 };
+            var expectedXml = "<?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n" +
+                              "<Dummy xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n" +
+                              "  <Value>2</Value>\r\n" +
+                              "</Dummy>";
+            var roundtrip = XmlSerializerAssert.Equal(expectedXml, actual);
+            Assert.AreEqual(roundtrip.Value, actual.Value);
+            FieldAssert.Equal(actual, roundtrip);
         }
     }
 }

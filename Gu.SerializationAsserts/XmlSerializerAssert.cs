@@ -25,26 +25,26 @@ namespace Gu.SerializationAsserts
         }
 
         /// <summary>
-        /// 1 Serializes <paramref name="item"/> to an xml string using <see cref="XmlSerializer"/>
+        /// 1 Serializes <paramref name="actual"/> to an xml string using <see cref="XmlSerializer"/>
         /// 2 Compares the xml with <paramref name="expectedXml"/>
-        /// 3 Creates a ContainerClass{T} this is to catch errors in ReadEndElement when implementing IXmlSerilizable
+        /// 3 Creates a ContainerClass{T} this is to catch errors in ReadEndElement() when implementing <see cref="IXmlSerializable"/>
         /// 4 Serializes it to xml.
         /// 5 Compares the xml
         /// 6 Deserializes it to container class
         /// 7 Does 2 & 3 again, we repeat this to catch any errors from deserializing
         /// 8 Returns roundtripped instance
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="item"></param>
+        /// <typeparam name="T">The type</typeparam>
         /// <param name="expectedXml">The expected xml</param>
+        /// <param name="actual">The actual item</param>
         /// <returns>The roundtripped instance</returns>
-        public static T Equal<T>(T item, string expectedXml)
+        public static T Equal<T>(string expectedXml, T actual)
         {
-            var actual = ToXml(item);
-            XmlAssert.Equal(expectedXml, actual);
+            var actualXml = ToXml(actual);
+            XmlAssert.Equal(expectedXml, actualXml);
 
-            var container = new ContainerClass<T>(item);
-            var expectedContainerXml = container.CreateExpectedXmlFor(actual);
+            var container = new ContainerClass<T>(actual);
+            var expectedContainerXml = container.CreateExpectedXmlFor(actualXml);
 
             for (int i = 0; i < 2; i++)
             {
