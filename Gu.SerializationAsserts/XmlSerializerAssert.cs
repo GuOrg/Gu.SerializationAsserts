@@ -1,9 +1,7 @@
 namespace Gu.SerializationAsserts
 {
     using System;
-    using System.CodeDom.Compiler;
     using System.IO;
-    using System.Linq;
     using System.Xml.Serialization;
 
     /// <summary>
@@ -44,34 +42,31 @@ namespace Gu.SerializationAsserts
         {
             var actualXml = ToXml(actual, nameof(actual));
             XmlAssert.Equal(expectedXml, actualXml, options);
-
-            var container = new ContainerClass<T>(actual);
-            var expectedContainerXml = CreateExpectedContainerXml<T>(actualXml);
-            var actualContainerXml = ToXml(container, nameof(container));
-            XmlAssert.Equal(expectedContainerXml, actualContainerXml, options);
-
-            // doing it twice to catch errors when deserializing
-            container = FromXml<ContainerClass<T>>(actualContainerXml, nameof(container));
-            actualContainerXml = ToXml(container, nameof(container));
-            XmlAssert.Equal(expectedContainerXml, actualContainerXml, options);
-
-            return container.Other;
+            return RoundTrip(actual);
         }
 
+        /// <summary>
+        /// 1. Places <paramref name="item"/> in a ContainerClass{T} container1
+        /// 2. Serializes container1
+        /// 3. Deserializes the containerXml to container2 and does FieldAssert.Equal(container1, container2);
+        /// 4. Serializes container2
+        /// 5. Checks XmlAssert.Equal(containerXml1, containerXml2, XmlAssertOptions.Verbatim);
+        /// </summary>
+        /// <typeparam name="T">The type of <paramref name="item"/></typeparam>
+        /// <param name="item">The instance to roundtrip</param>
+        /// <returns>The serialized and deserialized instance (container2.Other)</returns>
         public static T RoundTrip<T>(T item)
         {
-            var actualXml = ToXml(item, nameof(item));
-            var container = new ContainerClass<T>(item);
-            var expectedContainerXml = CreateExpectedContainerXml<T>(actualXml);
-            var actualContainerXml = ToXml(container, nameof(container));
-            XmlAssert.Equal(expectedContainerXml, actualContainerXml);
+            var container1 = new ContainerClass<T>(item);
+            var containerXml1 = ToXml(container1, nameof(container1));
 
             // doing it twice to catch errors when deserializing
-            container = FromXml<ContainerClass<T>>(actualContainerXml, nameof(container));
-            actualContainerXml = ToXml(container, nameof(container));
-            XmlAssert.Equal(expectedContainerXml, actualContainerXml);
+            var container2 = FromXml<ContainerClass<T>>(containerXml1, nameof(container1));
+            FieldAssert.Equal(container1, container2);
+            var containerXml2 = ToXml(container2, nameof(container2));
+            XmlAssert.Equal(containerXml1, containerXml2, XmlAssertOptions.Verbatim);
 
-            return container.Other;
+            return container2.Other;
         }
 
         /// <summary>
@@ -134,36 +129,7 @@ namespace Gu.SerializationAsserts
             }
             catch (Exception e)
             {
-                throw AssertException.CreateFromException($"Could not deserialize {xml} to an instance of type {typeof(T)}", e);
-            }
-        }
-
-        private static string CreateExpectedContainerXml<T>(string actual)
-        {
-            var xml = ToXml(new ContainerClass<T>(default(T)), nameof(ContainerClass<T>)).Lines();
-            var xmlDeclaration = xml[0];
-            var root = xml[1].Replace("/>", ">");
-            var endRoot = $"</{root.Substring(1, root.IndexOf(" ") - 1)}>";
-            using (var writer = new IndentedTextWriter(new StringWriter(), "  "))
-            {
-                writer.WriteLine(xmlDeclaration);
-                writer.WriteLine(root);
-                writer.Indent++;
-                foreach (var element in new[] { "First", "Other" })
-                {
-                    writer.WriteLine($"<{element}>");
-                    for (int i = 2; i < actual.Lines().Length - 1; i++)
-                    {
-                        var row = actual.Lines()[i];
-                        writer.WriteLine(row);
-                    }
-
-                    writer.WriteLine($"</{element}>");
-                }
-
-                writer.Indent--;
-                writer.Write(endRoot);
-                return writer.InnerWriter.ToString();
+                throw AssertException.CreateFromException($"Could not deserialize {parameterName} to an instance of type {typeof(T)}", e);
             }
         }
 

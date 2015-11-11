@@ -1,5 +1,6 @@
 ﻿namespace Gu.SerializationAsserts.Tests
 {
+    using System;
 
     using NUnit.Framework;
 
@@ -71,6 +72,7 @@
                      "  Expected: <?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n" +
                      "  But was:  <Dummy xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n" +
                      "  -----------^";
+            Console.WriteLine(ext.Message);
             Assert.AreEqual(em, ext.Message);
         }
 

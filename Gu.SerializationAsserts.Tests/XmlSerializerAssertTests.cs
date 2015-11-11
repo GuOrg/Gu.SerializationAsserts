@@ -79,6 +79,25 @@
         }
 
         [Test]
+        public void EqualXmlAttributeClass()
+        {
+            var actual = new XmlAttributeClass { Value = 2 };
+            var expectedXml = "<XmlAttributeClass Value=\"2\" />";
+            var roundtrip = XmlSerializerAssert.Equal(expectedXml, actual, XmlAssertOptions.IgnoreNameSpaces | XmlAssertOptions.IgnoreDeclaration);
+            Assert.AreEqual(roundtrip.Value, actual.Value);
+            FieldAssert.Equal(actual, roundtrip);
+        }
+
+        [Test]
+        public void ForgotReadEndElement()
+        {
+            var actual = new ForgotReadEndElement { Value = 2 };
+            var expectedXml = "<ForgotReadEndElement><Value>2</Value></ForgotReadEndElement>";
+            var ex = Assert.Throws<AssertException>(()=> XmlSerializerAssert.Equal(expectedXml, actual, XmlAssertOptions.IgnoreNameSpaces | XmlAssertOptions.IgnoreDeclaration));
+            //Assert.AreEqual("Not sure what to write here", ex.Message);
+        }
+
+        [Test]
         public void EqualThrowsOnMissingDeclarationWhenVerbatim()
         {
             var actual = new Dummy { Value = 2 };

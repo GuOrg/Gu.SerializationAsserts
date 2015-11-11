@@ -37,6 +37,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <Choose>
     <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
@@ -53,8 +54,10 @@
     <Compile Include="DataContractSerializerAssertTests.Attibutes.cs" />
     <Compile Include="DataContractSerializerAssertTests.strings.cs" />
     <Compile Include="Dtos\DataContractDummy.cs" />
+    <Compile Include="Dtos\ForgotReadEndElement.cs" />
     <Compile Include="Dtos\MissingAttributes.cs" />
     <Compile Include="Dtos\Parent.cs" />
+    <Compile Include="Dtos\XmlAttributeClass.cs" />
     <Compile Include="FieldsAssertTests.cs" />
     <Compile Include="Comparers\FieldsEqualsComparerTests.cs" />
     <Compile Include="Dtos\Dummy.cs" />
