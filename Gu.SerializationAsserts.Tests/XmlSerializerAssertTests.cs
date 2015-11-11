@@ -60,9 +60,9 @@
             var ex = Assert.Throws<AssertException>(() => XmlSerializerAssert.Equal(expected, actual));
             var expectedMessage = "  String lengths are both 201.\r\n" +
                                   "  Strings differ at line 3 index 7.\r\n" +
-                                  "  Expected: <Value>1</Value>\r\n" +
-                                  "  But was:  <Value>2</Value>\r\n" +
-                                  "  -----------------^";
+                                  "  Expected: 3| <Value>1</Value>\r\n" +
+                                  "  But was:  3| <Value>2</Value>\r\n" +
+                                  "  --------------------^";
             Assert.AreEqual(expectedMessage, ex.Message);
         }
 
@@ -107,9 +107,9 @@
             var ex = Assert.Throws<AssertException>(() => XmlSerializerAssert.Equal(expectedXml, actual, XmlAssertOptions.Verbatim));
             var expectedMessage = "  Expected string length 37 but was 177.\r\n" +
                                   "  Strings differ at line 1 index 1.\r\n" +
-                                  "  Expected: <Dummy>\r\n" +
-                                  "  But was:  <?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n" +
-                                  "  -----------^";
+                                  "  Expected: 1| <Dummy>\r\n" +
+                                  "  But was:  1| <?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n" +
+                                  "  --------------^";
             Assert.AreEqual(expectedMessage, ex.Message);
         }
 

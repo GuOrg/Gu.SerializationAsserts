@@ -7,7 +7,7 @@
     using System.Xml.Linq;
 
     [DebuggerDisplay("ElementName: {Element.Name}")]
-    internal class XElementAndSource
+    internal class XElementAndSource : IXAndSource
     {
         public XElementAndSource(string sourceXml, XElement element, XmlAssertOptions options)
         {

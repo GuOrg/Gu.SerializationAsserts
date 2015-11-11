@@ -2,7 +2,7 @@
 {
     using System.Xml.Linq;
 
-    internal class XDocumentAndSource
+    internal class XDocumentAndSource : IXAndSource
     {
         public XDocumentAndSource(string sourceXml, XDocument document, XmlAssertOptions options)
         {
@@ -19,6 +19,8 @@
         public XDocument Document { get; }
 
         public XmlAssertOptions Options { get;  }
+
+        public int LineNumber { get; } = 1;
 
         public XElementAndSource Element { get;  }
     }

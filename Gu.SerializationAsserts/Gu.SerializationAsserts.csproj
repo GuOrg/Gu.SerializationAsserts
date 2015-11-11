@@ -79,6 +79,7 @@
     <Compile Include="Internals\TypeExt.cs" />
     <Compile Include="Comparers\DeepEquals\ComparedItem.cs" />
     <Compile Include="Internals\XNameComparer.cs" />
+    <Compile Include="Monads\IXAndSource.cs" />
     <Compile Include="Monads\XAttributeAndSource.cs" />
     <Compile Include="Monads\XDocumentAndSource.cs" />
     <Compile Include="Monads\XElementAndSource.cs" />

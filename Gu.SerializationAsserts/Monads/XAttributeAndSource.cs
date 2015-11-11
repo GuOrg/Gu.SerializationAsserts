@@ -5,7 +5,7 @@ namespace Gu.SerializationAsserts
     using System.Xml.Linq;
 
     [DebuggerDisplay("AttributeName: {Attribute.Name}, Value: {Attribute.Value}")]
-    internal class XAttributeAndSource
+    internal class XAttributeAndSource : IXAndSource
     {
         public XAttributeAndSource(string sourceXml, XAttribute attribute, XmlAssertOptions options)
         {

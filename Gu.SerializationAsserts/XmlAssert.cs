@@ -26,7 +26,7 @@
             {
                 if (!FieldsEqualsComparer<XDeclaration>.Default.Equals(expected.Document.Declaration, actual.Document.Declaration))
                 {
-                    var message = CreateMessage(1, expected.SourceXml, actual.SourceXml);
+                    var message = CreateMessage(expected, actual);
                     throw new AssertException(message);
                 }
             }
@@ -38,7 +38,7 @@
         {
             if (!XNameComparer.GetFor(options).Equals(expected.Element.Name, actual.Element.Name))
             {
-                var message = CreateMessage(expected.LineNumber, expected.SourceXml, actual.SourceXml);
+                var message = CreateMessage(expected, actual);
                 throw new AssertException(message);
             }
 
@@ -47,7 +47,7 @@
                 var message = $"  Number of attributes does not macth for {expected.Element.Name.LocalName}\r\n" +
                               $"  Expected: {expected.Attributes.Count}\r\n" +
                               $"  But was:  {actual.Attributes.Count}\r\n" +
-                              CreateMessage(expected.LineNumber, expected.SourceXml, actual.SourceXml);
+                              CreateMessage( expected, actual);
                 throw new AssertException(message);
             }
 
@@ -57,7 +57,7 @@
             {
                 if (expected.Element.Value != actual.Element.Value)
                 {
-                    var message = CreateMessage(expected.LineNumber, expected.SourceXml, actual.SourceXml);
+                    var message = CreateMessage(expected, actual);
                     throw new AssertException(message);
                 }
 
@@ -69,7 +69,7 @@
                 var message = $"  Number of elements does not macth for {expected.Element.Name}\r\n" +
                               $"  Expected: {expected.Elements.Count}\r\n" +
                               $"  But was:  {actual.Elements.Count}\r\n" +
-                              CreateMessage(expected.LineNumber, expected.SourceXml, actual.SourceXml);
+                              CreateMessage(expected, actual);
                 throw new AssertException(message);
             }
 
@@ -91,7 +91,7 @@
             if (!XNameComparer.GetFor(options).Equals(expected.Attribute.Name, actual.Attribute.Name) ||
                 expected.Attribute.Value != actual.Attribute.Value)
             {
-                var message = CreateMessage(expected.LineNumber, expected.SourceXml, actual.SourceXml);
+                var message = CreateMessage(expected, actual);
                 throw new AssertException(message);
             }
         }
@@ -118,27 +118,27 @@
             }
         }
 
-        private static string CreateMessage(int lineNumber, string expected, string actual)
+        private static string CreateMessage(IXAndSource expected, IXAndSource actual)
         {
-            var expectedLine = expected.Line(lineNumber).Trim();
-            var actualLine = actual.Line(lineNumber).Trim();
+            var expectedLine = expected.SourceXml.Line(expected.LineNumber).Trim();
+            var actualLine = actual.SourceXml.Line(actual.LineNumber).Trim();
             var index = expectedLine.FirstDiff(actualLine);
 
             using (var writer = new StringWriter())
             {
                 if (expectedLine.Length != actualLine.Length)
                 {
-                    writer.WriteLine($"  Expected string length {expected.Length} but was {actual.Length}.");
+                    writer.WriteLine($"  Expected string length {expected.SourceXml.Length} but was {actual.SourceXml.Length}.");
                 }
                 else
                 {
-                    writer.WriteLine($"  String lengths are both {expected.Length}.");
+                    writer.WriteLine($"  String lengths are both {expected.SourceXml.Length}.");
                 }
 
-                writer.WriteLine($"  Strings differ at line {lineNumber} index {index}.");
-                writer.WriteLine($"  Expected: {expectedLine}");
-                writer.WriteLine($"  But was:  {actualLine}");
-                writer.Write($"  {new string('-', index + 10)}^");
+                writer.WriteLine($"  Strings differ at line {expected.LineNumber} index {index}.");
+                writer.WriteLine($"  Expected: {expected.LineNumber}| {expectedLine}");
+                writer.WriteLine($"  But was:  {actual.LineNumber}| {actualLine}");
+                writer.Write($"  {new string('-', index + 13)}^");
                 return writer.ToString();
             }
         }

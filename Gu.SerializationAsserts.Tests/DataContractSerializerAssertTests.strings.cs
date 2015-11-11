@@ -60,9 +60,9 @@
             var ex = Assert.Throws<AssertException>(() => DataContractSerializerAssert.Equal(expected, actual));
             var expectedMessage = "  String lengths are both 237.\r\n" +
                                   "  Strings differ at line 3 index 7.\r\n" +
-                                  "  Expected: <Value>1</Value>\r\n" +
-                                  "  But was:  <Value>2</Value>\r\n" +
-                                  "  -----------------^";
+                                  "  Expected: 3| <Value>1</Value>\r\n" +
+                                  "  But was:  3| <Value>2</Value>\r\n" +
+                                  "  --------------------^";
             Assert.AreEqual(expectedMessage, ex.Message);
         }
 
