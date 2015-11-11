@@ -1,19 +1,13 @@
 namespace Gu.SerializationAsserts
 {
-    using System;
-
     public static class AssertSerialization
     {
-        public static T[] RoundtripAll<T>(T item, bool assertAreEqual = true)
+        public static RoundtripResults<T> RoundtripAll<T>(T item)
         {
-            throw new NotImplementedException(string.Empty);
-
-            // return new[]
-            //           {
-            //               BinaryFormatterRoundtrip(item, assertAreEqual),
-            //               XmlSerializerRoundtrip(item,null, assertAreEqual),
-            //               DataContractSerializerRoundtrip(item, assertAreEqual),
-            //           };
+            var binary = BinaryFormatterAssert.Roundtrip(item);
+            var xmlSerializer = XmlSerializerAssert.RoundTrip(item);
+            var dataContract = DataContractSerializerAssert.RoundTrip(item);
+            return new RoundtripResults<T>(binary, xmlSerializer, dataContract);
         }
     }
 }

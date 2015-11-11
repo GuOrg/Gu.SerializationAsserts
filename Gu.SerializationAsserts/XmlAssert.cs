@@ -1,40 +1,57 @@
 ﻿namespace Gu.SerializationAsserts
 {
     using System;
-    using System.CodeDom.Compiler;
     using System.Collections.Generic;
     using System.IO;
     using System.Xml.Linq;
 
     public static class XmlAssert
     {
-        public static void Equal(string expected, string actual)
+        /// <summary>
+        /// Parses the xml and compares expected to actual.
+        /// </summary>
+        /// <param name="expected">The expected xml</param>
+        /// <param name="actual">The actual xml</param>
+        /// <param name="options">How to compare the xml</param>
+        public static void Equal(string expected, string actual, XmlAssertOptions options = XmlAssertOptions.Verbatim)
         {
-            var expectedXml = ParseDocument(expected, nameof(expected));
-            var actualXml = ParseDocument(actual, nameof(actual));
-            Equal(expectedXml, actualXml);
+            var expectedXml = ParseDocument(expected, nameof(expected), options);
+            var actualXml = ParseDocument(actual, nameof(actual), options);
+            Equal(expectedXml, actualXml, options);
         }
 
-        private static void Equal(XDocumentAndSource expected, XDocumentAndSource actual)
+        private static void Equal(XDocumentAndSource expected, XDocumentAndSource actual, XmlAssertOptions options)
         {
-            if (!FieldsEqualsComparer<XDeclaration>.Default.Equals(expected.Document.Declaration, actual.Document.Declaration))
+            if (!options.HasFlag(XmlAssertOptions.IgnoreDeclaration))
             {
-                var message = CreateMessage(1, expected.SourceXml, actual.SourceXml);
-                throw new AssertException(message);
+                if (!FieldsEqualsComparer<XDeclaration>.Default.Equals(expected.Document.Declaration, actual.Document.Declaration))
+                {
+                    var message = CreateMessage(1, expected.SourceXml, actual.SourceXml);
+                    throw new AssertException(message);
+                }
             }
 
-            Equal(expected.Element, actual.Element);
+            Equal(expected.Element, actual.Element, options);
         }
 
-        private static void Equal(XElementAndSource expected, XElementAndSource actual)
+        private static void Equal(XElementAndSource expected, XElementAndSource actual, XmlAssertOptions options)
         {
-            if (expected.Element.Name != actual.Element.Name)
+            if (!XNameComparer.GetFor(options).Equals(expected.Element.Name, actual.Element.Name))
             {
                 var message = CreateMessage(expected.LineNumber, expected.SourceXml, actual.SourceXml);
                 throw new AssertException(message);
             }
 
-            Equal(expected.Attributes, actual.Attributes);
+            if (expected.Attributes.Count != actual.Attributes.Count)
+            {
+                var message = $"  Number of attributes does not macth for {expected.Element.Name.LocalName}\r\n" +
+                              $"  Expected: {expected.Attributes.Count}\r\n" +
+                              $"  But was:  {actual.Attributes.Count}\r\n" +
+                              CreateMessage(expected.LineNumber, expected.SourceXml, actual.SourceXml);
+                throw new AssertException(message);
+            }
+
+            Equal(expected.Attributes, actual.Attributes, options);
 
             if (expected.Elements.Count == 0 && actual.Elements.Count == 0)
             {
@@ -47,22 +64,31 @@
                 return;
             }
 
-            Equal(expected.Elements, actual.Elements);
+            if (expected.Elements.Count != actual.Elements.Count)
+            {
+                var message = $"  Number of elements does not macth for {expected.Element.Name}\r\n" +
+                              $"  Expected: {expected.Elements.Count}\r\n" +
+                              $"  But was:  {actual.Elements.Count}\r\n" +
+                              CreateMessage(expected.LineNumber, expected.SourceXml, actual.SourceXml);
+                throw new AssertException(message);
+            }
+
+            Equal(expected.Elements, actual.Elements, options);
         }
 
-        private static void Equal(IReadOnlyList<XAttributeAndSource> expecteds, IReadOnlyList<XAttributeAndSource> actuals)
+        private static void Equal(IReadOnlyList<XAttributeAndSource> expecteds, IReadOnlyList<XAttributeAndSource> actuals, XmlAssertOptions options)
         {
             for (int i = 0; i < Math.Max(expecteds.Count, actuals.Count); i++)
             {
                 var expected = expecteds.ElementAtOrDefault(i);
                 var actual = actuals.ElementAtOrDefault(i);
-                Equal(expected, actual);
+                Equal(expected, actual, options);
             }
         }
 
-        private static void Equal(XAttributeAndSource expected, XAttributeAndSource actual)
+        private static void Equal(XAttributeAndSource expected, XAttributeAndSource actual, XmlAssertOptions options)
         {
-            if (expected.Attribute.Name != actual.Attribute.Name ||
+            if (!XNameComparer.GetFor(options).Equals(expected.Attribute.Name, actual.Attribute.Name) ||
                 expected.Attribute.Value != actual.Attribute.Value)
             {
                 var message = CreateMessage(expected.LineNumber, expected.SourceXml, actual.SourceXml);
@@ -70,21 +96,21 @@
             }
         }
 
-        private static void Equal(IReadOnlyList<XElementAndSource> expecteds, IReadOnlyList<XElementAndSource> actuals)
+        private static void Equal(IReadOnlyList<XElementAndSource> expecteds, IReadOnlyList<XElementAndSource> actuals, XmlAssertOptions options)
         {
             for (int i = 0; i < Math.Max(expecteds.Count, actuals.Count); i++)
             {
                 var expected = expecteds.ElementAtOrDefault(i);
                 var actual = actuals.ElementAtOrDefault(i);
-                Equal(expected, actual);
+                Equal(expected, actual, options);
             }
         }
 
-        private static XDocumentAndSource ParseDocument(string xml, string parameterName)
+        private static XDocumentAndSource ParseDocument(string xml, string parameterName, XmlAssertOptions options)
         {
             try
             {
-                return new XDocumentAndSource(xml, XDocument.Parse(xml, LoadOptions.PreserveWhitespace | LoadOptions.SetLineInfo));
+                return new XDocumentAndSource(xml, XDocument.Parse(xml, LoadOptions.PreserveWhitespace | LoadOptions.SetLineInfo), options);
             }
             catch (Exception e)
             {

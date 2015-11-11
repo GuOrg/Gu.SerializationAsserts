@@ -1,18 +1,22 @@
-namespace Gu.SerializationAsserts
+﻿namespace Gu.SerializationAsserts
 {
     using System;
     using System.CodeDom.Compiler;
     using System.IO;
     using System.Linq;
-    using System.Xml.Serialization;
+    using System.Runtime.Serialization;
+    using System.Text;
+    using System.Xml;
 
     /// <summary>
-    /// Test serialization using  <see cref="XmlSerializer"/>
+    /// Test serialization using  <see cref="DataContractSerializer"/>
     /// </summary>
-    public static class XmlSerializerAssert
+    public static partial class DataContractSerializerAssert
     {
+        public static readonly XmlWriterSettings XmlWriterSettings = new XmlWriterSettings {Indent = true, IndentChars = "  "};
+
         /// <summary>
-        /// 1. serializes <paramref name="expected"/> and <paramref name="actual"/> to xml strings using <see cref="XmlSerializer"/>
+        /// 1. serializes <paramref name="expected"/> and <paramref name="actual"/> to xml strings using <see cref="DataContractSerializer"/>
         /// 2. Compares the xml using <see cref="XmlAssert"/>
         /// </summary>
         /// <typeparam name="T">The type</typeparam>
@@ -26,9 +30,9 @@ namespace Gu.SerializationAsserts
         }
 
         /// <summary>
-        /// 1 Serializes <paramref name="actual"/> to an xml string using <see cref="XmlSerializer"/>
+        /// 1 Serializes <paramref name="actual"/> to an xml string using <see cref="DataContractSerializer"/>
         /// 2 Compares the xml with <paramref name="expectedXml"/>
-        /// 3 Creates a ContainerClass{T} this is to catch errors in ReadEndElement() when implementing <see cref="IXmlSerializable"/>
+        /// 3 Creates a ContainerClass{T} this is to catch errors in ReadEndElement() when implementing <see cref="System.Xml.Serialization.IXmlSerializable"/>
         /// 4 Serializes it to xml.
         /// 5 Compares the xml
         /// 6 Deserializes it to container class
@@ -48,12 +52,12 @@ namespace Gu.SerializationAsserts
             var container = new ContainerClass<T>(actual);
             var expectedContainerXml = CreateExpectedContainerXml<T>(actualXml);
             var actualContainerXml = ToXml(container, nameof(container));
-            XmlAssert.Equal(expectedContainerXml, actualContainerXml, options);
+            XmlAssert.Equal(expectedContainerXml, actualContainerXml, XmlAssertOptions.IgnoreNameSpaces);
 
             // doing it twice to catch errors when deserializing
             container = FromXml<ContainerClass<T>>(actualContainerXml, nameof(container));
             actualContainerXml = ToXml(container, nameof(container));
-            XmlAssert.Equal(expectedContainerXml, actualContainerXml, options);
+            XmlAssert.Equal(expectedContainerXml, actualContainerXml, XmlAssertOptions.IgnoreNameSpaces);
 
             return container.Other;
         }
@@ -64,18 +68,18 @@ namespace Gu.SerializationAsserts
             var container = new ContainerClass<T>(item);
             var expectedContainerXml = CreateExpectedContainerXml<T>(actualXml);
             var actualContainerXml = ToXml(container, nameof(container));
-            XmlAssert.Equal(expectedContainerXml, actualContainerXml);
+            XmlAssert.Equal(expectedContainerXml, actualContainerXml, XmlAssertOptions.IgnoreNameSpaces);
 
             // doing it twice to catch errors when deserializing
             container = FromXml<ContainerClass<T>>(actualContainerXml, nameof(container));
             actualContainerXml = ToXml(container, nameof(container));
-            XmlAssert.Equal(expectedContainerXml, actualContainerXml);
+            XmlAssert.Equal(expectedContainerXml, actualContainerXml, XmlAssertOptions.IgnoreNameSpaces);
 
             return container.Other;
         }
 
         /// <summary>
-        /// 1. Creates an XmlSerializer(typeof(T))
+        /// 1. Creates an DataContractSerializer(typeof(T))
         /// 2. Serialize <paramref name="item"/>
         /// 3. Returns the xml
         /// </summary>
@@ -93,7 +97,7 @@ namespace Gu.SerializationAsserts
         }
 
         /// <summary>
-        /// 1. Creates an XmlSerializer(typeof(T))
+        /// 1. Creates an DataContractSerializer(typeof(T))
         /// 2. Deserialize <paramref name="xml"/>
         /// 3. Returns the deserialized instance
         /// </summary>
@@ -109,12 +113,14 @@ namespace Gu.SerializationAsserts
         {
             try
             {
-                var serializer = new XmlSerializer(typeof(T));
-                using (var writer = new StringWriter())
+                var serializer = new DataContractSerializer(typeof(T));
+                var stringBuilder = new StringBuilder();
+                using (var writer = XmlWriter.Create(stringBuilder, XmlWriterSettings))
                 {
-                    serializer.Serialize(writer, item);
-                    return writer.ToString();
+                    serializer.WriteObject(writer, item);
                 }
+
+                return stringBuilder.ToString();
             }
             catch (Exception e)
             {
@@ -126,21 +132,22 @@ namespace Gu.SerializationAsserts
         {
             try
             {
-                var serializer = new XmlSerializer(typeof(T));
-                using (var reader = new StringReader(xml))
+                var serializer = new DataContractSerializer(typeof(T));
+                using (var reader = new XmlTextReader(new StringReader(xml)))
                 {
-                    return (T)serializer.Deserialize(reader);
+                    return (T)serializer.ReadObject(reader);
                 }
             }
             catch (Exception e)
             {
-                throw AssertException.CreateFromException($"Could not deserialize {xml} to an instance of type {typeof(T)}", e);
+                throw AssertException.CreateFromException($"Could not deserialize {parameterName} to an instance of type {typeof(T)}", e);
             }
         }
 
         private static string CreateExpectedContainerXml<T>(string actual)
         {
-            var xml = ToXml(new ContainerClass<T>(default(T)), nameof(ContainerClass<T>)).Lines();
+            var containerClass = new ContainerClass<T>(default(T));
+            var xml = ToXml(containerClass, nameof(ContainerClass<T>)).Lines();
             var xmlDeclaration = xml[0];
             var root = xml[1].Replace("/>", ">");
             var endRoot = $"</{root.Substring(1, root.IndexOf(" ") - 1)}>";
@@ -149,7 +156,7 @@ namespace Gu.SerializationAsserts
                 writer.WriteLine(xmlDeclaration);
                 writer.WriteLine(root);
                 writer.Indent++;
-                foreach (var element in new[] { "First", "Other" })
+                foreach (var element in new[] { nameof(containerClass.First), nameof(containerClass.Other) })
                 {
                     writer.WriteLine($"<{element}>");
                     for (int i = 2; i < actual.Lines().Length - 1; i++)
@@ -163,7 +170,8 @@ namespace Gu.SerializationAsserts
 
                 writer.Indent--;
                 writer.Write(endRoot);
-                return writer.InnerWriter.ToString();
+                var expectedXml = writer.InnerWriter.ToString();
+                return expectedXml;
             }
         }
 

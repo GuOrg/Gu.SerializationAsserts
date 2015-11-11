@@ -48,6 +48,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -60,6 +61,8 @@
     <Compile Include="Comparers\DeepEquals\DeepEqualsNode.cs" />
     <Compile Include="Comparers\FieldsEqualsComparer{T}.cs" />
     <Compile Include="Comparers\DeepEquals\ICompared.cs" />
+    <Compile Include="DataContractSerializerAssert.Attributes.cs" />
+    <Compile Include="DataContractSerializerAssert.cs" />
     <Compile Include="Exceptions\AssertException.cs" />
     <Compile Include="AssertSerialization.cs" />
     <Compile Include="FieldAssert.cs" />
@@ -74,12 +77,15 @@
     <Compile Include="Internals\StringExt.cs" />
     <Compile Include="Internals\TypeExt.cs" />
     <Compile Include="Comparers\DeepEquals\ComparedItem.cs" />
+    <Compile Include="Internals\XNameComparer.cs" />
     <Compile Include="Monads\XAttributeAndSource.cs" />
     <Compile Include="Monads\XDocumentAndSource.cs" />
     <Compile Include="Monads\XElementAndSource.cs" />
+    <Compile Include="RoundtripResults.cs" />
     <Compile Include="XmlAssert.cs" />
     <Compile Include="BinaryFormatterAssert.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="XmlAssertOptions.cs" />
     <Compile Include="XmlSerializerAssert.cs" />
   </ItemGroup>
   <ItemGroup>
