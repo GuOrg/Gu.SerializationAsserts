@@ -15,8 +15,8 @@
         /// <summary>
         /// http://stackoverflow.com/a/324812/1069200
         /// </summary>
-        /// <param name="input"></param>
-        /// <returns></returns>
+        /// <param name="input">The string to escape</param>
+        /// <returns>The escaped string</returns>
         internal static string Escape(this string input)
         {
             using (var writer = new StringWriter())

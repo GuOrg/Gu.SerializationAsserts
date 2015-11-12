@@ -67,6 +67,7 @@
     <Compile Include="Internals\TypeExtTests.cs" />
     <Compile Include="BinaryFormatterAssertTests.cs" />
     <Compile Include="Reminders.cs" />
+    <Compile Include="Sandbox\NUnit.cs" />
     <Compile Include="XmlAssertTests.string.cs" />
     <Compile Include="XmlSerializerAssertTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

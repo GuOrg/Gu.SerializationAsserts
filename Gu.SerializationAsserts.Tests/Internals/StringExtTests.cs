@@ -1,4 +1,6 @@
-﻿namespace Gu.SerializationAsserts.Tests.Internals
+﻿using Gu.SerializationAsserts.Tests.Dtos;
+
+namespace Gu.SerializationAsserts.Tests.Internals
 {
     using System;
     using System.CodeDom;
@@ -26,6 +28,27 @@
                     Assert.AreEqual(code, escaped);
                 }
             }
+        }
+
+        [Test]
+        public void EscapeMultiline()
+        {
+            var text = "a\r\nb";
+            var escaped = text.Escape();
+            Console.WriteLine(escaped);
+            Assert.AreEqual("\"a\\r\\n\" +\r\n\"b\"", escaped);
+        }
+
+        [Test]
+        public void TestName()
+        {
+            var xml = "<?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n" +
+                      "<Dummy xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n" +
+                      "  <Value>2</Value>\r\n" +
+                      "</Dummy>";
+            var dummy = new Dummy(2);
+            var escape = XmlSerializerAssert.ToXml(dummy).Escape();
+            Console.WriteLine(escape);
         }
     }
 }
