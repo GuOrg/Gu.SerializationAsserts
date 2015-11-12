@@ -46,7 +46,7 @@
         {
             var actualXml = ToXml(actual, nameof(actual));
             XmlAssert.Equal(expectedXml, actualXml, options);
-            return RoundTrip(actual);
+            return Roundtrip(actual);
         }
 
         /// <summary>
@@ -59,7 +59,7 @@
         /// <typeparam name="T">The type of <paramref name="item"/></typeparam>
         /// <param name="item">The instance to roundtrip</param>
         /// <returns>The serialized and deserialized instance (container2.Other)</returns>
-        public static T RoundTrip<T>(T item)
+        public static T Roundtrip<T>(T item)
         {
             var container1 = new ContainerClass<T>(item);
             var containerXml1 = ToXml(container1, nameof(container1));

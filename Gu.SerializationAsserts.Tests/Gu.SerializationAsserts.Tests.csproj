@@ -55,6 +55,7 @@
     <Compile Include="DataContractSerializerAssertTests.strings.cs" />
     <Compile Include="Dtos\DataContractDummy.cs" />
     <Compile Include="Dtos\ForgotReadEndElement.cs" />
+    <Compile Include="Dtos\ReadingOutsideEndElement.cs" />
     <Compile Include="Dtos\MissingAttributes.cs" />
     <Compile Include="Dtos\Parent.cs" />
     <Compile Include="Dtos\XmlAttributeClass.cs" />
@@ -71,6 +72,7 @@
     <Compile Include="XmlAssertTests.string.cs" />
     <Compile Include="XmlSerializerAssertTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="XmlSerializerAssertRoundtripTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="paket.references" />

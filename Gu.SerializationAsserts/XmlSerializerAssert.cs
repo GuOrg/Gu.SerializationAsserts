@@ -42,7 +42,7 @@ namespace Gu.SerializationAsserts
         {
             var actualXml = ToXml(actual, nameof(actual));
             XmlAssert.Equal(expectedXml, actualXml, options);
-            return RoundTrip(actual);
+            return Roundtrip(actual);
         }
 
         /// <summary>
@@ -55,18 +55,20 @@ namespace Gu.SerializationAsserts
         /// <typeparam name="T">The type of <paramref name="item"/></typeparam>
         /// <param name="item">The instance to roundtrip</param>
         /// <returns>The serialized and deserialized instance (container2.Other)</returns>
-        public static T RoundTrip<T>(T item)
+        public static T Roundtrip<T>(T item)
         {
-            var container1 = new ContainerClass<T>(item);
-            var containerXml1 = ToXml(container1, nameof(container1));
+            Roundtripper.Simple(item, nameof(item), ToXml, FromXml<T>);
 
-            // doing it twice to catch errors when deserializing
-            var container2 = FromXml<ContainerClass<T>>(containerXml1, nameof(container1));
-            FieldAssert.Equal(container1, container2);
-            var containerXml2 = ToXml(container2, nameof(container2));
-            XmlAssert.Equal(containerXml1, containerXml2, XmlAssertOptions.Verbatim);
+            var roundtripped = Roundtripper.InContainer(
+                item,
+                nameof(item),
+                ToXml,
+                FromXml<ContainerClass<T>>,
+                (e, a) => XmlAssert.Equal(e, a, XmlAssertOptions.Verbatim));
 
-            return container2.Other;
+            FieldAssert.Equal(item, roundtripped);
+
+            return roundtripped;
         }
 
         /// <summary>

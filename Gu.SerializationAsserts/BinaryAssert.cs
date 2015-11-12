@@ -1,7 +1,6 @@
 namespace Gu.SerializationAsserts
 {
     using System;
-    using System.CodeDom.Compiler;
     using System.IO;
     using System.Runtime.Serialization.Formatters.Binary;
 

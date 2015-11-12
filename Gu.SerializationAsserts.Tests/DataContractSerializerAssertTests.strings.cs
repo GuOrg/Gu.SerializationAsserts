@@ -95,7 +95,48 @@
             var actual = new ForgotReadEndElement { Value = 2 };
             var expectedXml = "<ForgotReadEndElement><Value>2</Value></ForgotReadEndElement>";
             var ex = Assert.Throws<AssertException>(() => DataContractSerializerAssert.Equal(expectedXml, actual, XmlAssertOptions.IgnoreNameSpaces | XmlAssertOptions.IgnoreDeclaration));
-            //Assert.AreEqual("Not sure what to write here", ex.Message);
+            var expectedMessage = "  Expected string length 37 but was 177.\r\n" + 
+                                  "  Strings differ at line 1 index 1.\r\n" + "  Expected: 1| <Dummy>\r\n" +
+                                  "  But was:  1| <?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n" +
+                                  "  --------------^";
+            Assert.AreEqual(expectedMessage, ex.Message);
+        }
+
+        [Test]
+        public void ForgotReadEndElementRoundtrip()
+        {
+            var actual = new ForgotReadEndElement { Value = 2 };
+            var ex = Assert.Throws<AssertException>(() => DataContractSerializerAssert.Roundtrip(actual));
+            var expectedMessage = "  Expected string length 37 but was 177.\r\n" +
+                                  "  Strings differ at line 1 index 1.\r\n" + "  Expected: 1| <Dummy>\r\n" +
+                                  "  But was:  1| <?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n" +
+                                  "  --------------^";
+            Assert.AreEqual(expectedMessage, ex.Message);
+        }
+
+        [Test]
+        public void ReadingOutsideEndElementEqual()
+        {
+            var actual = new ReadingOutsideEndElement { Value = 2 };
+            var expectedXml = "<ForgotReadEndElement><Value>2</Value></ForgotReadEndElement>";
+            var ex = Assert.Throws<AssertException>(() => DataContractSerializerAssert.Equal(expectedXml, actual, XmlAssertOptions.IgnoreNameSpaces | XmlAssertOptions.IgnoreDeclaration));
+            var expectedMessage = "  Expected string length 37 but was 177.\r\n"
+                                  + "  Strings differ at line 1 index 1.\r\n" + "  Expected: 1| <Dummy>\r\n"
+                                  + "  But was:  1| <?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n"
+                                  + "  --------------^";
+            Assert.AreEqual(expectedMessage, ex.Message);
+        }
+
+        [Test]
+        public void ReadingOutsideEndElementRoundtrip()
+        {
+            var actual = new ReadingOutsideEndElement { Value = 2 };
+            var ex = Assert.Throws<AssertException>(() => DataContractSerializerAssert.Roundtrip(actual));
+            var expectedMessage = "  Expected string length 37 but was 177.\r\n"
+                      + "  Strings differ at line 1 index 1.\r\n" + "  Expected: 1| <Dummy>\r\n"
+                      + "  But was:  1| <?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n"
+                      + "  --------------^";
+            Assert.AreEqual(expectedMessage, ex.Message);
         }
 
         [Test]
@@ -124,28 +165,12 @@
         }
 
         [Test]
-        public void RoundTrip()
+        public void Roundtrip()
         {
             var actual = new DataContractDummy { Value = 2 };
-            var roundtrip = DataContractSerializerAssert.RoundTrip(actual);
+            var roundtrip = DataContractSerializerAssert.Roundtrip(actual);
             Assert.AreEqual(roundtrip.Value, actual.Value);
             FieldAssert.Equal(actual, roundtrip);
-        }
-
-        [Test, Explicit("Dunno what is right here")]
-        public void RoundTripThrowsOnMissingAttribute()
-        {
-            var actual = new MissingAttributes { Value = 2 };
-            var ex = Assert.Throws<AssertException>(() => DataContractSerializerAssert.RoundTrip(actual));
-            var expected = "  Number of attributes does not macth for First\r\n" +
-                           "  Expected: 0\r\n" +
-                           "  But was:  1\r\n" +
-                           "  Expected string length 290 but was 486.\r\n" +
-                           "  Strings differ at line 3 index 6.\r\n" +
-                           "  Expected: <First>\r\n" +
-                           "  But was:  <First xmlns:d2p1=\"http://schemas.datacontract.org/2004/07/Gu.SerializationAsserts.Tests.Dtos\">\r\n" +
-                           "  ----------------^";
-            Assert.AreEqual(expected, ex.Message);
         }
     }
 }
