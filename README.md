@@ -14,11 +14,11 @@ Compares two xml strings. If they are not equal an `AssertException` is thrown. 
 ##### XmlAssertOptions
 Use `XmlAssertOptions` to compare how the the documents are compared. Sample:
 
-    XmlAssert.Equal(expected, actual, XmlAssertOptions.IgnoreDeclaration | XmlAssertOptions.IgnoreNameSpaces);
+    XmlAssert.Equal(expected, actual, XmlAssertOptions.IgnoreDeclaration | XmlAssertOptions.IgnoreNamespaces);
 
 - Verbatim, the default and strictest mode.
 - IgnoreDeclaration, ignore Xml declaration when comparing.
-- IgnoreNameSpaces, perhaps useful for less verbose tests.
+- IgnoreNamespaces, perhaps useful for less verbose tests.
 - IgnoreElementOrder
 - IgnoreAttributeOrder
 - IgnoreOrder = IgnoreElementOrder | IgnoreAttributeOrder
@@ -42,7 +42,7 @@ A collection of helpers for tests using `XmlSerializer`. The most typical use is
                       "  <Value>2</Value>\r\n" +
                       "</Dummy>";
     var actual = new Dummy { Value = 2 };
-    XmlSerializerAssert.Equal(expectedXml, actual, XmlAssertOptions.IgnoreDeclaration | XmlAssertOptions.IgnoreNameSpaces);
+    XmlSerializerAssert.Equal(expectedXml, actual, XmlAssertOptions.IgnoreDeclaration | XmlAssertOptions.IgnoreNamespaces);
 
 1. Serializes actual to xml
 2. Calls XmlAssert.Equal(expectedXml, actual, options)
@@ -58,3 +58,24 @@ Checks if two instances produces the same xml. Useful for deep equals.
 
 1. Serializes expected and actual
 2. Calls XmlAssert.Equal(expectedXml, actualXml)
+
+## DataContractSerializerAssert 
+Similar to XmlSerializerAssert
+
+`HasDataContractAttribute<T>()` checks that [DataContract] is defined for T
+
+`AllPropertiesHasDataMemberAttributes<T>()` checks that all properties for T has [DataMember]
+
+## BinaryFormatterAssert 
+Similar to XmlSerializerAssert
+
+## FieldAssert
+Checks that all fields are structurally equal recursively. Compares `IEquatable<T>` types using `object.Equals()`.
+Compares collections by element.
+
+If assert fails the output looks like this:
+```
+Found this difference between expected and actual:
+expected[1].value: 5
+  actual[1].value: 2
+```
