@@ -42,7 +42,7 @@ namespace Gu.SerializationAsserts
         {
             var actualXml = ToXml(actual, nameof(actual));
             XmlAssert.Equal(expectedXml, actualXml, options);
-            return RoundTrip(actual);
+            return Roundtrip(actual);
         }
 
         /// <summary>
@@ -55,18 +55,19 @@ namespace Gu.SerializationAsserts
         /// <typeparam name="T">The type of <paramref name="item"/></typeparam>
         /// <param name="item">The instance to roundtrip</param>
         /// <returns>The serialized and deserialized instance (container2.Other)</returns>
-        public static T RoundTrip<T>(T item)
+        public static T Roundtrip<T>(T item)
         {
-            var container1 = new ContainerClass<T>(item);
-            var containerXml1 = ToXml(container1, nameof(container1));
+            Roundtripper.Simple(item, nameof(item), ToXml, FromXml<T>);
+            var roundtripped = Roundtripper.InContainer(
+                item,
+                nameof(item),
+                ToXml,
+                FromXml<ContainerClass<T>>,
+                (e, a) => XmlAssert.Equal(e, a, XmlAssertOptions.Verbatim));
 
-            // doing it twice to catch errors when deserializing
-            var container2 = FromXml<ContainerClass<T>>(containerXml1, nameof(container1));
-            FieldAssert.Equal(container1, container2);
-            var containerXml2 = ToXml(container2, nameof(container2));
-            XmlAssert.Equal(containerXml1, containerXml2, XmlAssertOptions.Verbatim);
+            FieldAssert.Equal(item, roundtripped);
 
-            return container2.Other;
+            return roundtripped;
         }
 
         /// <summary>
@@ -82,6 +83,12 @@ namespace Gu.SerializationAsserts
             return ToXml(item, nameof(item));
         }
 
+        /// <summary>
+        /// Get copy paste friendly xml for <paramref name="item"/>
+        /// </summary>
+        /// <typeparam name="T">The type of <paramref name="item"/></typeparam>
+        /// <param name="item">The item to serialize</param>
+        /// <returns>Xml escaped and ready to paste in code.</returns>
         public static string ToEscapedXml<T>(T item)
         {
             return ToXml(item).Escape(); // wasteful allocation here but np I think;
@@ -100,6 +107,22 @@ namespace Gu.SerializationAsserts
             return FromXml<T>(xml, nameof(xml));
         }
 
+        private static T FromXml<T>(string xml, string parameterName)
+        {
+            try
+            {
+                var serializer = new XmlSerializer(typeof(T));
+                using (var reader = new StringReader(xml))
+                {
+                    return (T)serializer.Deserialize(reader);
+                }
+            }
+            catch (Exception e)
+            {
+                throw AssertException.CreateFromException($"Could not deserialize {parameterName} to an instance of type {typeof(T)}", e);
+            }
+        }
+
         private static string ToXml<T>(T item, string parameterName)
         {
             try
@@ -114,22 +137,6 @@ namespace Gu.SerializationAsserts
             catch (Exception e)
             {
                 throw AssertException.CreateFromException($"Could not serialize{parameterName}.", e);
-            }
-        }
-
-        public static T FromXml<T>(string xml, string parameterName)
-        {
-            try
-            {
-                var serializer = new XmlSerializer(typeof(T));
-                using (var reader = new StringReader(xml))
-                {
-                    return (T)serializer.Deserialize(reader);
-                }
-            }
-            catch (Exception e)
-            {
-                throw AssertException.CreateFromException($"Could not deserialize {parameterName} to an instance of type {typeof(T)}", e);
             }
         }
 

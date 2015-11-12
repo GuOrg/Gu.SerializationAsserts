@@ -1,7 +1,5 @@
 ﻿namespace Gu.SerializationAsserts.Tests
 {
-    using System;
-
     using Gu.SerializationAsserts.Tests.Dtos;
 
     using NUnit.Framework;

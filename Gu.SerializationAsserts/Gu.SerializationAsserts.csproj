@@ -65,7 +65,8 @@
     <Compile Include="DataContractSerializerAssert.Attributes.cs" />
     <Compile Include="DataContractSerializerAssert.cs" />
     <Compile Include="Exceptions\AssertException.cs" />
-    <Compile Include="AssertSerialization.cs" />
+    <Compile Include="Internals\Roundtripper.cs" />
+    <Compile Include="SerializationAssert.cs" />
     <Compile Include="FieldAssert.cs" />
     <Compile Include="Ensure\Ensure.Collections.cs" />
     <Compile Include="Ensure\Ensure.Compare.cs" />

@@ -51,10 +51,12 @@
     <Compile Include="BinaryAssertTests.T.cs" />
     <Compile Include="Comparers\BinaryEqualsComparerTests.cs" />
     <Compile Include="Comparers\DeepEquals\ComparisonTest.cs" />
+    <Compile Include="DataContractSerializerAssertTestsRoundtrip.cs" />
     <Compile Include="DataContractSerializerAssertTests.Attibutes.cs" />
     <Compile Include="DataContractSerializerAssertTests.strings.cs" />
     <Compile Include="Dtos\DataContractDummy.cs" />
     <Compile Include="Dtos\ForgotReadEndElement.cs" />
+    <Compile Include="Dtos\ReadingOutsideEndElement.cs" />
     <Compile Include="Dtos\MissingAttributes.cs" />
     <Compile Include="Dtos\Parent.cs" />
     <Compile Include="Dtos\XmlAttributeClass.cs" />
@@ -71,6 +73,7 @@
     <Compile Include="XmlAssertTests.string.cs" />
     <Compile Include="XmlSerializerAssertTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="XmlSerializerAssertTestsRoundtrip.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="paket.references" />

@@ -1,10 +1,11 @@
 ﻿namespace Gu.SerializationAsserts.Tests.Dtos
 {
+    using System;
     using System.Xml;
     using System.Xml.Schema;
     using System.Xml.Serialization;
 
-    public class ForgotReadEndElement : IXmlSerializable
+    public class ReadingOutsideEndElement : IXmlSerializable
     {
         public int Value { get; set; }
 
@@ -15,6 +16,12 @@
             reader.MoveToContent();
             reader.Read();
             this.Value = XmlConvert.ToInt32(reader.ReadElementString(nameof(this.Value)));
+            if (reader.NodeType != XmlNodeType.EndElement)
+            {
+                throw new InvalidOperationException();
+            }
+            reader.Read();
+            reader.Read(); // reading once outside the lement
         }
 
         void IXmlSerializable.WriteXml(XmlWriter writer)

@@ -47,6 +47,18 @@
 
         internal IReadOnlyList<FieldInfo> Fields { get; }
 
+        public IEnumerable<DeepEqualsNode> AllChildren()
+        {
+            foreach (var child in this.GetChildren())
+            {
+                yield return child;
+                foreach (var nested in child.AllChildren())
+                {
+                    yield return nested;
+                }
+            }
+        }
+
         internal static DeepEqualsNode CreateFor(object expected, object actual)
         {
             var ec = new ComparedField(expected, null);
@@ -85,18 +97,6 @@
             }
 
             return true;
-        }
-
-        public IEnumerable<DeepEqualsNode> AllChildren()
-        {
-            foreach (var child in this.GetChildren())
-            {
-                yield return child;
-                foreach (var nested in child.AllChildren())
-                {
-                    yield return nested;
-                }
-            }
         }
 
         internal IEnumerable<DeepEqualsNode> GetChildren()

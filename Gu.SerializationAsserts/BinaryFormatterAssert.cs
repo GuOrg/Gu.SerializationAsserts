@@ -5,7 +5,7 @@ namespace Gu.SerializationAsserts
     using System.Runtime.Serialization.Formatters.Binary;
 
     /// <summary>
-    /// Test serialization using  <see cref="BinaryFormatter"/>
+    /// Test serialization using <see cref="BinaryFormatter"/>
     /// </summary>
     public static class BinaryFormatterAssert
     {
@@ -16,7 +16,7 @@ namespace Gu.SerializationAsserts
         /// </summary>
         /// <typeparam name="T">The type of <paramref name="item>"/></typeparam>
         /// <param name="item">The item to serialize</param>
-        /// <returns>The <see cref="T"/> read from the stream</returns>
+        /// <returns>The <typeparamref name="T"/> read from the stream</returns>
         public static T Roundtrip<T>(T item)
         {
             var firstBytes = BinaryAssert.ToBytes(item, typeof(T).Name);
@@ -71,7 +71,7 @@ namespace Gu.SerializationAsserts
         // Using new here to hide it so it not called by mistake
         private new static void Equals(object x, object y)
         {
-            throw new NotSupportedException($"{x}, {y}");
+            throw new AssertException($"Don't call this {x}, {y}");
         }
     }
 }

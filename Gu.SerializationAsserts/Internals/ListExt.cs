@@ -1,7 +1,6 @@
 ﻿namespace Gu.SerializationAsserts
 {
     using System.Collections.Generic;
-    using System.Linq;
 
     internal static class ListExt
     {

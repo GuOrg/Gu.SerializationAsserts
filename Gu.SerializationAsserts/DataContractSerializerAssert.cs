@@ -11,7 +11,7 @@
     /// </summary>
     public static partial class DataContractSerializerAssert
     {
-        public static readonly XmlWriterSettings XmlWriterSettings = new XmlWriterSettings {Indent = true, IndentChars = "  "};
+        private static readonly XmlWriterSettings XmlWriterSettings = new XmlWriterSettings { Indent = true, IndentChars = "  " };
 
         /// <summary>
         /// 1. serializes <paramref name="expected"/> and <paramref name="actual"/> to xml strings using <see cref="DataContractSerializer"/>
@@ -34,7 +34,7 @@
         /// 4 Serializes it to xml.
         /// 5 Compares the xml
         /// 6 Deserializes it to container class
-        /// 7 Does 2 & 3 again, we repeat this to catch any errors from deserializing
+        /// 7 Does 2 and 3 again, we repeat this to catch any errors from deserializing
         /// 8 Returns roundtripped instance
         /// </summary>
         /// <typeparam name="T">The type</typeparam>
@@ -46,7 +46,7 @@
         {
             var actualXml = ToXml(actual, nameof(actual));
             XmlAssert.Equal(expectedXml, actualXml, options);
-            return RoundTrip(actual);
+            return Roundtrip(actual);
         }
 
         /// <summary>
@@ -59,18 +59,20 @@
         /// <typeparam name="T">The type of <paramref name="item"/></typeparam>
         /// <param name="item">The instance to roundtrip</param>
         /// <returns>The serialized and deserialized instance (container2.Other)</returns>
-        public static T RoundTrip<T>(T item)
+        public static T Roundtrip<T>(T item)
         {
-            var container1 = new ContainerClass<T>(item);
-            var containerXml1 = ToXml(container1, nameof(container1));
+            Roundtripper.Simple(item, nameof(item), ToXml, FromXml<T>);
 
-            // doing it twice to catch errors when deserializing
-            var container2 = FromXml<ContainerClass<T>>(containerXml1, nameof(container1));
-            FieldAssert.Equal(container1, container2);
-            var containerXml2 = ToXml(container2, nameof(container2));
-            XmlAssert.Equal(containerXml1, containerXml2);
+            var roundtripped = Roundtripper.InContainer(
+                item,
+                nameof(item),
+                ToXml,
+                FromXml<ContainerClass<T>>,
+                (e, a) => XmlAssert.Equal(e, a, XmlAssertOptions.Verbatim));
 
-            return container2.Other;
+            FieldAssert.Equal(item, roundtripped);
+
+            return roundtripped;
         }
 
         /// <summary>
@@ -86,6 +88,12 @@
             return ToXml(item, nameof(item));
         }
 
+        /// <summary>
+        /// Get copy paste friendly xml for <paramref name="item"/>
+        /// </summary>
+        /// <typeparam name="T">The type of <paramref name="item"/></typeparam>
+        /// <param name="item">The item to serialize</param>
+        /// <returns>Xml escaped and ready to paste in code.</returns>
         public static string ToEscapedXml<T>(T item)
         {
             return ToXml(item).Escape(); // wasteful allocation here but np I think;
@@ -102,6 +110,22 @@
         public static T FromXml<T>(string xml)
         {
             return FromXml<T>(xml, nameof(xml));
+        }
+
+        private static T FromXml<T>(string xml, string parameterName)
+        {
+            try
+            {
+                var serializer = new DataContractSerializer(typeof(T));
+                using (var reader = new XmlTextReader(new StringReader(xml)))
+                {
+                    return (T)serializer.ReadObject(reader);
+                }
+            }
+            catch (Exception e)
+            {
+                throw AssertException.CreateFromException($"Could not deserialize {parameterName} to an instance of type {typeof(T)}", e);
+            }
         }
 
         private static string ToXml<T>(T item, string parameterName)
@@ -123,26 +147,10 @@
             }
         }
 
-        public static T FromXml<T>(string xml, string parameterName)
-        {
-            try
-            {
-                var serializer = new DataContractSerializer(typeof(T));
-                using (var reader = new XmlTextReader(new StringReader(xml)))
-                {
-                    return (T)serializer.ReadObject(reader);
-                }
-            }
-            catch (Exception e)
-            {
-                throw AssertException.CreateFromException($"Could not deserialize {parameterName} to an instance of type {typeof(T)}", e);
-            }
-        }
-
         // Using new here to hide it so it not called by mistake
         private new static void Equals(object x, object y)
         {
-            throw new NotSupportedException($"{x}, {y}");
+            throw new AssertException($"Don't call this {x}, {y}");
         }
     }
 }
