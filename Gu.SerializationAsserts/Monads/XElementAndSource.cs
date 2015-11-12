@@ -33,7 +33,7 @@
         private IReadOnlyList<XAttributeAndSource> CreateAttributes()
         {
             var attributeAndSources = this.Element.Attributes()
-                                          .Where(x => !(this.Options.HasFlag(XmlAssertOptions.IgnoreNameSpaces) && x.IsNamespaceDeclaration))
+                                          .Where(x => !(this.Options.HasFlag(XmlAssertOptions.IgnoreNamespaces) && x.IsNamespaceDeclaration))
                                           .Select(x => new XAttributeAndSource(this.SourceXml, x, this.Options));
             if (this.Options.HasFlag(XmlAssertOptions.IgnoreAttributeOrder))
             {

@@ -5,7 +5,7 @@
 
     public class XNameComparer : IEqualityComparer<XName>, IComparer<XName>
     {
-        public static readonly XNameComparer IgnoringNameSpaces = new XNameComparer(XmlAssertOptions.IgnoreNameSpaces);
+        public static readonly XNameComparer IgnoringNamespaces = new XNameComparer(XmlAssertOptions.IgnoreNamespaces);
         public static readonly XNameComparer Default = new XNameComparer(XmlAssertOptions.Verbatim);
 
         private readonly XmlAssertOptions options;
@@ -17,9 +17,9 @@
 
         public static XNameComparer GetFor(XmlAssertOptions options)
         {
-            if (options.HasFlag(XmlAssertOptions.IgnoreNameSpaces))
+            if (options.HasFlag(XmlAssertOptions.IgnoreNamespaces))
             {
-                return IgnoringNameSpaces;
+                return IgnoringNamespaces;
             }
 
             return Default;
@@ -37,7 +37,7 @@
                 return false;
             }
 
-            if (this.options.HasFlag(XmlAssertOptions.IgnoreNameSpaces))
+            if (this.options.HasFlag(XmlAssertOptions.IgnoreNamespaces))
             {
                 return x.LocalName == y.LocalName;
             }
@@ -48,7 +48,7 @@
         public int GetHashCode(XName obj)
         {
             Ensure.NotNull(obj, nameof(obj));
-            if (this.options.HasFlag(XmlAssertOptions.IgnoreNameSpaces))
+            if (this.options.HasFlag(XmlAssertOptions.IgnoreNamespaces))
             {
                 return obj.LocalName.GetHashCode();
             }
@@ -73,7 +73,7 @@
                 return 1;
             }
 
-            if (this.options.HasFlag(XmlAssertOptions.IgnoreNameSpaces))
+            if (this.options.HasFlag(XmlAssertOptions.IgnoreNamespaces))
             {
                 return string.CompareOrdinal(x.LocalName, y.LocalName);
             }

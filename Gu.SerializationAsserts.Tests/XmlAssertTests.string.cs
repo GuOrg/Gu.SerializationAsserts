@@ -79,7 +79,7 @@
         }
 
         [Test]
-        public void HappyPathIgnoreNameSpaces()
+        public void HappyPathIgnoreNamespaces()
         {
             var expected = "<?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n" +
                            "<Dummy xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n" +
@@ -95,7 +95,7 @@
                          "  </Outer>\r\n" +
                          "</Dummy>";
 
-            XmlAssert.Equal(expected, actual, XmlAssertOptions.IgnoreNameSpaces);
+            XmlAssert.Equal(expected, actual, XmlAssertOptions.IgnoreNamespaces);
         }
 
         [Test]
@@ -159,7 +159,7 @@
         }
 
         [Test]
-        public void WrongNameSpaces()
+        public void WrongNamespaces()
         {
             var expected = "<?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n" +
                            "<Dummy xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n" +

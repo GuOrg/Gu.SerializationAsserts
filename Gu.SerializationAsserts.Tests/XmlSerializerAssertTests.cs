@@ -73,7 +73,7 @@
             var expectedXml = "<Dummy>\r\n" +
                               "  <Value>2</Value>\r\n" +
                               "</Dummy>";
-            var roundtrip = XmlSerializerAssert.Equal(expectedXml, actual, XmlAssertOptions.IgnoreNameSpaces | XmlAssertOptions.IgnoreDeclaration);
+            var roundtrip = XmlSerializerAssert.Equal(expectedXml, actual, XmlAssertOptions.IgnoreNamespaces | XmlAssertOptions.IgnoreDeclaration);
             Assert.AreEqual(roundtrip.Value, actual.Value);
             FieldAssert.Equal(actual, roundtrip);
         }
@@ -83,7 +83,7 @@
         {
             var actual = new XmlAttributeClass { Value = 2 };
             var expectedXml = "<XmlAttributeClass Value=\"2\" />";
-            var roundtrip = XmlSerializerAssert.Equal(expectedXml, actual, XmlAssertOptions.IgnoreNameSpaces | XmlAssertOptions.IgnoreDeclaration);
+            var roundtrip = XmlSerializerAssert.Equal(expectedXml, actual, XmlAssertOptions.IgnoreNamespaces | XmlAssertOptions.IgnoreDeclaration);
             Assert.AreEqual(roundtrip.Value, actual.Value);
             FieldAssert.Equal(actual, roundtrip);
         }
@@ -93,7 +93,7 @@
         {
             var actual = new ForgotReadEndElement { Value = 2 };
             var expectedXml = "<ForgotReadEndElement><Value>2</Value></ForgotReadEndElement>";
-            var ex = Assert.Throws<AssertException>(()=> XmlSerializerAssert.Equal(expectedXml, actual, XmlAssertOptions.IgnoreNameSpaces | XmlAssertOptions.IgnoreDeclaration));
+            var ex = Assert.Throws<AssertException>(()=> XmlSerializerAssert.Equal(expectedXml, actual, XmlAssertOptions.IgnoreNamespaces | XmlAssertOptions.IgnoreDeclaration));
             var expectedMessage = "  Roundtrip of item in ContainerClass Failed.\r\n" +
                                   "  This means there is an error in serialization.\r\n" +
                                   "  If you are implementing IXmlSerializable check that you handle ReadEndElement properly as it is a common source of bugs.";
@@ -105,7 +105,7 @@
         {
             var actual = new ReadingOutsideEndElement { Value = 2 };
             var expectedXml = "<ReadingOutsideEndElement><Value>2</Value></ReadingOutsideEndElement>";
-            var ex = Assert.Throws<AssertException>(() => XmlSerializerAssert.Equal(expectedXml, actual, XmlAssertOptions.IgnoreNameSpaces | XmlAssertOptions.IgnoreDeclaration));
+            var ex = Assert.Throws<AssertException>(() => XmlSerializerAssert.Equal(expectedXml, actual, XmlAssertOptions.IgnoreNamespaces | XmlAssertOptions.IgnoreDeclaration));
             var expectedMessage = "  Roundtrip of item in ContainerClass Failed.\r\n" +
                                   "  This means there is an error in serialization.\r\n" +
                                   "  If you are implementing IXmlSerializable check that you handle ReadEndElement properly as it is a common source of bugs.";

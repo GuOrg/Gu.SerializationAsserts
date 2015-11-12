@@ -84,7 +84,7 @@
         {
             var actual = new XmlAttributeClass { Value = 2 };
             var expectedXml = "<XmlAttributeClass Value=\"2\" />";
-            var roundtrip = DataContractSerializerAssert.Equal(expectedXml, actual, XmlAssertOptions.IgnoreNameSpaces | XmlAssertOptions.IgnoreDeclaration);
+            var roundtrip = DataContractSerializerAssert.Equal(expectedXml, actual, XmlAssertOptions.IgnoreNamespaces | XmlAssertOptions.IgnoreDeclaration);
             Assert.AreEqual(roundtrip.Value, actual.Value);
             FieldAssert.Equal(actual, roundtrip);
         }
@@ -94,7 +94,7 @@
         {
             var actual = new ReadingOutsideEndElement { Value = 2 };
             var expectedXml = "<ReadingOutsideEndElement><Value>2</Value></ReadingOutsideEndElement>";
-            var ex = Assert.Throws<AssertException>(() => DataContractSerializerAssert.Equal(expectedXml, actual, XmlAssertOptions.IgnoreNameSpaces | XmlAssertOptions.IgnoreDeclaration));
+            var ex = Assert.Throws<AssertException>(() => DataContractSerializerAssert.Equal(expectedXml, actual, XmlAssertOptions.IgnoreNamespaces | XmlAssertOptions.IgnoreDeclaration));
             //var expectedMessage = "  Roundtrip of actual in ContainerClass Failed.\r\n" +
             //                      "  This means there is an error in serialization.\r\n" +
             //                      "  If you are implementing IXmlSerializable check that you handle ReadEndElement properly as it is a common source of bugs.";
@@ -108,7 +108,7 @@
             var expectedXml = "<DataContractDummy>\r\n" +
                               "  <Value>2</Value>\r\n" +
                               "</DataContractDummy>";
-            var roundtrip = DataContractSerializerAssert.Equal(expectedXml, actual, XmlAssertOptions.IgnoreDeclaration | XmlAssertOptions.IgnoreNameSpaces);
+            var roundtrip = DataContractSerializerAssert.Equal(expectedXml, actual, XmlAssertOptions.IgnoreDeclaration | XmlAssertOptions.IgnoreNamespaces);
             Assert.AreEqual(roundtrip.Value, actual.Value);
             FieldAssert.Equal(actual, roundtrip);
         }
