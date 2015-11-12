@@ -79,5 +79,17 @@
                                   "  If you are implementing IXmlSerializable check that you handle ReadEndElement properly as it is a common source of bugs.";
             Assert.AreEqual(expectedMessage, ex.Message);
         }
+
+        [Test]
+        public void RoundtripForgotReadElementThrows()
+        {
+            var actual = new ForgotReadElement { Value = 2 };
+            var ex = Assert.Throws<AssertException>(() => XmlSerializerAssert.Roundtrip(actual));
+            var expectedMessage = "  Simple roundtrip failed. item is not equal to roundtripped.\r\n" +
+                                  "  AssertException:   Found this difference between expected and actual:\r\n" +
+                                  "  expected.value: 2\r\n" +
+                                  "    actual.value: 0";
+            Assert.AreEqual(expectedMessage, ex.Message);
+        }
     }
 }

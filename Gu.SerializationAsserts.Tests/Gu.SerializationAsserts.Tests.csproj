@@ -55,6 +55,7 @@
     <Compile Include="DataContractSerializerAssertTests.Attibutes.cs" />
     <Compile Include="DataContractSerializerAssertTests.strings.cs" />
     <Compile Include="Dtos\DataContractDummy.cs" />
+    <Compile Include="Dtos\ForgotReadElement.cs" />
     <Compile Include="Dtos\ForgotReadEndElement.cs" />
     <Compile Include="Dtos\ReadingOutsideEndElement.cs" />
     <Compile Include="Dtos\MissingAttributes.cs" />

@@ -68,5 +68,17 @@ namespace Gu.SerializationAsserts.Tests
                 Assert.AreEqual(actual.Value, roundtrip.Value);
             }
         }
+
+        [Test]
+        public void RoundtripForgotReadElementThrows()
+        {
+            var actual = new ForgotReadElement { Value = 2 };
+            var ex = Assert.Throws<AssertException>(() => DataContractSerializerAssert.Roundtrip(actual));
+            var expectedMessage = "  Simple roundtrip failed. item is not equal to roundtripped.\r\n" +
+                                  "  AssertException:   Found this difference between expected and actual:\r\n" +
+                                  "  expected.value: 2\r\n" +
+                                  "    actual.value: 0";
+            Assert.AreEqual(expectedMessage, ex.Message);
+        }
     }
 }
