@@ -38,6 +38,7 @@
     <Reference Include="System" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <Choose>
     <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
@@ -71,6 +72,8 @@
     <Compile Include="BinaryFormatterAssertTests.cs" />
     <Compile Include="Reminders.cs" />
     <Compile Include="Sandbox\NUnit.cs" />
+    <Compile Include="Sandbox\ToXml.cs" />
+    <Compile Include="XmlAssertTests.comparer.cs" />
     <Compile Include="XmlAssertTests.string.cs" />
     <Compile Include="XmlSerializerAssertTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

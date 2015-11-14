@@ -62,6 +62,9 @@
     <Compile Include="Comparers\DeepEquals\DeepEqualsNode.cs" />
     <Compile Include="Comparers\FieldsEqualsComparer{T}.cs" />
     <Compile Include="Comparers\DeepEquals\ICompared.cs" />
+    <Compile Include="Comparers\XAttributeComparer.cs" />
+    <Compile Include="Comparers\XElementComparer.cs" />
+    <Compile Include="Comparers\XmlAssertOptionsComparer.cs" />
     <Compile Include="DataContractSerializerAssert.Attributes.cs" />
     <Compile Include="DataContractSerializerAssert.cs" />
     <Compile Include="Exceptions\AssertException.cs" />
@@ -79,7 +82,7 @@
     <Compile Include="Internals\StringExt.cs" />
     <Compile Include="Internals\TypeExt.cs" />
     <Compile Include="Comparers\DeepEquals\ComparedItem.cs" />
-    <Compile Include="Internals\XNameComparer.cs" />
+    <Compile Include="Comparers\XNameComparer.cs" />
     <Compile Include="Monads\IXAndSource.cs" />
     <Compile Include="Monads\XAttributeAndSource.cs" />
     <Compile Include="Monads\XDocumentAndSource.cs" />

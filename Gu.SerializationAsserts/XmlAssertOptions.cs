@@ -10,6 +10,9 @@ namespace Gu.SerializationAsserts
         IgnoreNamespaces = 1 << 1,
         IgnoreElementOrder = 1 << 2,
         IgnoreAttributeOrder = 1 << 3,
-        IgnoreOrder = IgnoreElementOrder | IgnoreAttributeOrder
+        IgnoreOrder = IgnoreElementOrder | IgnoreAttributeOrder,
+        TreatEmptyAndMissingElemensAsEqual = 1 << 4,
+        TreatEmptyAndMissingAttributesAsEqual = 1 << 4,
+        TreatEmptyAndMissingAsEqual = TreatEmptyAndMissingElemensAsEqual | TreatEmptyAndMissingAttributesAsEqual,
     }
 }

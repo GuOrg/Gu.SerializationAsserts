@@ -4,7 +4,7 @@
 
     using NUnit.Framework;
 
-    public class XmlAssertTests
+    public partial class XmlAssertTests
     {
         [Test]
         public void HappyPath()
@@ -19,7 +19,22 @@
         }
 
         [Test]
-        public void HappyPathVerbatim()
+        public void EqualWhenArrayVerbatim()
+        {
+            var xml = "<?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n" +
+                      "<ArrayOfDummy xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n" +
+                      "  <Dummy>\r\n" +
+                      "    <Value>1</Value>\r\n" +
+                      "  </Dummy>\r\n" +
+                      "  <Dummy>\r\n" +
+                      "    <Value>1</Value>\r\n" +
+                      "  </Dummy>\r\n" +
+                      "</ArrayOfDummy>";
+            XmlAssert.Equal(xml, xml, XmlAssertOptions.Verbatim);
+        }
+
+        [Test]
+        public void EqualWhenVerbatim()
         {
             var xml = "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
                       "<Dummy xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">" +
@@ -31,7 +46,7 @@
         }
 
         [Test]
-        public void HappyPathIgnoreDeclaration()
+        public void EqualWhenIgnoreDeclaration()
         {
             var expected = "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
                            "<Dummy xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">" +
@@ -52,7 +67,7 @@
         }
 
         [Test]
-        public void VerbatimThrowsOnMissingDeclaration()
+        public void NotEqualWhenMissingDeclaration()
         {
             var expected = "<?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n" +
                            "<Dummy xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n" +
@@ -69,8 +84,8 @@
                 "</Dummy>";
 
             var ext = Assert.Throws<AssertException>(() => XmlAssert.Equal(expected, actual));
-            var em = "  Expected string length 232 but was 191.\r\n" +
-                     "  Strings differ at line 1 index 1.\r\n" +
+            var em = "  Expected and actual xml are not equal.\r\n" +
+                     "  Xml differ at line 1 index 1.\r\n" +
                      "  Expected: 1| <?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n" +
                      "  But was:  1| <Dummy xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n" +
                      "  --------------^";
@@ -79,7 +94,7 @@
         }
 
         [Test]
-        public void HappyPathIgnoreNamespaces()
+        public void EqualWhenIgnoreNamespaces()
         {
             var expected = "<?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n" +
                            "<Dummy xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n" +
@@ -99,14 +114,14 @@
         }
 
         [Test]
-        public void WrongEncoding()
+        public void NotEqualWhenWrongEncoding()
         {
             var actualXml = "<?xml version=\"1.0\" encoding=\"utf-8\"?><Dummy />";
             var expectedXml = "<?xml version=\"1.0\" encoding=\"utf-16\"?><Dummy />";
 
             var xmlExt = Assert.Throws<AssertException>(() => XmlAssert.Equal(expectedXml, actualXml));
-            var expected = "  Expected string length 48 but was 47.\r\n" +
-                           "  Strings differ at line 1 index 34.\r\n" +
+            var expected = "  Expected and actual xml are not equal.\r\n" +
+                           "  Xml differ at line 1 index 34.\r\n" +
                            "  Expected: 1| <?xml version=\"1.0\" encoding=\"utf-16\"?><Dummy />\r\n" +
                            "  But was:  1| <?xml version=\"1.0\" encoding=\"utf-8\"?><Dummy />\r\n" +
                            "  -----------------------------------------------^";
@@ -114,7 +129,7 @@
         }
 
         [Test]
-        public void WrongRoot()
+        public void NotEqualWhenWrongRoot()
         {
             var expectedXml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n" +
                               "<Dummy xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n" +
@@ -127,8 +142,8 @@
                             "</Wrong>";
 
             var xmlExt = Assert.Throws<AssertException>(() => XmlAssert.Equal(expectedXml, actualXml));
-            var expected = "  String lengths are both 176.\r\n" +
-                           "  Strings differ at line 2 index 1.\r\n" +
+            var expected = "  Expected and actual xml are not equal.\r\n" +
+                           "  Xml differ at line 2 index 1.\r\n" +
                            "  Expected: 2| <Dummy xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n" +
                            "  But was:  2| <Wrong xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n" +
                            "  --------------^";
@@ -136,7 +151,7 @@
         }
 
         [Test]
-        public void WrongRootIgnoreDeclaration()
+        public void NotEqualWhenWrongRootIgnoreDeclaration()
         {
             var expectedXml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n" +
                               "<Dummy>\r\n" +
@@ -147,11 +162,9 @@
                             "  <Value>2</Value>\r\n" +
                             "</Wrong>";
 
-            var xmlExt =
-                Assert.Throws<AssertException>(
-                    () => XmlAssert.Equal(expectedXml, actualXml, XmlAssertOptions.IgnoreDeclaration));
-            var expected = "  String lengths are both 77.\r\n" +
-                           "  Strings differ at line 2 index 1.\r\n" +
+            var xmlExt = Assert.Throws<AssertException>(() => XmlAssert.Equal(expectedXml, actualXml, XmlAssertOptions.IgnoreDeclaration));
+            var expected = "  Expected and actual xml are not equal.\r\n" +
+                           "  Xml differ at line 2 index 1.\r\n" +
                            "  Expected: 2| <Dummy>\r\n" +
                            "  But was:  1| <Wrong>\r\n" +
                            "  --------------^";
@@ -159,7 +172,7 @@
         }
 
         [Test]
-        public void WrongNamespaces()
+        public void NotEqualWhenWrongNamespaces()
         {
             var expected = "<?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n" +
                            "<Dummy xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n" +
@@ -176,11 +189,12 @@
                          "</Dummy>";
 
             var ex = Assert.Throws<AssertException>(() => XmlAssert.Equal(expected, actual, XmlAssertOptions.Verbatim));
-            var em = "  Number of attributes does not macth for Dummy\r\n" +
+
+            var em = "  Expected and actual xml are not equal.\r\n" +
+                     "  Number of attributes does not macth for element: Dummy\r\n" +
                      "  Expected: 2\r\n" +
                      "  But was:  0\r\n" +
-                     "  Expected string length 232 but was 133.\r\n" +
-                     "  Strings differ at line 2 index 6.\r\n" +
+                     "  Xml differ at line 2 index 6.\r\n" +
                      "  Expected: 2| <Dummy xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n" +
                      "  But was:  2| <Dummy>\r\n" +
                      "  -------------------^";
@@ -188,7 +202,7 @@
         }
 
         [Test]
-        public void InvalidXmlStartingWithWhiteSpace()
+        public void NotEqualWhenInvalidXmlStartingWithWhiteSpace()
         {
             var xml = " <?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n" +
                       "<Dummy xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n" +
@@ -202,7 +216,7 @@
         }
 
         [Test]
-        public void InvalidXmlUnmatchedElement()
+        public void NotEqualWhenInvalidXmlUnmatchedElement()
         {
             var xml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n" +
                       "<Dummy>\r\n" +
@@ -216,7 +230,7 @@
         }
 
         [Test]
-        public void WrongElement()
+        public void NotEqualWhenWrongElement()
         {
             var expectedXml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n" +
                               "<Dummy xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n" +
@@ -230,8 +244,8 @@
 
 
             var xmlExt = Assert.Throws<AssertException>(() => XmlAssert.Equal(expectedXml, actualXml));
-            var expected = "  String lengths are both 176.\r\n" +
-                           "  Strings differ at line 3 index 1.\r\n" +
+            var expected = "  Expected and actual xml are not equal.\r\n" +
+                           "  Xml differ at line 3 index 1.\r\n" +
                            "  Expected: 3| <Value>2</Value>\r\n" +
                            "  But was:  3| <Wrong>2</Wrong>\r\n" +
                            "  --------------^";
@@ -239,7 +253,82 @@
         }
 
         [Test]
-        public void WrongNestedElement()
+        public void NotEqualWhenEmptyAndMissingElement()
+        {
+            var expectedXmls = new[]
+                                   {
+                                      "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n" +
+                                      "<Dummy xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n" +
+                                      "  <Value></Value>\r\n" +
+                                      "</Dummy>",
+
+                                      //"<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n" +
+                                      //"<Dummy xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n" +
+                                      //"  <Value />\r\n" +
+                                      //"</Dummy>",
+                                   };
+
+            var actualXmls = new[]
+                                 {
+                                     "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n" +
+                                     "<Dummy xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n" +
+                                     "</Dummy>",
+
+                                     "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n" +
+                                     "<Dummy xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" />",
+                                 };
+            foreach (var expectedXml in expectedXmls)
+            {
+                foreach (var actualXml in actualXmls)
+                {
+                    var xmlExt = Assert.Throws<AssertException>(() => XmlAssert.Equal(expectedXml, actualXml, XmlAssertOptions.Verbatim));
+                    var expected = "  Expected and actual xml are not equal.\r\n" +
+                                   "  Xml differ at line 3 index 0.\r\n" +
+                                   "  Expected: 3| <Value></Value>\r\n" +
+                                   "  But was:  ?| Missing\r\n" +
+                                   "  -------------^";
+                    Assert.AreEqual(expected, xmlExt.Message);
+                }
+            }
+        }
+
+        [Test]
+        public void EqualTreatEmptyAndMissingElementsAsEqual()
+        {
+            var expectedXmls = new[]
+                                   {
+                                      "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n" +
+                                      "<Dummy xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n" +
+                                      "  <Value></Value>\r\n" +
+                                      "</Dummy>",
+
+                                      "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n" +
+                                      "<Dummy xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n" +
+                                      "  <Value />\r\n" +
+                                      "</Dummy>",
+                                   };
+
+            var actualXmls = new[]
+                                 {
+                                     "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n" +
+                                     "<Dummy xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n" +
+                                     "</Dummy>",
+
+                                     "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n" +
+                                     "<Dummy xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" />",
+                                 };
+            foreach (var expectedXml in expectedXmls)
+            {
+                foreach (var actualXml in actualXmls)
+                {
+                    XmlAssert.Equal(expectedXml, actualXml, XmlAssertOptions.TreatEmptyAndMissingElemensAsEqual);
+                    XmlAssert.Equal(expectedXml, actualXml, XmlAssertOptions.TreatEmptyAndMissingAsEqual);
+                }
+            }
+        }
+
+        [Test]
+        public void NotEqualWhenWrongNestedElement()
         {
             var expectedXml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n" +
                               "<Dummy xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n" +
@@ -257,8 +346,8 @@
 
 
             var xmlExt = Assert.Throws<AssertException>(() => XmlAssert.Equal(expectedXml, actualXml));
-            var expected = "  String lengths are both 201.\r\n" +
-                           "  Strings differ at line 4 index 1.\r\n" +
+            var expected = "  Expected and actual xml are not equal.\r\n" +
+                           "  Xml differ at line 4 index 1.\r\n" +
                            "  Expected: 4| <Value>2</Value>\r\n" +
                            "  But was:  4| <Wrong>2</Wrong>\r\n" +
                            "  --------------^";
@@ -266,7 +355,7 @@
         }
 
         [Test]
-        public void WrongElementOrder()
+        public void NotEqualWhenWrongElementOrder()
         {
             var expectedXml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n" +
                               "<Dummy xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n" +
@@ -280,44 +369,25 @@
                             "  <Value1>1</Value1>\r\n" +
                             "</Dummy>";
 
-            var xmlExt = Assert.Throws<AssertException>(() => XmlAssert.Equal(expectedXml, actualXml));
-            var expected = "  String lengths are both 200.\r\n" +
-                           "  Strings differ at line 3 index 6.\r\n" +
+            var exts = new[]
+                           {
+                               Assert.Throws<AssertException>(() => XmlAssert.Equal(expectedXml, actualXml)),
+                               Assert.Throws<AssertException>(() => XmlAssert.Equal(expectedXml, actualXml, XmlAssertOptions.Verbatim))
+                           };
+            var expected = "  Expected and actual xml are not equal.\r\n" +
+                           "  The order of elements is incorrect.\r\n" +
+                           "  Xml differ at line 3 index 6.\r\n" +
                            "  Expected: 3| <Value1>1</Value1>\r\n" +
                            "  But was:  3| <Value2>2</Value2>\r\n" +
                            "  -------------------^";
-
-            Assert.AreEqual(expected, xmlExt.Message);
+            foreach (var ext in exts)
+            {
+                Assert.AreEqual(expected, ext.Message);
+            }
         }
 
         [Test]
-        public void WrongElementOrderVerbatim()
-        {
-            var expectedXml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n" +
-                              "<Dummy xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n" +
-                              "  <Value1>1</Value1>\r\n" +
-                              "  <Value2>2</Value2>\r\n" +
-                              "</Dummy>";
-
-            var actualXml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n" +
-                            "<Dummy xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n" +
-                            "  <Value2>2</Value2>\r\n" +
-                            "  <Value1>1</Value1>\r\n" +
-                            "</Dummy>";
-
-            var xmlExt =
-                Assert.Throws<AssertException>(() => XmlAssert.Equal(expectedXml, actualXml, XmlAssertOptions.Verbatim));
-            var expected = "  String lengths are both 200.\r\n" +
-                           "  Strings differ at line 3 index 6.\r\n" +
-                           "  Expected: 3| <Value1>1</Value1>\r\n" +
-                           "  But was:  3| <Value2>2</Value2>\r\n" +
-                           "  -------------------^";
-
-            Assert.AreEqual(expected, xmlExt.Message);
-        }
-
-        [Test]
-        public void WrongElementOrderIgnoreElementOrder()
+        public void EqualIgnoreElementOrder()
         {
             var expectedXml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n" +
                               "<Dummy xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n" +
@@ -335,7 +405,7 @@
         }
 
         [Test]
-        public void WrongAttributeOrder()
+        public void NotEqualWhenWrongAttributeOrder()
         {
             var expectedXml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n" +
                               "<Dummy xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n" +
@@ -348,21 +418,21 @@
                             "</Dummy>";
 
             var ex1 = Assert.Throws<AssertException>(() => XmlAssert.Equal(expectedXml, actualXml));
-            var expected = "  String lengths are both 208.\r\n" +
-                           "  Strings differ at line 3 index 17.\r\n" +
+            var expected = "  Expected and actual xml are not equal.\r\n" +
+                           "  The order of atributes is incorrect.\r\n" +
+                           "  Xml differ at line 3 index 17.\r\n" +
                            "  Expected: 3| <Value1 Attribute1=\"1\" Attribute2=\"2\">1</Value1>\r\n" +
                            "  But was:  3| <Value1 Attribute2=\"2\" Attribute1=\"1\">1</Value1>\r\n" +
                            "  ------------------------------^";
 
             Assert.AreEqual(expected, ex1.Message);
 
-            var ex2 =
-                Assert.Throws<AssertException>(() => XmlAssert.Equal(expectedXml, actualXml, XmlAssertOptions.Verbatim));
+            var ex2 = Assert.Throws<AssertException>(() => XmlAssert.Equal(expectedXml, actualXml, XmlAssertOptions.Verbatim));
             Assert.AreEqual(expected, ex2.Message);
         }
 
         [Test]
-        public void WrongAttributeOrderWhenIgnoreOrder()
+        public void EqualIgnoreAttributeOrder()
         {
             var expectedXml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n" +
                               "<Dummy xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n" +
@@ -379,7 +449,7 @@
         }
 
         [Test]
-        public void WrongNestedElementValue()
+        public void NotEqualWhenWrongNestedElementValue()
         {
             var expectedXml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n" +
                               "<Dummy xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n" +
@@ -396,8 +466,8 @@
                             "</Dummy>";
 
             var xmlExt = Assert.Throws<AssertException>(() => XmlAssert.Equal(expectedXml, actualXml));
-            var expected = "  Expected string length 231 but was 235.\r\n" +
-                           "  Strings differ at line 4 index 21.\r\n" +
+            var expected = "  Expected and actual xml are not equal.\r\n" +
+                           "  Xml differ at line 4 index 21.\r\n" +
                            "  Expected: 4| <Value Attribute=\"1\">2</Value>\r\n" +
                            "  But was:  4| <Value Attribute=\"1\">Wrong</Value>\r\n" +
                            "  ----------------------------------^";
@@ -405,7 +475,7 @@
         }
 
         [Test]
-        public void WrongNestedAttribute()
+        public void NotEqualWhenWrongNestedAttribute()
         {
             var expectedXml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n" +
                               "<Dummy xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n" +
@@ -422,8 +492,8 @@
                             "</Dummy>";
 
             var xmlExt = Assert.Throws<AssertException>(() => XmlAssert.Equal(expectedXml, actualXml));
-            var expected = "  Expected string length 231 but was 227.\r\n" +
-                           "  Strings differ at line 4 index 7.\r\n" +
+            var expected = "  Expected and actual xml are not equal.\r\n" +
+                           "  Xml differ at line 4 index 7.\r\n" +
                            "  Expected: 4| <Value Attribute=\"1\">2</Value>\r\n" +
                            "  But was:  4| <Value Wrong=\"1\">2</Value>\r\n" +
                            "  --------------------^";
@@ -431,7 +501,7 @@
         }
 
         [Test]
-        public void WrongNestedAttributeValue()
+        public void NotEqualWhenWrongNestedAttributeValue()
         {
             var expectedXml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n" +
                               "<Dummy xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n" +
@@ -449,8 +519,8 @@
 
 
             var xmlExt = Assert.Throws<AssertException>(() => XmlAssert.Equal(expectedXml, actualXml));
-            var expected = "  Expected string length 231 but was 235.\r\n" +
-                           "  Strings differ at line 4 index 18.\r\n" +
+            var expected = "  Expected and actual xml are not equal.\r\n" +
+                           "  Xml differ at line 4 index 18.\r\n" +
                            "  Expected: 4| <Value Attribute=\"1\">2</Value>\r\n" +
                            "  But was:  4| <Value Attribute=\"Wrong\">2</Value>\r\n" +
                            "  -------------------------------^";
@@ -458,7 +528,7 @@
         }
 
         [Test]
-        public void WrongElementValue()
+        public void NotEqualWhenWrongElementValue()
         {
             var expectedXml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n" +
                               "<Dummy xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n" +
@@ -471,8 +541,8 @@
                             "</Dummy>";
 
             var xmlExt = Assert.Throws<AssertException>(() => XmlAssert.Equal(expectedXml, actualXml));
-            var expected = "  Expected string length 176 but was 180.\r\n" +
-                           "  Strings differ at line 3 index 7.\r\n" +
+            var expected = "  Expected and actual xml are not equal.\r\n" +
+                           "  Xml differ at line 3 index 7.\r\n" +
                            "  Expected: 3| <Value>1</Value>\r\n" +
                            "  But was:  3| <Value>Wrong</Value>\r\n" +
                            "  --------------------^";

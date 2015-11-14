@@ -1,5 +1,6 @@
 ﻿namespace Gu.SerializationAsserts
 {
+    using System;
     using System.Collections.Generic;
 
     internal static class ListExt
@@ -12,6 +13,21 @@
             }
 
             return @default;
+        }
+
+        internal static int IndexOf<TItem, TValue>(this IReadOnlyList<TItem> items, TItem item, Func<TItem, TValue> selector, IEqualityComparer<TValue> comparer)
+        {
+            for (int i = 0; i < items.Count; i++)
+            {
+                var x = selector(item);
+                var y = selector(items[i]);
+                if (comparer.Equals(x, y))
+                {
+                    return i;
+                }
+            }
+
+            return -1;
         }
     }
 }

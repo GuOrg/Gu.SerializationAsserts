@@ -58,8 +58,8 @@
             var expected = new DataContractDummy { Value = 1 };
             var actual = new DataContractDummy { Value = 2 };
             var ex = Assert.Throws<AssertException>(() => DataContractSerializerAssert.Equal(expected, actual));
-            var expectedMessage = "  String lengths are both 237.\r\n" +
-                                  "  Strings differ at line 3 index 7.\r\n" +
+            var expectedMessage = "  Expected and actual xml are not equal.\r\n" +
+                                  "  Xml differ at line 3 index 7.\r\n" +
                                   "  Expected: 3| <Value>1</Value>\r\n" +
                                   "  But was:  3| <Value>2</Value>\r\n" +
                                   "  --------------------^";
