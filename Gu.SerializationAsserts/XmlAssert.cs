@@ -20,7 +20,9 @@
         {
             var expectedXml = ParseDocument(expected, nameof(expected), options);
             var actualXml = ParseDocument(actual, nameof(actual), options);
-            Equal(expectedXml, actualXml, new XElementComparer(options), new XAttributeComparer(options), options);
+            var xElementComparer = new XElementComparer(options);
+            var xAttributeComparer = new XAttributeComparer(options);
+            Equal(expectedXml, actualXml, xElementComparer, xAttributeComparer, options);
         }
 
         public static void Equal(
@@ -102,17 +104,10 @@
 
             CheckElementOrder(expected, actual, options);
 
-            // ReSharper disable once InvokeAsExtensionMethod
-            var childElementNames = Enumerable.Concat(
-                expected?.Elements.Select(x => x.Element.Name) ?? EmptyNames,
-                actual?.Elements.Select(x => x.Element.Name) ?? EmptyNames)
-                                              .Distinct(nameComparer);
-
-            foreach (var name in childElementNames)
+            for (int i = 0; i < Math.Max(expected.Elements.Count, actual.Elements.Count); i++)
             {
-                var expectedChild = expected?.Elements.SingleOrDefault(x => nameComparer.Equals(x.Element.Name, name));
-                var actualChild = actual?.Elements.SingleOrDefault(x => nameComparer.Equals(x.Element.Name, name)) ??
-                                   actual?.Elements.SingleOrDefault(x=>x.LineNumber == expectedChild.LineNumber);
+                var expectedChild = expected?.Elements.ElementAtOrDefault(i);
+                var actualChild = actual?.Elements.ElementAtOrDefault(i);
                 Equal(expectedChild, actualChild, elementComparer, attributeComparer, options);
             }
         }
@@ -152,22 +147,14 @@
             }
 
             var nameComparer = XNameComparer.GetFor(options);
-            int index = -1;
-            foreach (var element in expected.Elements)
+            for (int i = 0; i < Math.Min(expected.Elements.Count, actual.Elements.Count); i++)
             {
-                var indexOf = actual.Elements.IndexOf(element, x => x.Element.Name, nameComparer);
-                if (indexOf < 0)
+                if (!nameComparer.Equals(expected.Elements[i].Element.Name, actual.Elements[i].Element.Name) &&
+                    actual.Elements.FirstOrDefault(x => nameComparer.Equals(expected.Elements[i].Element.Name, x.Element.Name)) != null)
                 {
-                    continue;
-                }
-
-                if (index > indexOf)
-                {
-                    var message = CreateMessage(element, actual.Elements[indexOf], "  The order of elements is incorrect.");
+                    var message = CreateMessage(expected.Elements[i], actual.Elements[i], "  The order of elements is incorrect.");
                     throw new AssertException(message);
                 }
-
-                index = indexOf;
             }
         }
 
@@ -191,7 +178,6 @@
             var lineNumber = expected?.LineNumber ?? actual.LineNumber;
             using (var writer = new StringWriter())
             {
-                //writer.WriteLine("  Expected and actual xml are not equal.");
                 if (subHeader != null)
                 {
                     writer.Write(subHeader);

@@ -7,7 +7,7 @@
         [Test]
         public void HandleEventsTest()
         {
-            Assert.Fail("Handle event fields");
+            Assert.Inconclusive("Handle event fields");
         }
     }
 }

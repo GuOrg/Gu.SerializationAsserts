@@ -107,13 +107,10 @@
                 return comparedPair.IsEqual;
             }
 
-            foreach (var child in this.Children)
+            if (this.Children.Any(child => !child.Matches()))
             {
-                if (!child.Matches())
-                {
-                    comparedPair.IsEqual = false;
-                    return false;
-                }
+                comparedPair.IsEqual = false;
+                return false;
             }
 
             comparedPair.IsEqual = true;
