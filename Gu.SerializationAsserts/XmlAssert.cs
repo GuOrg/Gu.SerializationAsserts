@@ -39,7 +39,7 @@
         {
             if (!options.HasFlag(XmlAssertOptions.IgnoreDeclaration))
             {
-                if (!FieldsEqualsComparer<XDeclaration>.Default.Equals(expected.Document.Declaration, actual.Document.Declaration))
+                if (!FieldComparer<XDeclaration>.Default.Equals(expected.Document.Declaration, actual.Document.Declaration))
                 {
                     var message = CreateMessage(expected, actual);
                     throw new AssertException(message);
@@ -71,7 +71,9 @@
 
                 if (!attributeComparer.Equals(expectedAttribute?.Attribute, actualAttribute?.Attribute))
                 {
-                    var message = CreateMessage(expectedAttribute, actualAttribute);
+                    var message = expectedAttribute == null || actualAttribute == null
+                        ? CreateMessage(expected, actual)
+                        : CreateMessage(expectedAttribute, actualAttribute);
                     throw new AssertException(message);
                 }
             }
@@ -109,7 +111,8 @@
             foreach (var name in childElementNames)
             {
                 var expectedChild = expected?.Elements.SingleOrDefault(x => nameComparer.Equals(x.Element.Name, name));
-                var actualChild = actual?.Elements.SingleOrDefault(x => nameComparer.Equals(x.Element.Name, name));
+                var actualChild = actual?.Elements.SingleOrDefault(x => nameComparer.Equals(x.Element.Name, name)) ??
+                                   actual?.Elements.SingleOrDefault(x=>x.LineNumber == expectedChild.LineNumber);
                 Equal(expectedChild, actualChild, elementComparer, attributeComparer, options);
             }
         }
@@ -133,7 +136,7 @@
 
                 if (index > indexOf)
                 {
-                    var message = CreateMessage(attribute, actual.Attributes[indexOf], "  The order of atributes is incorrect.");
+                    var message = CreateMessage(attribute, actual.Attributes[indexOf], "  The order of attributes is incorrect.");
                     throw new AssertException(message);
                 }
 
@@ -188,7 +191,7 @@
             var lineNumber = expected?.LineNumber ?? actual.LineNumber;
             using (var writer = new StringWriter())
             {
-                writer.WriteLine("  Expected and actual xml are not equal.");
+                //writer.WriteLine("  Expected and actual xml are not equal.");
                 if (subHeader != null)
                 {
                     writer.Write(subHeader);

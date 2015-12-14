@@ -58,8 +58,7 @@
             var expected = new DataContractDummy { Value = 1 };
             var actual = new DataContractDummy { Value = 2 };
             var ex = Assert.Throws<AssertException>(() => XmlSerializerAssert.Equal(expected, actual));
-            var expectedMessage = "  String lengths are both 201.\r\n" +
-                                  "  Strings differ at line 3 index 7.\r\n" +
+            var expectedMessage = "  Xml differ at line 3 index 7.\r\n" +
                                   "  Expected: 3| <Value>1</Value>\r\n" +
                                   "  But was:  3| <Value>2</Value>\r\n" +
                                   "  --------------------^";
@@ -120,8 +119,7 @@
                               "  <Value>2</Value>\r\n" +
                               "</Dummy>";
             var ex = Assert.Throws<AssertException>(() => XmlSerializerAssert.Equal(expectedXml, actual, XmlAssertOptions.Verbatim));
-            var expectedMessage = "  Expected string length 37 but was 177.\r\n" +
-                                  "  Strings differ at line 1 index 1.\r\n" +
+            var expectedMessage = "  Xml differ at line 1 index 1.\r\n" +
                                   "  Expected: 1| <Dummy>\r\n" +
                                   "  But was:  1| <?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n" +
                                   "  --------------^";

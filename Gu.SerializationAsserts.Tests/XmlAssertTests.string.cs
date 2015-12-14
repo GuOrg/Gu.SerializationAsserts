@@ -62,7 +62,6 @@
                 "  </Outer>  " +
                 "</Dummy>";
 
-
             XmlAssert.Equal(expected, actual, XmlAssertOptions.IgnoreDeclaration);
         }
 
@@ -84,8 +83,7 @@
                 "</Dummy>";
 
             var ext = Assert.Throws<AssertException>(() => XmlAssert.Equal(expected, actual));
-            var em = "  Expected and actual xml are not equal.\r\n" +
-                     "  Xml differ at line 1 index 1.\r\n" +
+            var em = "  Xml differ at line 1 index 1.\r\n" +
                      "  Expected: 1| <?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n" +
                      "  But was:  1| <Dummy xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n" +
                      "  --------------^";
@@ -120,8 +118,7 @@
             var expectedXml = "<?xml version=\"1.0\" encoding=\"utf-16\"?><Dummy />";
 
             var xmlExt = Assert.Throws<AssertException>(() => XmlAssert.Equal(expectedXml, actualXml));
-            var expected = "  Expected and actual xml are not equal.\r\n" +
-                           "  Xml differ at line 1 index 34.\r\n" +
+            var expected = "  Xml differ at line 1 index 34.\r\n" +
                            "  Expected: 1| <?xml version=\"1.0\" encoding=\"utf-16\"?><Dummy />\r\n" +
                            "  But was:  1| <?xml version=\"1.0\" encoding=\"utf-8\"?><Dummy />\r\n" +
                            "  -----------------------------------------------^";
@@ -142,8 +139,7 @@
                             "</Wrong>";
 
             var xmlExt = Assert.Throws<AssertException>(() => XmlAssert.Equal(expectedXml, actualXml));
-            var expected = "  Expected and actual xml are not equal.\r\n" +
-                           "  Xml differ at line 2 index 1.\r\n" +
+            var expected = "  Xml differ at line 2 index 1.\r\n" +
                            "  Expected: 2| <Dummy xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n" +
                            "  But was:  2| <Wrong xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n" +
                            "  --------------^";
@@ -163,8 +159,7 @@
                             "</Wrong>";
 
             var xmlExt = Assert.Throws<AssertException>(() => XmlAssert.Equal(expectedXml, actualXml, XmlAssertOptions.IgnoreDeclaration));
-            var expected = "  Expected and actual xml are not equal.\r\n" +
-                           "  Xml differ at line 2 index 1.\r\n" +
+            var expected = "  Xml differ at line 2 index 1.\r\n" +
                            "  Expected: 2| <Dummy>\r\n" +
                            "  But was:  1| <Wrong>\r\n" +
                            "  --------------^";
@@ -190,11 +185,7 @@
 
             var ex = Assert.Throws<AssertException>(() => XmlAssert.Equal(expected, actual, XmlAssertOptions.Verbatim));
 
-            var em = "  Expected and actual xml are not equal.\r\n" +
-                     "  Number of attributes does not macth for element: Dummy\r\n" +
-                     "  Expected: 2\r\n" +
-                     "  But was:  0\r\n" +
-                     "  Xml differ at line 2 index 6.\r\n" +
+            var em = "  Xml differ at line 2 index 6.\r\n" +
                      "  Expected: 2| <Dummy xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n" +
                      "  But was:  2| <Dummy>\r\n" +
                      "  -------------------^";
@@ -242,10 +233,8 @@
                             "  <Wrong>2</Wrong>\r\n" +
                             "</Dummy>";
 
-
             var xmlExt = Assert.Throws<AssertException>(() => XmlAssert.Equal(expectedXml, actualXml));
-            var expected = "  Expected and actual xml are not equal.\r\n" +
-                           "  Xml differ at line 3 index 1.\r\n" +
+            var expected = "  Xml differ at line 3 index 1.\r\n" +
                            "  Expected: 3| <Value>2</Value>\r\n" +
                            "  But was:  3| <Wrong>2</Wrong>\r\n" +
                            "  --------------^";
@@ -282,8 +271,7 @@
                 foreach (var actualXml in actualXmls)
                 {
                     var xmlExt = Assert.Throws<AssertException>(() => XmlAssert.Equal(expectedXml, actualXml, XmlAssertOptions.Verbatim));
-                    var expected = "  Expected and actual xml are not equal.\r\n" +
-                                   "  Xml differ at line 3 index 0.\r\n" +
+                    var expected = "  Xml differ at line 3 index 0.\r\n" +
                                    "  Expected: 3| <Value></Value>\r\n" +
                                    "  But was:  ?| Missing\r\n" +
                                    "  -------------^";
@@ -346,8 +334,7 @@
 
 
             var xmlExt = Assert.Throws<AssertException>(() => XmlAssert.Equal(expectedXml, actualXml));
-            var expected = "  Expected and actual xml are not equal.\r\n" +
-                           "  Xml differ at line 4 index 1.\r\n" +
+            var expected = "  Xml differ at line 4 index 1.\r\n" +
                            "  Expected: 4| <Value>2</Value>\r\n" +
                            "  But was:  4| <Wrong>2</Wrong>\r\n" +
                            "  --------------^";
@@ -374,8 +361,7 @@
                                Assert.Throws<AssertException>(() => XmlAssert.Equal(expectedXml, actualXml)),
                                Assert.Throws<AssertException>(() => XmlAssert.Equal(expectedXml, actualXml, XmlAssertOptions.Verbatim))
                            };
-            var expected = "  Expected and actual xml are not equal.\r\n" +
-                           "  The order of elements is incorrect.\r\n" +
+            var expected = "  The order of elements is incorrect.\r\n" +
                            "  Xml differ at line 3 index 6.\r\n" +
                            "  Expected: 3| <Value1>1</Value1>\r\n" +
                            "  But was:  3| <Value2>2</Value2>\r\n" +
@@ -418,8 +404,7 @@
                             "</Dummy>";
 
             var ex1 = Assert.Throws<AssertException>(() => XmlAssert.Equal(expectedXml, actualXml));
-            var expected = "  Expected and actual xml are not equal.\r\n" +
-                           "  The order of atributes is incorrect.\r\n" +
+            var expected = "  The order of attributes is incorrect.\r\n" +
                            "  Xml differ at line 3 index 17.\r\n" +
                            "  Expected: 3| <Value1 Attribute1=\"1\" Attribute2=\"2\">1</Value1>\r\n" +
                            "  But was:  3| <Value1 Attribute2=\"2\" Attribute1=\"1\">1</Value1>\r\n" +
@@ -466,8 +451,7 @@
                             "</Dummy>";
 
             var xmlExt = Assert.Throws<AssertException>(() => XmlAssert.Equal(expectedXml, actualXml));
-            var expected = "  Expected and actual xml are not equal.\r\n" +
-                           "  Xml differ at line 4 index 21.\r\n" +
+            var expected = "  Xml differ at line 4 index 21.\r\n" +
                            "  Expected: 4| <Value Attribute=\"1\">2</Value>\r\n" +
                            "  But was:  4| <Value Attribute=\"1\">Wrong</Value>\r\n" +
                            "  ----------------------------------^";
@@ -492,8 +476,7 @@
                             "</Dummy>";
 
             var xmlExt = Assert.Throws<AssertException>(() => XmlAssert.Equal(expectedXml, actualXml));
-            var expected = "  Expected and actual xml are not equal.\r\n" +
-                           "  Xml differ at line 4 index 7.\r\n" +
+            var expected = "  Xml differ at line 4 index 7.\r\n" +
                            "  Expected: 4| <Value Attribute=\"1\">2</Value>\r\n" +
                            "  But was:  4| <Value Wrong=\"1\">2</Value>\r\n" +
                            "  --------------------^";
@@ -519,8 +502,7 @@
 
 
             var xmlExt = Assert.Throws<AssertException>(() => XmlAssert.Equal(expectedXml, actualXml));
-            var expected = "  Expected and actual xml are not equal.\r\n" +
-                           "  Xml differ at line 4 index 18.\r\n" +
+            var expected = "  Xml differ at line 4 index 18.\r\n" +
                            "  Expected: 4| <Value Attribute=\"1\">2</Value>\r\n" +
                            "  But was:  4| <Value Attribute=\"Wrong\">2</Value>\r\n" +
                            "  -------------------------------^";
@@ -541,8 +523,7 @@
                             "</Dummy>";
 
             var xmlExt = Assert.Throws<AssertException>(() => XmlAssert.Equal(expectedXml, actualXml));
-            var expected = "  Expected and actual xml are not equal.\r\n" +
-                           "  Xml differ at line 3 index 7.\r\n" +
+            var expected = "  Xml differ at line 3 index 7.\r\n" +
                            "  Expected: 3| <Value>1</Value>\r\n" +
                            "  But was:  3| <Value>Wrong</Value>\r\n" +
                            "  --------------------^";
