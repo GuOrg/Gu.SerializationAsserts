@@ -12,6 +12,8 @@
                                                                                     { '\"', "\\\"" },
                                                                                 };
 
+        public static readonly string Missing = "Missing";
+
         /// <summary>
         /// http://stackoverflow.com/a/324812/1069200
         /// </summary>
@@ -55,6 +57,11 @@
 
         internal static int FirstDiff(this string expectedRow, string actualRow)
         {
+            if (expectedRow == null || actualRow == null)
+            {
+                return 0;
+            }
+
             for (int i = 0; i < expectedRow.Length; i++)
             {
                 if (actualRow.Length <= i)
@@ -73,7 +80,10 @@
 
         internal static string Line(this string text, int lineNumber)
         {
-            Ensure.GreaterThanOrEqual(lineNumber, 1, nameof(lineNumber));
+            if (lineNumber < 0)
+            {
+                return Missing;
+            }
 
             var rows = text.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
             if (lineNumber <= rows.Length)

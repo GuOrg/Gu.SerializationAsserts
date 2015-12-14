@@ -266,27 +266,15 @@ namespace Gu.SerializationAsserts.Tests
             var p1 = new Parent { new Child(1), new Child(2) };
             var p2 = new Parent { new Child(1), new Child(5) };
             var ex1 = Assert.Throws<AssertException>(() => FieldAssert.Equal(p1, p2));
-            var em1 = "  Fields differ between expected and actual, here are the 3 differences:\r\n" +
+            var em1 = "  Found this difference between expected and actual:\r\n" +
                       "  expected[1].value: 2\r\n" +
-                      "    actual[1].value: 5\r\n" +
-                      "\r\n" +
-                      "  expected.children[1].value: 2\r\n" +
-                      "    actual.children[1].value: 5\r\n" +
-                      "\r\n" +
-                      "  expected.children._items[1].value: 2\r\n" +
-                      "    actual.children._items[1].value: 5";
+                      "    actual[1].value: 5";
             Assert.AreEqual(em1, ex1.Message);
 
             var ex2 = Assert.Throws<AssertException>(() => FieldAssert.Equal(p2, p1));
-            var em2 = "  Fields differ between expected and actual, here are the 3 differences:\r\n" +
+            var em2 = "  Found this difference between expected and actual:\r\n" +
                       "  expected[1].value: 5\r\n" +
-                      "    actual[1].value: 2\r\n" +
-                      "\r\n" +
-                      "  expected.children[1].value: 5\r\n" +
-                      "    actual.children[1].value: 2\r\n" +
-                      "\r\n" +
-                      "  expected.children._items[1].value: 5\r\n" +
-                      "    actual.children._items[1].value: 2";
+                      "    actual[1].value: 2";
             Assert.AreEqual(em2, ex2.Message);
         }
     }

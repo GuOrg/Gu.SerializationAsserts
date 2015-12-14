@@ -27,7 +27,7 @@ namespace Gu.SerializationAsserts
             using (var writer = new StringWriter())
             {
                 var children = comparison.AllChildren()
-                                      .Where(c => !c.GetChildren().Any() && !c.Matches())
+                                      .Where(c => !c.Children.Any() && !c.Matches())
                                       .Take(6)
                                       .ToArray();
                 if (children.Length == 1)

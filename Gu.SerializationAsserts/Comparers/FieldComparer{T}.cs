@@ -7,11 +7,11 @@
     /// A deep equals checking nested fields
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class FieldsEqualsComparer<T> : IEqualityComparer<T>, IComparer
+    public class FieldComparer<T> : IEqualityComparer<T>, IComparer
     {
-        public static readonly FieldsEqualsComparer<T> Default = new FieldsEqualsComparer<T>();
+        public static readonly FieldComparer<T> Default = new FieldComparer<T>();
 
-        private FieldsEqualsComparer()
+        private FieldComparer()
         {
         }
 
@@ -35,7 +35,7 @@
                 return 0;
             }
 
-            return 1;
+            return -1;
         }
 
         int IEqualityComparer<T>.GetHashCode(T obj)
