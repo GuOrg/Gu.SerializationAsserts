@@ -74,7 +74,7 @@ namespace Gu.SerializationAsserts.Tests.Comparers.DeepEquals
             Assert.AreEqual(expectedDump, dump);
         }
 
-        [Test]
+        [Test, Explicit]
         public void Parents()
         {
             var p1 = new Parent { new Child(1), new Child(2) };
@@ -104,10 +104,11 @@ namespace Gu.SerializationAsserts.Tests.Comparers.DeepEquals
                          $"Expected: {GetValue(deepEqualsNode.Expected)} " +
                          $"Actual: {GetValue(deepEqualsNode.Actual)}");
             writer.Indent++;
-            foreach (var child in deepEqualsNode.GetChildren())
+            foreach (var child in deepEqualsNode.Children)
             {
                 Dump(child, writer);
             }
+
             writer.Indent--;
         }
 

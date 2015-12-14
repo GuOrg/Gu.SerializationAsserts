@@ -10,10 +10,14 @@
     [DebuggerDisplay("Type: {Type} Field: {ParentField}}")]
     internal class DeepEqualsNode
     {
-        private DeepEqualsNode(ICompared expected, ICompared actual)
+        private readonly List<ComparedPair> compared;
+        private IReadOnlyList<DeepEqualsNode> children;
+
+        private DeepEqualsNode(ICompared expected, ICompared actual, List<ComparedPair> compared)
         {
             this.Expected = expected;
             this.Actual = actual;
+            this.compared = compared;
             var expectedType = this.Expected.Value?.GetType();
             var actualType = this.Actual.Value?.GetType();
             this.Type = expectedType == actualType ? expectedType : null;
@@ -28,8 +32,9 @@
             DeepEqualsNode parent,
             FieldInfo parentField,
             ICompared expected,
-            ICompared actual)
-            : this(expected, actual)
+            ICompared actual,
+            List<ComparedPair> compared)
+            : this(expected, actual, compared)
         {
             this.Parent = parent;
             this.ParentField = parentField;
@@ -47,9 +52,11 @@
 
         internal IReadOnlyList<FieldInfo> Fields { get; }
 
+        internal IReadOnlyList<DeepEqualsNode> Children => this.children ?? (this.children = this.GetChildren().ToList());
+
         public IEnumerable<DeepEqualsNode> AllChildren()
         {
-            foreach (var child in this.GetChildren())
+            foreach (var child in this.Children)
             {
                 yield return child;
                 foreach (var nested in child.AllChildren())
@@ -63,46 +70,98 @@
         {
             var ec = new ComparedField(expected, null);
             var ac = new ComparedField(actual, null);
-            return new DeepEqualsNode(ec, ac);
+            return new DeepEqualsNode(ec, ac, new List<ComparedPair>());
         }
 
         internal bool Matches()
         {
+            var match = this.compared.SingleOrDefault(x => x.HasCompared(this.Expected.Value, this.Actual.Value));
+            if (match != null)
+            {
+                return match.IsEqual;
+            }
+
+            var comparedPair = new ComparedPair(this.Expected.Value, this.Actual.Value);
+            this.compared.Add(comparedPair);
             if (this.Expected.Value == null && this.Actual.Value == null)
             {
+                comparedPair.IsEqual = true;
                 return true;
             }
 
             if (this.Expected.Value == null || this.Actual.Value == null)
             {
+                comparedPair.IsEqual = false;
                 return false;
             }
 
             if (this.Expected is ComparedIEnumerable && this.Actual is ComparedIEnumerable)
             {
+                comparedPair.IsEqual = false;
                 return false;
             }
 
             if (this.Type.IsEquatable())
             {
-                return object.Equals(this.Expected.Value, this.Actual.Value);
+                comparedPair.IsEqual = object.Equals(this.Expected.Value, this.Actual.Value);
+                return comparedPair.IsEqual;
             }
 
-            foreach (var child in this.GetChildren())
+            foreach (var child in this.Children)
             {
                 if (!child.Matches())
                 {
+                    comparedPair.IsEqual = false;
                     return false;
                 }
             }
 
+            comparedPair.IsEqual = true;
             return true;
         }
 
-        internal IEnumerable<DeepEqualsNode> GetChildren()
+        private static bool IsAnyIEnumerable(object a, object b)
+        {
+            return a is IEnumerable || b is IEnumerable;
+        }
+
+        private static bool IsBothIEnumerable(object a, object b)
+        {
+            return a is IEnumerable && b is IEnumerable;
+        }
+
+        // Using new here to hide it so it not called by mistake
+        private new static void Equals(object x, object y)
+        {
+            throw new NotSupportedException($"{x}, {y}");
+        }
+
+        private DeepEqualsNode CreateIEnumerableChild(object[] expected, object[] actual, FieldInfo field)
+        {
+            var ecf = new ComparedIEnumerable(expected, field);
+            var acf = new ComparedIEnumerable(actual, field);
+            return new DeepEqualsNode(this, field, ecf, acf, this.compared);
+        }
+
+        private DeepEqualsNode CreateFieldChild(object expected, object actual, FieldInfo field)
+        {
+            var ecf = new ComparedField(expected, field);
+            var acf = new ComparedField(actual, field);
+            return new DeepEqualsNode(this, field, ecf, acf, this.compared);
+        }
+
+        private DeepEqualsNode CreateIndexChild(object expected, object actual, FieldInfo field, int index)
+        {
+            var ecf = new ComparedItem(expected, index);
+            var acf = new ComparedItem(actual, index);
+            return new DeepEqualsNode(this, field, ecf, acf, this.compared);
+        }
+
+        private IEnumerable<DeepEqualsNode> GetChildren()
         {
             var expected = this.Expected.Value;
             var actual = this.Actual.Value;
+
             if (expected == null || actual == null)
             {
                 yield break;
@@ -137,6 +196,10 @@
                     {
                         var expectedChild = expectedChildren.ElementAtOrDefault(i);
                         var actualChild = actualChildren.ElementAtOrDefault(i);
+                        if (this.compared.Any(x => x.HasCompared(expectedChild, actualChild)))
+                        {
+                            continue;
+                        }
 
                         yield return this.CreateIndexChild(expectedChild, actualChild, this.ParentField, i);
                     }
@@ -147,71 +210,13 @@
             {
                 var expectedChild = fieldInfo.GetValue(expected);
                 var actualChild = fieldInfo.GetValue(actual);
-                if (this.IsCircular(expectedChild, actualChild))
+                if (this.compared.Any(x => x.HasCompared(expectedChild, actualChild)))
                 {
                     continue;
                 }
 
                 yield return this.CreateFieldChild(expectedChild, actualChild, fieldInfo);
             }
-        }
-
-        private bool IsCircular(object expectedChild, object actualChild)
-        {
-            var parent = this;
-            while (parent != null)
-            {
-                if (ReferenceEquals(parent.Expected.Value, expectedChild) && ReferenceEquals(parent.Actual.Value, actualChild))
-                {
-                    return true;
-                }
-
-                if (ReferenceEquals(parent.Expected.Value, expectedChild) || ReferenceEquals(parent.Actual.Value, actualChild))
-                {
-                    throw new NotSupportedException();
-                }
-
-                parent = parent.Parent;
-            }
-
-            return false;
-        }
-
-        private static bool IsAnyIEnumerable(object a, object b)
-        {
-            return a is IEnumerable || b is IEnumerable;
-        }
-
-        private static bool IsBothIEnumerable(object a, object b)
-        {
-            return a is IEnumerable && b is IEnumerable;
-        }
-
-        private DeepEqualsNode CreateIEnumerableChild(object[] expected, object[] actual, FieldInfo field)
-        {
-            var ecf = new ComparedIEnumerable(expected, field);
-            var acf = new ComparedIEnumerable(actual, field);
-            return new DeepEqualsNode(this, field, ecf, acf);
-        }
-
-        private DeepEqualsNode CreateFieldChild(object expected, object actual, FieldInfo field)
-        {
-            var ecf = new ComparedField(expected, field);
-            var acf = new ComparedField(actual, field);
-            return new DeepEqualsNode(this, field, ecf, acf);
-        }
-
-        private DeepEqualsNode CreateIndexChild(object expected, object actual, FieldInfo field, int index)
-        {
-            var ecf = new ComparedItem(expected, index);
-            var acf = new ComparedItem(actual, index);
-            return new DeepEqualsNode(this, field, ecf, acf);
-        }
-
-        // Using new here to hide it so it not called by mistake
-        private new static void Equals(object x, object y)
-        {
-            throw new NotSupportedException($"{x}, {y}");
         }
     }
 }

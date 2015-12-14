@@ -35,7 +35,7 @@
                 return 0;
             }
 
-            return 1;
+            return -1;
         }
 
         int IEqualityComparer<T>.GetHashCode(T obj)

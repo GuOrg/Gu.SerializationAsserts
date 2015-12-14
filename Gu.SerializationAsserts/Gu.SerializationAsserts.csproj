@@ -58,9 +58,11 @@
     <Compile Include="Comparers\BinaryEqualsComparer{T}.cs" />
     <Compile Include="Comparers\DeepEquals\ComparedField.cs" />
     <Compile Include="Comparers\DeepEquals\ComparedIEnumerable.cs" />
+    <Compile Include="Comparers\DeepEquals\ComparedPair.cs" />
     <Compile Include="Comparers\DeepEquals\ComparisonTracker.cs" />
     <Compile Include="Comparers\DeepEquals\DeepEqualsNode.cs" />
-    <Compile Include="Comparers\FieldsEqualsComparer{T}.cs" />
+    <Compile Include="Comparers\FieldComparer.cs" />
+    <Compile Include="Comparers\FieldComparer{T}.cs" />
     <Compile Include="Comparers\DeepEquals\ICompared.cs" />
     <Compile Include="Comparers\XAttributeComparer.cs" />
     <Compile Include="Comparers\XElementComparer.cs" />
