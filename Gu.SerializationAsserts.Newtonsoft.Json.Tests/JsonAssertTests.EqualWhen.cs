@@ -14,7 +14,7 @@ namespace Gu.SerializationAsserts.Newtonsoft.Json.Tests
             {
                 JsonAssert.Equal(expectedJson, actualJson);
                 JsonAssert.Equal(expectedJson, actualJson, JsonAssertOptions.Verbatim);
-                JsonAssert.Equal(expectedJson, actualJson, JsonAssertOptions.IgnoreElementOrder);
+                JsonAssert.Equal(expectedJson, actualJson, JsonAssertOptions.Default);
             }
 
             [Test]
@@ -30,7 +30,7 @@ namespace Gu.SerializationAsserts.Newtonsoft.Json.Tests
 
                 JsonAssert.Equal(json, json);
                 JsonAssert.Equal(json, json, JsonAssertOptions.Verbatim);
-                JsonAssert.Equal(json, json, JsonAssertOptions.IgnoreElementOrder);
+                JsonAssert.Equal(json, json, JsonAssertOptions.Default);
             }
 
             [Test]
@@ -44,7 +44,7 @@ namespace Gu.SerializationAsserts.Newtonsoft.Json.Tests
 
                 JsonAssert.Equal(json, json);
                 JsonAssert.Equal(json, json, JsonAssertOptions.Verbatim);
-                JsonAssert.Equal(json, json, JsonAssertOptions.IgnoreElementOrder);
+                JsonAssert.Equal(json, json, JsonAssertOptions.Default);
             }
 
             [Test]
@@ -66,7 +66,7 @@ namespace Gu.SerializationAsserts.Newtonsoft.Json.Tests
 
                 JsonAssert.Equal(json, json);
                 JsonAssert.Equal(json, json, JsonAssertOptions.Verbatim);
-                JsonAssert.Equal(json, json, JsonAssertOptions.IgnoreElementOrder);
+                JsonAssert.Equal(json, json, JsonAssertOptions.Default);
             }
 
             [Test]
@@ -86,7 +86,32 @@ namespace Gu.SerializationAsserts.Newtonsoft.Json.Tests
 
                 JsonAssert.Equal(json, json);
                 JsonAssert.Equal(json, json, JsonAssertOptions.Verbatim);
-                JsonAssert.Equal(json, json, JsonAssertOptions.IgnoreElementOrder);
+                JsonAssert.Equal(json, json, JsonAssertOptions.Default);
+            }
+
+            [Test]
+            public void IgnoresOrder()
+            {
+                var expectedJson = "{\r\n" +
+                                   "  \"A\": 1, \r\n" +
+                                   "  \"B\": 2 \r\n" +
+                                   "}";
+
+                var actualJson = "{\r\n" +
+                                 "  \"B\": 2, \r\n" +
+                                 "  \"A\": 1 \r\n" +
+                                 "}";
+                JsonAssert.Equal(expectedJson, actualJson, JsonAssertOptions.Default);
+                JsonAssert.Equal(expectedJson, actualJson);
+            }
+
+            [Test]
+            public void NullAndMissingElement()
+            {
+                var expectedJson = "{ \"A\": null, \"B\": 1 }";
+                var actualJson = "{ \"B\": 1 }";
+                Assert.Inconclusive("dunno if we want this");
+                //JsonAssert.Equal(expectedJson, actualJson, JsonAssertOptions.TreatNullAndMissingAsEqual);
             }
         }
     }

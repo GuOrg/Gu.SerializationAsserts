@@ -47,91 +47,61 @@
             var expected = new Dummy { Value = 1 };
             var actual = new Dummy { Value = 2 };
             var ex = Assert.Throws<AssertException>(() => JsonSerializerAssert.Equal(expected, actual));
-            var expectedMessage = "  Json differ at line 1 index 7.\r\n" +
+            var expectedMessage = "  Json differ at line 1 index 9.\r\n" +
                                   "  Expected: 1| {\"Value\":1}\r\n" +
                                   "  But was:  1| {\"Value\":2}\r\n" +
-                                  "  ------------------------^";
+                                  "  ----------------------^";
             Assert.AreEqual(expectedMessage, ex.Message);
         }
 
         [Test]
-        public void Equal()
+        public void RoundtripWithExpectedJson()
         {
-            Assert.Fail();
-            //var actual = new Dummy { Value = 2 };
-            //var expectedJson = "<Dummy>\r\n" +
-            //                  "  <Value>2</Value>\r\n" +
-            //                  "</Dummy>";
-            //var roundtrip = JsonSerializerAssert.Equal(expectedJson, actual, JsonAssertOptions.IgnoreNamespaces | JsonAssertOptions.IgnoreDeclaration);
-            //Assert.AreEqual(roundtrip.Value, actual.Value);
-            //FieldAssert.Equal(actual, roundtrip);
+            var actual = new Dummy { Value = 2 };
+            var expectedJson = "{\"Value\":2}";
+            var roundtrips = new[]
+            {
+                JsonSerializerAssert.Equal(expectedJson, actual),
+                JsonSerializerAssert.Equal(expectedJson, actual, JsonAssertOptions.Default),
+                JsonSerializerAssert.Equal(expectedJson, actual, JsonAssertOptions.Verbatim),
+                JsonSerializerAssert.Roundtrip(actual)
+            };
+            foreach (var roundtrip in roundtrips)
+            {
+                Assert.AreEqual(2, roundtrip.Value);
+            }
         }
 
         [Test]
-        public void EqualJsonAttributeClass()
+        public void RoundtripWithArrayOfInts()
         {
-            Assert.Fail();
-            //var actual = new JsonAttributeClass { Value = 2 };
-            //var expectedJson = "<JsonAttributeClass Value=\"2\" />";
-            //var roundtrip = JsonSerializerAssert.Equal(expectedJson, actual, JsonAssertOptions.IgnoreNamespaces | JsonAssertOptions.IgnoreDeclaration);
-            //Assert.AreEqual(roundtrip.Value, actual.Value);
-            //FieldAssert.Equal(actual, roundtrip);
+            var ints = new[] { 1, 2, 3 };
+            var actual = new WithIntArray { Values = ints };
+            var expectedJson = "{\"Values\":[1,2,3]}";
+            var roundtrips = new[]
+            {
+                JsonSerializerAssert.Equal(expectedJson, actual),
+                JsonSerializerAssert.Equal(expectedJson, actual, JsonAssertOptions.Default),
+                JsonSerializerAssert.Equal(expectedJson, actual, JsonAssertOptions.Verbatim),
+                JsonSerializerAssert.Roundtrip(actual)
+            };
+            foreach (var roundtrip in roundtrips)
+            {
+                CollectionAssert.AreEqual(ints, roundtrip.Values);
+            }
         }
 
         [Test]
-        public void EqualForgotReadEndElementThrows()
+        public void WithWrongCtorParameter()
         {
-            Assert.Fail();
-            //var actual = new ForgotReadEndElement { Value = 2 };
-            //var expectedJson = "<ForgotReadEndElement><Value>2</Value></ForgotReadEndElement>";
-            //var ex = Assert.Throws<AssertException>(()=> JsonSerializerAssert.Equal(expectedJson, actual, JsonAssertOptions.IgnoreNamespaces | JsonAssertOptions.IgnoreDeclaration));
-            //var expectedMessage = "  Roundtrip of item in ContainerClass Failed.\r\n" +
-            //                      "  This means there is an error in serialization.\r\n" +
-            //                      "  If you are implementing IJsonSerializable check that you handle ReadEndElement properly as it is a common source of bugs.";
-            //Assert.AreEqual(expectedMessage, ex.Message);
-        }
-
-        [Test]
-        public void EqualReadingOutsideEndElementThrows()
-        {
-            Assert.Fail();
-            //var actual = new ReadingOutsideEndElement { Value = 2 };
-            //var expectedJson = "<ReadingOutsideEndElement><Value>2</Value></ReadingOutsideEndElement>";
-            //var ex = Assert.Throws<AssertException>(() => JsonSerializerAssert.Equal(expectedJson, actual, JsonAssertOptions.IgnoreNamespaces | JsonAssertOptions.IgnoreDeclaration));
-            //var expectedMessage = "  Roundtrip of item in ContainerClass Failed.\r\n" +
-            //                      "  This means there is an error in serialization.\r\n" +
-            //                      "  If you are implementing IJsonSerializable check that you handle ReadEndElement properly as it is a common source of bugs.";
-            //Assert.AreEqual(expectedMessage, ex.Message);
-        }
-
-        [Test]
-        public void EqualThrowsOnMissingDeclarationWhenVerbatim()
-        {
-            Assert.Fail();
-            //var actual = new Dummy { Value = 2 };
-            //var expectedJson = "<Dummy>\r\n" +
-            //                  "  <Value>2</Value>\r\n" +
-            //                  "</Dummy>";
-            //var ex = Assert.Throws<AssertException>(() => JsonSerializerAssert.Equal(expectedJson, actual, JsonAssertOptions.Verbatim));
-            //var expectedMessage = "  Json differ at line 1 index 1.\r\n" +
-            //                      "  Expected: 1| <Dummy>\r\n" +
-            //                      "  But was:  1| <?Json version=\"1.0\" encoding=\"utf-16\"?>\r\n" +
-            //                      "  --------------^";
-            //Assert.AreEqual(expectedMessage, ex.Message);
-        }
-
-        [Test]
-        public void EqualWithAttributeAndDeclaration()
-        {
-            Assert.Fail();
-            //var actual = new Dummy { Value = 2 };
-            //var expectedJson = "<?Json version=\"1.0\" encoding=\"utf-16\"?>\r\n" +
-            //                  "<Dummy Jsonns:xsd=\"http://www.w3.org/2001/JsonSchema\" Jsonns:xsi=\"http://www.w3.org/2001/JsonSchema-instance\">\r\n" +
-            //                  "  <Value>2</Value>\r\n" +
-            //                  "</Dummy>";
-            //var roundtrip = JsonSerializerAssert.Equal(expectedJson, actual);
-            //Assert.AreEqual(roundtrip.Value, actual.Value);
-            //FieldAssert.Equal(actual, roundtrip);
+            var actual = new WithWrongCtorParameter("meh");
+            var expectedJson = "{\"Name\":\"meh\"}";
+            var ex = Assert.Throws<AssertException>(() => JsonSerializerAssert.Equal(expectedJson, actual));
+            var expectedMessage = "  Simple roundtrip failed. Source is not equal to roundtripped.\r\n" +
+                                  "  AssertException:   Found this difference between expected and actual:\r\n" +
+                                  "  expected.<Name>k__BackingField: meh\r\n" +
+                                  "    actual.<Name>k__BackingField: null";
+            Assert.AreEqual(expectedMessage, ex.Message);
         }
     }
 }

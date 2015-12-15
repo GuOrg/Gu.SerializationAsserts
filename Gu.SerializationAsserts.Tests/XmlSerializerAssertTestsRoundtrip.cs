@@ -85,7 +85,7 @@
         {
             var actual = new ForgotReadElement { Value = 2 };
             var ex = Assert.Throws<AssertException>(() => XmlSerializerAssert.Roundtrip(actual));
-            var expectedMessage = "  Simple roundtrip failed. item is not equal to roundtripped.\r\n" +
+            var expectedMessage = "  Simple roundtrip failed. Source is not equal to roundtripped.\r\n" +
                                   "  AssertException:   Found this difference between expected and actual:\r\n" +
                                   "  expected.value: 2\r\n" +
                                   "    actual.value: 0";

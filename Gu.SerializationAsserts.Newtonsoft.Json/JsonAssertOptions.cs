@@ -2,7 +2,7 @@
 {
     public enum JsonAssertOptions
     {
-        Verbatim,
-        IgnoreElementOrder
+        Default,
+        Verbatim
     }
 }

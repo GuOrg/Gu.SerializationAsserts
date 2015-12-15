@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="Dtos\Dummy.cs" />
     <Compile Include="Dtos\DumpJson.cs" />
+    <Compile Include="Dtos\WithDummy.cs" />
     <Compile Include="Dtos\WithDummyArray.cs" />
     <Compile Include="Dtos\WithIntArray.cs" />
     <Compile Include="Dtos\WithWrongCtorParameter.cs" />

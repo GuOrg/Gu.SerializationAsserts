@@ -14,7 +14,7 @@
         /// <param name="expected">The expected Json</param>
         /// <param name="actual">The actual Json</param>
         /// <param name="options">How to compare the Json</param>
-        public static void Equal(string expected, string actual, JsonAssertOptions options = JsonAssertOptions.Verbatim)
+        public static void Equal(string expected, string actual, JsonAssertOptions options = JsonAssertOptions.Default)
         {
             var expectedJson = ParseDocument(expected, nameof(expected), options);
             var actualJson = ParseDocument(actual, nameof(actual), options);
@@ -58,20 +58,20 @@
                     var message = CreateMessage(expected, actual);
                     throw new AssertException(message);
                 }
-                var actualProperty = (JProperty)actualToken;
-                if (actualProperty.HasValues)
+
+                if (actualValue.HasValues)
                 {
                     var message = CreateMessage(expected, actual);
                     throw new AssertException(message);
                 }
 
                 var valueComparer = JValueComparer.GetFor(options);
-                if (valueComparer.Equals(expectedValue, actualProperty))
+                if (valueComparer.Equals(expectedValue, actualValue))
                 {
                     return;
                 }
 
-                if (comparer?.Equals(expectedValue, actualProperty) == true)
+                if (comparer?.Equals(expectedValue, actualValue) == true)
                 {
                     return;
                 }
@@ -92,7 +92,7 @@
 
         private static void CheckElementOrder(JTokenAndSource expected, JTokenAndSource actual, JsonAssertOptions options)
         {
-            if (options.HasFlag(JsonAssertOptions.IgnoreElementOrder))
+            if (!options.HasFlag(JsonAssertOptions.Verbatim))
             {
                 return;
             }

@@ -6,11 +6,12 @@
 
     public class DumpJson
     {
-        [Test]
+        [Test, Explicit]
         public void Dump()
         {
-            var item = new[] { 1, 2, 3 };
-            var json = JsonSerializerAssert.ToEscapedJson(item, new JsonSerializerSettings { Formatting = Formatting.Indented });
+            var item = new Dummy(1);
+            var settings = new JsonSerializerSettings { Formatting = Formatting.Indented };
+            var json = JsonSerializerAssert.ToJson(item, settings);
             Console.Write(json);
         }
     }

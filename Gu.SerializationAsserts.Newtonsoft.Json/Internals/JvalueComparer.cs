@@ -31,11 +31,6 @@
                 return false;
             }
 
-            if (x.Type != JTokenType.Property || y.Type != JTokenType.Property)
-            {
-                return false;
-            }
-
             return Equals(x.Value, y.Value);
         }
 

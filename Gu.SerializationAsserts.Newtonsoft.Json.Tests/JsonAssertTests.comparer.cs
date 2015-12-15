@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Globalization;
     using global::Newtonsoft.Json.Linq;
     using NUnit.Framework;
 
@@ -11,28 +10,21 @@
         [Test]
         public void EqualWithCustomElementComparer()
         {
-            var expected = "<?Json version=\"1.0\" encoding=\"utf-16\"?>" +
-                           "<Foo Jsonns:xsd=\"http://www.w3.org/2001/JsonSchema\" Jsonns:xsi=\"http://www.w3.org/2001/JsonSchema-instance\">" +
-                           "  <Bar>1</Bar>" +
-                           "</Foo>";
-
-            var actual = "<?Json version=\"1.0\" encoding=\"utf-16\"?>" +
-                         "<Foo Jsonns:xsd=\"http://www.w3.org/2001/JsonSchema\" Jsonns:xsi=\"http://www.w3.org/2001/JsonSchema-instance\">" +
-                         "  <Bar>  1.0  </Bar>" +
-                         "</Foo>";
-            Assert.Fail();
-            //JsonAssert.Equal(expected, actual, new DoubleValueComparer(), null);
+            var expected = "{\"Value\":1.234}";
+            var actual = "{\"Value\":1.2345}";
+            JsonAssert.Equal(expected, actual, new DoubleValueComparer());
         }
 
-        private class DoubleValueComparer : IEqualityComparer<JProperty>
+        private class DoubleValueComparer : IEqualityComparer<JValue>
         {
-            public bool Equals(JProperty x, JProperty y)
+            public bool Equals(JValue x, JValue y)
             {
-                throw new NotImplementedException();
-                //return double.Parse(x.Value, CultureInfo.InvariantCulture) == double.Parse(y.Value, CultureInfo.InvariantCulture);
+                var xv = (double)x.Value;
+                var yv = (double)y.Value;
+                return Math.Abs(xv - yv) < 1E-3;
             }
 
-            public int GetHashCode(JProperty obj)
+            int IEqualityComparer<JValue>.GetHashCode(JValue obj)
             {
                 throw new System.NotImplementedException();
             }

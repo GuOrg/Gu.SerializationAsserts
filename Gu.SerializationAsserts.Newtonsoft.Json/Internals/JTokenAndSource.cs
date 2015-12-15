@@ -12,12 +12,17 @@ namespace Gu.SerializationAsserts.Newtonsoft.Json
             this.Json = json;
             this.JToken = jObject;
             this.Options = options;
-            this.Children = jObject.Children().Select(x => new JTokenAndSource(json, x, options)).ToList();
+            var children = jObject.Children().Select(x => new JTokenAndSource(json, x, options));
+            this.Children = options == JsonAssertOptions.Verbatim
+                ? children.ToList()
+                : children.OrderBy(x => x.PropertyName).ToList();
         }
 
         internal JToken JToken { get; }
 
         internal JProperty JProperty => this.JToken as JProperty;
+
+        internal string PropertyName => JProperty?.Name;
 
         internal string Json { get; }
 

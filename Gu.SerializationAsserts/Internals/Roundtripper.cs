@@ -21,7 +21,7 @@ namespace Gu.SerializationAsserts
             catch (Exception e)
             {
                 throw AssertException.CreateFromException(
-                    $"Simple roundtrip failed. {paremeterName} is not equal to roundtripped.",
+                    $"Simple roundtrip failed. Source is not equal to roundtripped.",
                     e);
             }
 

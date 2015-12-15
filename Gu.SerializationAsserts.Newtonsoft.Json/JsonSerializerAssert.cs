@@ -168,7 +168,8 @@ namespace Gu.SerializationAsserts.Newtonsoft.Json
         /// <returns>Json escaped and ready to paste in code.</returns>
         public static string ToEscapedJson<T>(T item)
         {
-            return ToJson(item).Escape(); // wasteful allocation here but np I think;
+            var json = ToJson(item);
+            return json.Escape(); // wasteful allocation here but np I think;
         }
 
         /// <summary>
@@ -180,7 +181,8 @@ namespace Gu.SerializationAsserts.Newtonsoft.Json
         /// <returns>Json escaped and ready to paste in code.</returns>
         public static string ToEscapedJson<T>(T item, JsonSerializerSettings settings)
         {
-            return ToJson(item, settings).Escape(); // wasteful allocation here but np I think;
+            var json = ToJson(item, settings);
+            return json.Escape(); // wasteful allocation here but np I think;
         }
 
         /// <summary>

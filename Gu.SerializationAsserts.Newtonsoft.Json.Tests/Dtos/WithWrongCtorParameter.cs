@@ -7,6 +7,6 @@ namespace Gu.SerializationAsserts.Newtonsoft.Json.Tests.Dtos
             this.Name = nameThatDoesNotMatch;
         }
 
-        public string Name { get; set; }
+        public string Name { get; }
     }
 }
