@@ -5,14 +5,19 @@
     using System.IO;
     using System.Runtime.Serialization.Formatters.Binary;
 
-    public class BinaryEqualsComparer<T> : IEqualityComparer<T>, IComparer
+    /// <summary>
+    /// Serializes the comparands using <see cref="BinaryFormatter"/> and compares the bytes.
+    /// </summary>
+    /// <typeparam name="T">The type of the items to compare</typeparam>
+    public class BinaryComparer<T> : IEqualityComparer<T>, IComparer
     {
-        public static readonly BinaryEqualsComparer<T> Default = new BinaryEqualsComparer<T>();
+        public static readonly BinaryComparer<T> Default = new BinaryComparer<T>();
 
-        private BinaryEqualsComparer()
+        private BinaryComparer()
         {
         }
 
+        /// <inheritdoc/>
         public bool Equals(T x, T y)
         {
             if (x == null && y == null)
@@ -32,7 +37,7 @@
                 return false;
             }
 
-            for (int i = 0; i < xs.Length; i++)
+            for (var i = 0; i < xs.Length; i++)
             {
                 if (xs[i] != ys[i])
                 {
@@ -43,6 +48,7 @@
             return true;
         }
 
+        /// <inheritdoc/>
         public int GetHashCode(T obj)
         {
             Ensure.NotNull(obj, nameof(obj));
@@ -50,7 +56,7 @@
             unchecked
             {
                 var result = 0;
-                for (int i = 0; i < bytes.Length; i++)
+                for (var i = 0; i < bytes.Length; i++)
                 {
                     result = (result * 31) ^ bytes[i];
                 }
@@ -59,6 +65,7 @@
             }
         }
 
+        /// <inheritdoc/>
         int IComparer.Compare(object x, object y)
         {
             return this.Equals((T)x, (T)y) ? 0 : 1;

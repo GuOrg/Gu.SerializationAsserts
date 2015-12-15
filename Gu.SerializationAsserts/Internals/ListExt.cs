@@ -7,6 +7,11 @@
     {
         internal static T ElementAtOrDefault<T>(this IReadOnlyList<T> items, int index, T @default = default(T))
         {
+            if (items == null)
+            {
+                return @default;
+            }
+
             if (items.Count > index)
             {
                 return items[index];

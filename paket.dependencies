@@ -3,3 +3,4 @@ source http://nuget.org/api/v2
 nuget JetBrains.Annotations @= 10.0.0
 nuget NUnit @= 2.6.4
 nuget StyleCop.Analyzers -prerelease
+nuget Newtonsoft.Json

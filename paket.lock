@@ -2,5 +2,6 @@ NUGET
   remote: http://nuget.org/api/v2
   specs:
     JetBrains.Annotations (10.0.0)
+    Newtonsoft.Json (7.0.1)
     NUnit (2.6.4)
-    StyleCop.Analyzers (1.0.0-beta015)
+    StyleCop.Analyzers (1.0.0-rc2)
