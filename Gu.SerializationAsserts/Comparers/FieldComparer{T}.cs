@@ -4,9 +4,10 @@
     using System.Collections.Generic;
 
     /// <summary>
-    /// A deep equals checking nested fields
+    /// A deep equals checking nested fields.
+    /// Handles collections and reference loops.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="T">The type of instances to check</typeparam>
     public class FieldComparer<T> : IEqualityComparer<T>, IComparer
     {
         public static readonly FieldComparer<T> Default = new FieldComparer<T>();
@@ -15,6 +16,7 @@
         {
         }
 
+        /// <inheritdoc/>
         public bool Equals(T x, T y)
         {
             var comparison = DeepEqualsNode.CreateFor(x, y);
@@ -24,9 +26,6 @@
         /// <summary>
         /// nUnit uses IComparer for CollectionAssert
         /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        /// <returns></returns>
         int IComparer.Compare(object x, object y)
         {
             var comparison = DeepEqualsNode.CreateFor(x, y);
@@ -38,6 +37,7 @@
             return -1;
         }
 
+        /// <inheritdoc/>
         int IEqualityComparer<T>.GetHashCode(T obj)
         {
             throw new System.NotImplementedException();

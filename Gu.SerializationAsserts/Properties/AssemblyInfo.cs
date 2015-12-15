@@ -37,3 +37,5 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyFileVersion("0.3.0.0")]
 [assembly: NeutralResourcesLanguageAttribute("en")]
 [assembly: InternalsVisibleTo("Gu.SerializationAsserts.Tests", AllInternalsVisible = true)]
+[assembly: InternalsVisibleTo("Gu.SerializationAsserts.Newtonsoft.Json", AllInternalsVisible = true)]
+[assembly: InternalsVisibleTo("Gu.SerializationAsserts.Newtonsoft.Json.Tests", AllInternalsVisible = true)]

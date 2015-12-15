@@ -56,22 +56,18 @@
             var nameComparer = XNameComparer.GetFor(options);
 
             CheckAttributeOrder(expected, actual, options);
-
-            // ReSharper disable once InvokeAsExtensionMethod
-            var childAttributeNames = Enumerable.Concat(
-                expected?.Attributes.Select(x => x.Attribute.Name) ?? EmptyNames,
-                actual?.Attributes.Select(x => x.Attribute.Name) ?? EmptyNames)
-                                              .Distinct(nameComparer);
-            foreach (var name in childAttributeNames)
+            var defaultAttributeComparer = XAttributeComparer.GetFor(options);
+            for (int i = 0; i < Math.Max(expected?.Attributes.Count ?? 0, actual?.Attributes.Count ?? 0); i++)
             {
-                var expectedAttribute = expected?.Attributes.SingleOrDefault(x => nameComparer.Equals(x.Attribute.Name, name));
-                var actualAttribute = actual?.Attributes.SingleOrDefault(x => nameComparer.Equals(x.Attribute.Name, name));
-                if (XAttributeComparer.GetFor(options).Equals(expectedAttribute?.Attribute, actualAttribute?.Attribute))
+                var expectedAttribute = expected?.Attributes.ElementAtOrDefault(i);
+                var actualAttribute = actual?.Attributes.ElementAtOrDefault(i);
+
+                if (defaultAttributeComparer.Equals(expectedAttribute?.Attribute, actualAttribute?.Attribute))
                 {
                     continue;
                 }
 
-                if (!attributeComparer.Equals(expectedAttribute?.Attribute, actualAttribute?.Attribute))
+                if (attributeComparer?.Equals(expectedAttribute?.Attribute, actualAttribute?.Attribute) == false)
                 {
                     var message = expectedAttribute == null || actualAttribute == null
                         ? CreateMessage(expected, actual)
@@ -104,7 +100,7 @@
 
             CheckElementOrder(expected, actual, options);
 
-            for (int i = 0; i < Math.Max(expected.Elements.Count, actual.Elements.Count); i++)
+            for (int i = 0; i < Math.Max(expected?.Elements.Count ?? 0, actual?.Elements.Count ?? 0); i++)
             {
                 var expectedChild = expected?.Elements.ElementAtOrDefault(i);
                 var actualChild = actual?.Elements.ElementAtOrDefault(i);
