@@ -79,7 +79,7 @@ namespace Gu.SerializationAsserts.Newtonsoft.Json
         {
             var actualJson = ToJson(actual, nameof(actual), settings);
             JsonAssert.Equal(expectedJson, actualJson, options);
-            return Roundtrip(actual);
+            return Roundtrip(actual, settings);
         }
 
         /// <summary>
