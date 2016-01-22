@@ -112,6 +112,14 @@
         }
 
         [Test]
+        public void EqualWhenDifferentCaseEncoding()
+        {
+            var actualXml = "<?xml version=\"1.0\" encoding=\"utf-8\"?><Dummy />";
+            var expectedXml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><Dummy />";
+            XmlAssert.Equal(expectedXml, actualXml);
+        }
+
+        [Test]
         public void NotEqualWhenWrongEncoding()
         {
             var actualXml = "<?xml version=\"1.0\" encoding=\"utf-8\"?><Dummy />";
