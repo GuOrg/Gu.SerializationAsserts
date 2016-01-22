@@ -62,11 +62,15 @@
     <Compile Include="Comparers\DeepEquals\ComparedPair.cs" />
     <Compile Include="Comparers\DeepEquals\ComparisonTracker.cs" />
     <Compile Include="Comparers\DeepEquals\DeepEqualsNode.cs" />
+    <Compile Include="Comparers\XAttributeDoubleValueComparer.cs" />
+    <Compile Include="Comparers\XAttributeMultiComparer.cs" />
+    <Compile Include="Comparers\XElementDoubleValueComparer.cs" />
     <Compile Include="Comparers\FieldComparer.cs" />
     <Compile Include="Comparers\FieldComparer{T}.cs" />
     <Compile Include="Comparers\DeepEquals\ICompared.cs" />
     <Compile Include="Comparers\XAttributeComparer.cs" />
     <Compile Include="Comparers\XElementComparer.cs" />
+    <Compile Include="Comparers\XElementMultiComparer.cs" />
     <Compile Include="Comparers\XmlAssertOptionsComparer.cs" />
     <Compile Include="Comparers\XmlComparer.cs" />
     <Compile Include="Comparers\XmlComparer{T}.cs" />
