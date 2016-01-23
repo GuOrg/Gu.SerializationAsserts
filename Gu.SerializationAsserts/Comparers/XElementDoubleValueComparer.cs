@@ -27,7 +27,7 @@
             if (double.TryParse(x.Value, NumberStyles.Float, CultureInfo.InvariantCulture, out xValue) &&
                 double.TryParse(y.Value, NumberStyles.Float, CultureInfo.InvariantCulture, out yValue))
             {
-                return Math.Abs(xValue - yValue) < this.tolerance;
+                return Math.Abs(xValue - yValue) <= this.tolerance;
             }
 
             return false;

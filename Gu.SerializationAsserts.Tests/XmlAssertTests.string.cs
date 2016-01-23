@@ -329,6 +329,17 @@
         }
 
         [Test]
+        public void EqualWhenTreatEmptyAndMissingElement4()
+        {
+            var xml1 = @"<Positions><C></C><X>2.2</X><Y>3.3</Y><E/></Positions>";
+            var xml2 = @"<Positions><X>2.2</X><D/><Y>3.3</Y></Positions>";
+            Assert.Throws<AssertException>(() => XmlAssert.Equal(xml1, xml2));
+            Assert.Throws<AssertException>(() => XmlAssert.Equal(xml2, xml1));
+            Assert.Throws<AssertException>(() => XmlAssert.Equal(xml1, xml2));
+            Assert.Throws<AssertException>(() => XmlAssert.Equal(xml2, xml1));
+        }
+
+        [Test]
         public void EqualTreatEmptyAndMissingElementsAsEqual1()
         {
             var expectedXmls = new[]
@@ -387,6 +398,17 @@
         }
 
         [Test]
+        public void EqualWhenTreatEmptyAndMissingElement3()
+        {
+            var xml1 = @"<Positions><C></C><X>2.2</X><Y>3.3</Y><E/></Positions>";
+            var xml2 = @"<Positions><X>2.2</X><D/><Y>3.3</Y></Positions>";
+            XmlAssert.Equal(xml1, xml2, XmlAssertOptions.TreatEmptyAndMissingAsEqual);
+            XmlAssert.Equal(xml2, xml1, XmlAssertOptions.TreatEmptyAndMissingAsEqual);
+            XmlAssert.Equal(xml1, xml2, XmlAssertOptions.TreatEmptyAndMissingElemensAsEqual);
+            XmlAssert.Equal(xml2, xml1, XmlAssertOptions.TreatEmptyAndMissingElemensAsEqual);
+        }
+
+        [Test]
         public void NotEqualWhenWrongNestedElement()
         {
             var expectedXml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n" +
@@ -433,10 +455,10 @@
                                Assert.Throws<AssertException>(() => XmlAssert.Equal(expectedXml, actualXml, XmlAssertOptions.Verbatim))
                            };
             var expected = "  The order of elements is incorrect.\r\n" +
-                           "  Xml differ at line 3 index 6.\r\n" +
-                           "  Expected: 3| <Value1>1</Value1>\r\n" +
+                           "  Line 4 in expected is found at line 3 in actual.\r\n" +
+                           "  Expected: 4| <Value2>2</Value2>\r\n" +
                            "  But was:  3| <Value2>2</Value2>\r\n" +
-                           "  -------------------^";
+                           "  ----------^";
             foreach (var ext in exts)
             {
                 Assert.AreEqual(expected, ext.Message);

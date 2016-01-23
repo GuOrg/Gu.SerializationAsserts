@@ -24,6 +24,8 @@
 
         public XmlAssertOptions Options { get; }
 
+        public bool IsEmpty => this.Attributes.Count == 0 && this.Elements.Count == 0 && string.IsNullOrEmpty(this.Element.Value);
+
         public IReadOnlyList<XAttributeAndSource> Attributes => this.CreateAttributes();
 
         public IReadOnlyList<XElementAndSource> Elements => this.CreateElements();

@@ -3,13 +3,10 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
-    using System.Linq;
     using System.Xml.Linq;
 
     public static class XmlAssert
     {
-        private static readonly XName[] EmptyNames = new XName[0];
-
         /// <summary>
         /// Parses the xml and compares expected to actual.
         /// </summary>
@@ -18,11 +15,7 @@
         /// <param name="options">How to compare the xml</param>
         public static void Equal(string expected, string actual, XmlAssertOptions options = XmlAssertOptions.Verbatim)
         {
-            var expectedXml = ParseDocument(expected, nameof(expected), options);
-            var actualXml = ParseDocument(actual, nameof(actual), options);
-            var xElementComparer = new XElementComparer(options);
-            var xAttributeComparer = new XAttributeComparer(options);
-            Equal(expectedXml, actualXml, xElementComparer, xAttributeComparer, options);
+            Equal(expected, actual, null, null, options);
         }
 
         /// <summary>
@@ -38,9 +31,7 @@
             IEqualityComparer<XElement> elementComparer,
             XmlAssertOptions options = XmlAssertOptions.Verbatim)
         {
-            var expectedXml = ParseDocument(expected, nameof(expected), options);
-            var actualXml = ParseDocument(actual, nameof(actual), options);
-            Equal(expectedXml, actualXml, elementComparer, null, options);
+            Equal(expected, actual, elementComparer, null, options);
         }
 
         /// <summary>
@@ -56,9 +47,7 @@
             IEqualityComparer<XAttribute> attributeComparer,
             XmlAssertOptions options = XmlAssertOptions.Verbatim)
         {
-            var expectedXml = ParseDocument(expected, nameof(expected), options);
-            var actualXml = ParseDocument(actual, nameof(actual), options);
-            Equal(expectedXml, actualXml, null, attributeComparer, options);
+            Equal(expected, actual, null, attributeComparer, options);
         }
 
         /// <summary>
@@ -77,8 +66,15 @@
             XmlAssertOptions options = XmlAssertOptions.Verbatim)
         {
             var expectedXml = ParseDocument(expected, nameof(expected), options);
+
+            // we want to parse first to assert that it is valid xml
+            if (expected == actual)
+            {
+                return;
+            }
+
             var actualXml = ParseDocument(actual, nameof(actual), options);
-            Equal(expectedXml, actualXml, null, attributeComparer, options);
+            Equal(expectedXml, actualXml, elementComparer, attributeComparer, options);
         }
 
         private static void Equal(
@@ -100,7 +96,12 @@
             Equal(expected.Element, actual.Element, elementComparer, attributeComparer, options);
         }
 
-        private static void Equal(XElementAndSource expected, XElementAndSource actual, IEqualityComparer<XElement> elementComparer, IEqualityComparer<XAttribute> attributeComparer, XmlAssertOptions options)
+        private static void Equal(
+            XElementAndSource expected,
+            XElementAndSource actual,
+            IEqualityComparer<XElement> customElementComparer,
+            IEqualityComparer<XAttribute> customAttributeComparer,
+            XmlAssertOptions options)
         {
             var nameComparer = XNameComparer.GetFor(options);
             CheckAttributeOrder(expected, actual, options);
@@ -115,13 +116,15 @@
                     continue;
                 }
 
-                if (attributeComparer?.Equals(expectedAttribute?.Attribute, actualAttribute?.Attribute) == false)
+                if (customAttributeComparer?.Equals(expectedAttribute?.Attribute, actualAttribute?.Attribute) == true)
                 {
-                    var message = expectedAttribute == null || actualAttribute == null
-                        ? CreateMessage(expected, actual)
-                        : CreateMessage(expectedAttribute, actualAttribute);
-                    throw new AssertException(message);
+                    continue;
                 }
+
+                var message = expectedAttribute == null || actualAttribute == null
+                    ? CreateMessage(expected, actual)
+                    : CreateMessage(expectedAttribute, actualAttribute);
+                throw new AssertException(message);
             }
 
             if ((expected?.Elements.Count ?? 0) == 0 && (actual?.Elements.Count ?? 0) == 0)
@@ -131,13 +134,13 @@
                     return;
                 }
 
-                if (!elementComparer.Equals(expected?.Element, actual?.Element))
+                if (customElementComparer?.Equals(expected?.Element, actual?.Element) == true)
                 {
-                    var message = CreateMessage(expected, actual);
-                    throw new AssertException(message);
+                    return;
                 }
 
-                return;
+                var message = CreateMessage(expected, actual);
+                throw new AssertException(message);
             }
 
             if (!nameComparer.Equals(expected?.Element.Name, actual?.Element.Name))
@@ -152,7 +155,7 @@
             {
                 var expectedChild = expected?.Elements.ElementAtOrDefault(i);
                 var actualChild = actual?.Elements.ElementAtOrDefault(i);
-                Equal(expectedChild, actualChild, elementComparer, attributeComparer, options);
+                Equal(expectedChild, actualChild, customElementComparer, customAttributeComparer, options);
             }
         }
 
@@ -169,41 +172,51 @@
             }
 
             var nameComparer = XNameComparer.GetFor(options);
-            int index = -1;
+            var actualIndex = 0;
             foreach (var attribute in expected.Attributes)
             {
-                var indexOf = actual.Attributes.IndexOf(attribute, x => x.Attribute.Name, nameComparer);
+                var indexOf = actual.Attributes.IndexOf(attribute, x => x.Attribute.Name, actualIndex, nameComparer);
                 if (indexOf < 0)
                 {
                     continue;
                 }
 
-                if (index > indexOf)
+                if (actualIndex > indexOf)
                 {
                     var message = CreateMessage(attribute, actual.Attributes[indexOf], "  The order of attributes is incorrect.");
                     throw new AssertException(message);
                 }
 
-                index = indexOf;
+                actualIndex = indexOf;
             }
         }
 
         private static void CheckElementOrder(XElementAndSource expected, XElementAndSource actual, XmlAssertOptions options)
         {
-            if (options.HasFlag(XmlAssertOptions.IgnoreElementOrder))
+            if (options.HasFlag(XmlAssertOptions.IgnoreElementOrder) ||
+                expected.Elements.Count == 0 ||
+                actual.Elements.Count == 0)
             {
                 return;
             }
 
             var nameComparer = XNameComparer.GetFor(options);
-            for (int i = 0; i < Math.Min(expected.Elements.Count, actual.Elements.Count); i++)
+            var actualIndex = 0;
+            foreach (var expectedElement in expected.Elements)
             {
-                if (!nameComparer.Equals(expected.Elements[i].Element.Name, actual.Elements[i].Element.Name) &&
-                    actual.Elements.FirstOrDefault(x => nameComparer.Equals(expected.Elements[i].Element.Name, x.Element.Name)) != null)
+                var indexOf = actual.Elements.IndexOf(expectedElement, x => x.Element.Name, actualIndex, nameComparer);
+                if (indexOf < 0)
                 {
-                    var message = CreateMessage(expected.Elements[i], actual.Elements[i], "  The order of elements is incorrect.");
+                    continue;
+                }
+
+                if (indexOf < actualIndex)
+                {
+                    var message = CreateMessage(expectedElement, actual.Elements[indexOf], "  The order of elements is incorrect.");
                     throw new AssertException(message);
                 }
+
+                actualIndex = indexOf;
             }
         }
 
@@ -225,6 +238,12 @@
             var actualLine = actual?.SourceXml.Line(actual.LineNumber).Trim();
             var index = expectedLine.FirstDiff(actualLine);
             var lineNumber = expected?.LineNumber ?? actual.LineNumber;
+            if (expected?.LineNumber != actual?.LineNumber &&
+                expectedLine == actualLine)
+            {
+                index = -(lineNumber.ToString().Length + 2);
+            }
+
             using (var writer = new StringWriter())
             {
                 if (subHeader != null)
@@ -233,7 +252,15 @@
                     writer.WriteLine();
                 }
 
-                writer.WriteLine($"  Xml differ at line {lineNumber} index {index}.");
+                if (index >= 0)
+                {
+                    writer.WriteLine($"  Xml differ at line {lineNumber} index {index}.");
+                }
+                else
+                {
+                    writer.WriteLine($"  Line {expected?.LineNumber} in expected is found at line {actual?.LineNumber} in actual.");
+                }
+
                 writer.WriteLine($"  Expected: {expected?.LineNumber}| {expectedLine}");
                 writer.WriteLine($"  But was:  {actual?.LineNumber.ToString() ?? new string('?', expected.LineNumber.ToString().Length)}| {actualLine ?? "Missing"}");
                 writer.Write($"  {new string('-', index + 13)}^");

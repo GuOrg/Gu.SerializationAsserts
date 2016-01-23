@@ -34,5 +34,21 @@
 
             return -1;
         }
+
+        internal static int IndexOf<TItem, TValue>(this IReadOnlyList<TItem> items, TItem item, Func<TItem, TValue> selector, int startAt, IEqualityComparer<TValue> comparer)
+        {
+            for (int i = startAt; i < items.Count; i++)
+            {
+                var x = selector(item);
+                var y = selector(items[i]);
+                if (comparer.Equals(x, y))
+                {
+                    return i;
+                }
+            }
+
+            // search from start if no match
+            return IndexOf(items, item, selector, comparer);
+        }
     }
 }
