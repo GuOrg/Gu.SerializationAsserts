@@ -250,20 +250,12 @@
         }
 
         [Test]
-        public void NotEqualWhenEmptyAndMissingElement()
+        public void NotEqualWhenEmptyAndMissingElement1()
         {
-            var expectedXmls = new[]
-                                   {
-                                      "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n" +
-                                      "<Dummy xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n" +
-                                      "  <Value></Value>\r\n" +
-                                      "</Dummy>",
-
-                                      //"<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n" +
-                                      //"<Dummy xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n" +
-                                      //"  <Value />\r\n" +
-                                      //"</Dummy>",
-                                   };
+            var expectedXml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n" +
+                               "<Dummy xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n" +
+                               "  <Value></Value>\r\n" +
+                               "</Dummy>";
 
             var actualXmls = new[]
                                  {
@@ -274,22 +266,70 @@
                                      "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n" +
                                      "<Dummy xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" />",
                                  };
-            foreach (var expectedXml in expectedXmls)
+
+            foreach (var actualXml in actualXmls)
             {
-                foreach (var actualXml in actualXmls)
-                {
-                    var xmlExt = Assert.Throws<AssertException>(() => XmlAssert.Equal(expectedXml, actualXml, XmlAssertOptions.Verbatim));
-                    var expected = "  Xml differ at line 3 index 0.\r\n" +
-                                   "  Expected: 3| <Value></Value>\r\n" +
-                                   "  But was:  ?| Missing\r\n" +
-                                   "  -------------^";
-                    Assert.AreEqual(expected, xmlExt.Message);
-                }
+                var xmlExt = Assert.Throws<AssertException>(() => XmlAssert.Equal(expectedXml, actualXml, XmlAssertOptions.Verbatim));
+                var expected = "  Xml differ at line 3 index 0.\r\n" +
+                               "  Expected: 3| <Value></Value>\r\n" +
+                               "  But was:  ?| Missing\r\n" +
+                               "  -------------^";
+                Assert.AreEqual(expected, xmlExt.Message);
             }
         }
 
         [Test]
-        public void EqualTreatEmptyAndMissingElementsAsEqual()
+        public void NotEqualWhenEmptyAndMissingElement2()
+        {
+            var expectedXml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n" +
+                              "<Dummy xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n" +
+                              "  <Value />\r\n" +
+                              "</Dummy>";
+
+            var actualXmls = new[]
+                                 {
+                                     "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n" +
+                                     "<Dummy xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n" +
+                                     "</Dummy>",
+
+                                     "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n" +
+                                     "<Dummy xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" />",
+                                 };
+            foreach (var actualXml in actualXmls)
+            {
+                var xmlExt = Assert.Throws<AssertException>(() => XmlAssert.Equal(expectedXml, actualXml, XmlAssertOptions.Verbatim));
+                var expected = "  Xml differ at line 3 index 0.\r\n" +
+                               "  Expected: 3| <Value />\r\n" +
+                               "  But was:  ?| Missing\r\n" +
+                               "  -------------^";
+                Assert.AreEqual(expected, xmlExt.Message);
+            }
+        }
+
+        [Test]
+        public void NotEqualWhenEmptyAndMissingElement3()
+        {
+            var expectedXml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n" +
+                              "<Dummy xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n" +
+                              "  <Element />\r\n" +
+                              "  <Value />\r\n" +
+                              "</Dummy>";
+
+            var actualXml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n" +
+                                     "<Dummy xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n" +
+                                      "  <Element />\r\n" +
+                                     "</Dummy>";
+
+            var xmlExt = Assert.Throws<AssertException>(() => XmlAssert.Equal(expectedXml, actualXml, XmlAssertOptions.Verbatim));
+            var expected = "  Xml differ at line 4 index 0.\r\n" +
+                           "  Expected: 4| <Value />\r\n" +
+                           "  But was:  ?| Missing\r\n" +
+                           "  -------------^";
+            Assert.AreEqual(expected, xmlExt.Message);
+        }
+
+        [Test]
+        public void EqualTreatEmptyAndMissingElementsAsEqual1()
         {
             var expectedXmls = new[]
                                    {
@@ -318,9 +358,32 @@
                 foreach (var actualXml in actualXmls)
                 {
                     XmlAssert.Equal(expectedXml, actualXml, XmlAssertOptions.TreatEmptyAndMissingElemensAsEqual);
+                    XmlAssert.Equal(actualXml, expectedXml, XmlAssertOptions.TreatEmptyAndMissingElemensAsEqual);
                     XmlAssert.Equal(expectedXml, actualXml, XmlAssertOptions.TreatEmptyAndMissingAsEqual);
+                    XmlAssert.Equal(actualXml, expectedXml, XmlAssertOptions.TreatEmptyAndMissingAsEqual);
                 }
             }
+        }
+
+        [Test]
+        public void EqualWhenTreatEmptyAndMissingElement2()
+        {
+            var expectedXml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n" +
+                              "<Dummy xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n" +
+                              "  <X>1.2</X>\r\n" +
+                              "  <Value />\r\n" +
+                              "</Dummy>";
+
+            var actualXml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n" +
+                                     "<Dummy xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n" +
+                                      "  <X>1.2</X>\r\n" +
+                                     "</Dummy>";
+
+            XmlAssert.Equal(expectedXml, actualXml, XmlAssertOptions.TreatEmptyAndMissingAsEqual);
+            XmlAssert.Equal(actualXml, expectedXml, XmlAssertOptions.TreatEmptyAndMissingAsEqual);
+
+            XmlAssert.Equal(expectedXml, actualXml, XmlAssertOptions.TreatEmptyAndMissingElemensAsEqual);
+            XmlAssert.Equal(actualXml, expectedXml, XmlAssertOptions.TreatEmptyAndMissingElemensAsEqual);
         }
 
         [Test]

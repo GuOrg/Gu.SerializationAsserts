@@ -54,7 +54,7 @@
         private static void Equal(XElementAndSource expected, XElementAndSource actual, IEqualityComparer<XElement> elementComparer, IEqualityComparer<XAttribute> attributeComparer, XmlAssertOptions options)
         {
             var nameComparer = XNameComparer.GetFor(options);
-
+            
             CheckAttributeOrder(expected, actual, options);
             var defaultAttributeComparer = XAttributeComparer.GetFor(options);
             for (int i = 0; i < Math.Max(expected?.Attributes.Count ?? 0, actual?.Attributes.Count ?? 0); i++)
@@ -110,6 +110,11 @@
 
         private static void CheckAttributeOrder(XElementAndSource expected, XElementAndSource actual, XmlAssertOptions options)
         {
+            if (expected == null || actual == null)
+            {
+                return;
+            }
+
             if (options.HasFlag(XmlAssertOptions.IgnoreAttributeOrder))
             {
                 return;
