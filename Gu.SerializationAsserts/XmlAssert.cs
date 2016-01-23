@@ -41,7 +41,7 @@
         {
             if (!options.HasFlag(XmlAssertOptions.IgnoreDeclaration))
             {
-                if (!FieldComparer<XDeclaration>.Default.Equals(expected.Document.Declaration, actual.Document.Declaration))
+                if (!XDeclarationComparer.Default.Equals(expected.Document.Declaration, actual.Document.Declaration))
                 {
                     var message = CreateMessage(expected, actual);
                     throw new AssertException(message);

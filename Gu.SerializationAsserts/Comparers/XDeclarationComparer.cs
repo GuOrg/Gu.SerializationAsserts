@@ -6,6 +6,12 @@
 
     public class XDeclarationComparer : IEqualityComparer<XDeclaration>
     {
+        public static readonly XDeclarationComparer Default = new XDeclarationComparer();
+
+        private XDeclarationComparer()
+        {
+        }
+
         public bool Equals(XDeclaration x, XDeclaration y)
         {
             if (x == null && y == null)
@@ -18,6 +24,7 @@
                 return false;
             }
 
+            // https://www.w3.org/TR/xml/#charencoding case insensitive
             if (!string.Equals(x.Encoding, y.Encoding, StringComparison.OrdinalIgnoreCase))
             {
                 return false;
