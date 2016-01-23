@@ -64,6 +64,7 @@
     <Compile Include="Comparers\DeepEquals\DeepEqualsNode.cs" />
     <Compile Include="Comparers\XAttributeDoubleValueComparer.cs" />
     <Compile Include="Comparers\XAttributeMultiComparer.cs" />
+    <Compile Include="Comparers\XAttributeTrimValueComparer.cs" />
     <Compile Include="Comparers\XDeclarationComparer.cs" />
     <Compile Include="Comparers\XElementDoubleValueComparer.cs" />
     <Compile Include="Comparers\FieldComparer.cs" />
@@ -72,6 +73,7 @@
     <Compile Include="Comparers\XAttributeComparer.cs" />
     <Compile Include="Comparers\XElementComparer.cs" />
     <Compile Include="Comparers\XElementMultiComparer.cs" />
+    <Compile Include="Comparers\XElementTrimValueComparer.cs" />
     <Compile Include="Comparers\XmlAssertOptionsComparer.cs" />
     <Compile Include="Comparers\XmlComparer.cs" />
     <Compile Include="Comparers\XmlComparer{T}.cs" />

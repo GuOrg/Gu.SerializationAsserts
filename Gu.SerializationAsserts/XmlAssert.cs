@@ -25,6 +25,50 @@
             Equal(expectedXml, actualXml, xElementComparer, xAttributeComparer, options);
         }
 
+        /// <summary>
+        /// Parses the xml and compares expected to actual.
+        /// </summary>
+        /// <param name="expected">The expected xml</param>
+        /// <param name="actual">The actual xml</param>
+        /// <param name="elementComparer">Additional comparer used for comparing leaf elements</param>
+        /// <param name="options">How to compare the xml</param>
+        public static void Equal(
+            string expected,
+            string actual,
+            IEqualityComparer<XElement> elementComparer,
+            XmlAssertOptions options = XmlAssertOptions.Verbatim)
+        {
+            var expectedXml = ParseDocument(expected, nameof(expected), options);
+            var actualXml = ParseDocument(actual, nameof(actual), options);
+            Equal(expectedXml, actualXml, elementComparer, null, options);
+        }
+
+        /// <summary>
+        /// Parses the xml and compares expected to actual.
+        /// </summary>
+        /// <param name="expected">The expected xml</param>
+        /// <param name="actual">The actual xml</param>
+        /// <param name="attributeComparer">Additional comparer used for comparing attributes</param>
+        /// <param name="options">How to compare the xml</param>
+        public static void Equal(
+            string expected,
+            string actual,
+            IEqualityComparer<XAttribute> attributeComparer,
+            XmlAssertOptions options = XmlAssertOptions.Verbatim)
+        {
+            var expectedXml = ParseDocument(expected, nameof(expected), options);
+            var actualXml = ParseDocument(actual, nameof(actual), options);
+            Equal(expectedXml, actualXml, null, attributeComparer, options);
+        }
+
+        /// <summary>
+        /// Parses the xml and compares expected to actual.
+        /// </summary>
+        /// <param name="expected">The expected xml</param>
+        /// <param name="actual">The actual xml</param>
+        /// <param name="elementComparer">Additional comparer used for comparing leaf elements</param>
+        /// <param name="attributeComparer">Additional comparer used for comparing attributes</param>
+        /// <param name="options">How to compare the xml</param>
         public static void Equal(
             string expected,
             string actual,
@@ -34,10 +78,15 @@
         {
             var expectedXml = ParseDocument(expected, nameof(expected), options);
             var actualXml = ParseDocument(actual, nameof(actual), options);
-            Equal(expectedXml, actualXml, elementComparer, attributeComparer, options);
+            Equal(expectedXml, actualXml, null, attributeComparer, options);
         }
 
-        private static void Equal(XDocumentAndSource expected, XDocumentAndSource actual, IEqualityComparer<XElement> elementComparer, IEqualityComparer<XAttribute> attributeComparer, XmlAssertOptions options)
+        private static void Equal(
+            XDocumentAndSource expected,
+            XDocumentAndSource actual,
+            IEqualityComparer<XElement> elementComparer,
+            IEqualityComparer<XAttribute> attributeComparer,
+            XmlAssertOptions options)
         {
             if (!options.HasFlag(XmlAssertOptions.IgnoreDeclaration))
             {
@@ -54,7 +103,6 @@
         private static void Equal(XElementAndSource expected, XElementAndSource actual, IEqualityComparer<XElement> elementComparer, IEqualityComparer<XAttribute> attributeComparer, XmlAssertOptions options)
         {
             var nameComparer = XNameComparer.GetFor(options);
-            
             CheckAttributeOrder(expected, actual, options);
             var defaultAttributeComparer = XAttributeComparer.GetFor(options);
             for (int i = 0; i < Math.Max(expected?.Attributes.Count ?? 0, actual?.Attributes.Count ?? 0); i++)

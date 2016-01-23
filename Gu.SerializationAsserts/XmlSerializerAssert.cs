@@ -1,7 +1,9 @@
 namespace Gu.SerializationAsserts
 {
     using System;
+    using System.Collections.Generic;
     using System.IO;
+    using System.Xml.Linq;
     using System.Xml.Serialization;
 
     /// <summary>
@@ -40,8 +42,38 @@ namespace Gu.SerializationAsserts
         /// <returns>The roundtripped instance</returns>
         public static T Equal<T>(string expectedXml, T actual, XmlAssertOptions options = XmlAssertOptions.Verbatim)
         {
+            return Equal(expectedXml, actual, null, null, options);
+        }
+
+        public static T Equal<T>(
+            string expectedXml,
+            T actual,
+            IEqualityComparer<XElement> elementComparer,
+            XmlAssertOptions options = XmlAssertOptions.Verbatim)
+        {
+            return Equal(expectedXml, actual, elementComparer, null, options);
+        }
+
+        public static T Equal<T>(
+            string expectedXml,
+            T actual,
+            IEqualityComparer<XAttribute> attributeComparer,
+            XmlAssertOptions options = XmlAssertOptions.Verbatim)
+        {
             var actualXml = ToXml(actual, nameof(actual));
-            XmlAssert.Equal(expectedXml, actualXml, options);
+            XmlAssert.Equal(expectedXml, actualXml, null, attributeComparer, options);
+            return Roundtrip(actual);
+        }
+
+        public static T Equal<T>(
+            string expectedXml,
+            T actual,
+            IEqualityComparer<XElement> elementComparer,
+            IEqualityComparer<XAttribute> attributeComparer,
+            XmlAssertOptions options = XmlAssertOptions.Verbatim)
+        {
+            var actualXml = ToXml(actual, nameof(actual));
+            XmlAssert.Equal(expectedXml, actualXml, elementComparer, attributeComparer, options);
             return Roundtrip(actual);
         }
 

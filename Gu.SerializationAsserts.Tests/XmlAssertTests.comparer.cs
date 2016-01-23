@@ -20,7 +20,7 @@
                          "<Foo xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">" +
                          "  <Bar>  1.0  </Bar>" +
                          "</Foo>";
-            XmlAssert.Equal(expected, actual, new ElementDoubleValueComparer(), null);
+            XmlAssert.Equal(expected, actual, new ElementDoubleValueComparer());
         }
 
         private class ElementDoubleValueComparer : IEqualityComparer<XElement>
