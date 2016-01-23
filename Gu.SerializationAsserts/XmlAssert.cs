@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
     using System.Xml.Linq;
 
     public static class XmlAssert
@@ -84,7 +85,7 @@
             IEqualityComparer<XAttribute> attributeComparer,
             XmlAssertOptions options)
         {
-            if (!options.HasFlag(XmlAssertOptions.IgnoreDeclaration))
+            if (!options.IsSet(XmlAssertOptions.IgnoreDeclaration))
             {
                 if (!XDeclarationComparer.Default.Equals(expected.Document.Declaration, actual.Document.Declaration))
                 {
@@ -103,31 +104,9 @@
             IEqualityComparer<XAttribute> customAttributeComparer,
             XmlAssertOptions options)
         {
-            var nameComparer = XNameComparer.GetFor(options);
-            CheckAttributeOrder(expected, actual, options);
-            var defaultAttributeComparer = XAttributeComparer.GetFor(options);
-            for (int i = 0; i < Math.Max(expected?.Attributes.Count ?? 0, actual?.Attributes.Count ?? 0); i++)
-            {
-                var expectedAttribute = expected?.Attributes.ElementAtOrDefault(i);
-                var actualAttribute = actual?.Attributes.ElementAtOrDefault(i);
+            CheckAttributes(expected, actual, customAttributeComparer, options);
 
-                if (defaultAttributeComparer.Equals(expectedAttribute?.Attribute, actualAttribute?.Attribute))
-                {
-                    continue;
-                }
-
-                if (customAttributeComparer?.Equals(expectedAttribute?.Attribute, actualAttribute?.Attribute) == true)
-                {
-                    continue;
-                }
-
-                var message = expectedAttribute == null || actualAttribute == null
-                    ? CreateMessage(expected, actual)
-                    : CreateMessage(expectedAttribute, actualAttribute);
-                throw new AssertException(message);
-            }
-
-            if ((expected?.Elements.Count ?? 0) == 0 && (actual?.Elements.Count ?? 0) == 0)
+            if ((expected?.AllElements.Count ?? 0) == 0 && (actual?.AllElements.Count ?? 0) == 0)
             {
                 if (XElementComparer.GetFor(options).Equals(expected?.Element, actual?.Element))
                 {
@@ -143,39 +122,95 @@
                 throw new AssertException(message);
             }
 
+            var nameComparer = XNameComparer.GetFor(options);
             if (!nameComparer.Equals(expected?.Element.Name, actual?.Element.Name))
             {
                 var message = CreateMessage(expected, actual);
                 throw new AssertException(message);
             }
 
-            CheckElementOrder(expected, actual, options);
-
-            for (int i = 0; i < Math.Max(expected?.Elements.Count ?? 0, actual?.Elements.Count ?? 0); i++)
+            if (!options.IsSet(XmlAssertOptions.IgnoreElementOrder))
             {
-                var expectedChild = expected?.Elements.ElementAtOrDefault(i);
-                var actualChild = actual?.Elements.ElementAtOrDefault(i);
+                var expectedElements = expected?.AllElements;
+                var actualElements = actual?.AllElements;
+                CheckOrder(expectedElements,
+                           actualElements,
+                           x => x.Element.Name,
+                           "  The order of elements is incorrect.",
+                           options);
+            }
+
+            var expectedElementsToCheck = expected?.ElementsToCheck;
+            var actualElementsToCheck = actual?.ElementsToCheck;
+            for (int i = 0; i < Math.Max(expectedElementsToCheck?.Count ?? 0, actualElementsToCheck?.Count ?? 0); i++)
+            {
+                var expectedChild = expectedElementsToCheck.ElementAtOrDefault(i);
+                var actualChild = actualElementsToCheck.ElementAtOrDefault(i);
                 Equal(expectedChild, actualChild, customElementComparer, customAttributeComparer, options);
             }
         }
 
-        private static void CheckAttributeOrder(XElementAndSource expected, XElementAndSource actual, XmlAssertOptions options)
+        private static void CheckAttributes(
+            XElementAndSource expectedElement,
+            XElementAndSource actualElement,
+            IEqualityComparer<XAttribute> customAttributeComparer,
+            XmlAssertOptions options)
         {
-            if (expected == null || actual == null)
+            if (!options.IsSet(XmlAssertOptions.IgnoreAttributeOrder))
             {
-                return;
+                var expectedAttributes = expectedElement?.AllAttributes;
+                var actualAttributes = actualElement?.AllAttributes;
+                CheckOrder(expectedAttributes,
+                           actualAttributes,
+                           x => x.Attribute.Name,
+                           "  The order of attributes is incorrect.",
+                           options);
             }
 
-            if (options.HasFlag(XmlAssertOptions.IgnoreAttributeOrder))
+            var expectedAttributesToCheck = expectedElement?.AttributesToCheck;
+            var actualAttributesToCheck = actualElement?.AttributesToCheck;
+
+            var defaultAttributeComparer = XAttributeComparer.GetFor(options);
+            for (int i = 0; i < Math.Max(expectedAttributesToCheck?.Count ?? 0, actualAttributesToCheck?.Count ?? 0); i++)
+            {
+                var expectedAttribute = expectedAttributesToCheck.ElementAtOrDefault(i);
+                var actualAttribute = actualAttributesToCheck.ElementAtOrDefault(i);
+
+                if (defaultAttributeComparer.Equals(expectedAttribute?.Attribute, actualAttribute?.Attribute))
+                {
+                    continue;
+                }
+
+                if (customAttributeComparer?.Equals(expectedAttribute?.Attribute, actualAttribute?.Attribute) == true)
+                {
+                    continue;
+                }
+
+                var message = expectedAttribute == null || actualAttribute == null
+                    ? CreateMessage(expectedElement, actualElement)
+                    : CreateMessage(expectedAttribute, actualAttribute);
+                throw new AssertException(message);
+            }
+        }
+
+        private static void CheckOrder<T>(
+            IReadOnlyList<T> expecteds,
+            IReadOnlyList<T> actuals,
+            Func<T, XName> nameGetter,
+            string errorMessage,
+            XmlAssertOptions options)
+            where T : IXAndSource
+        {
+            if (expecteds == null || actuals == null)
             {
                 return;
             }
 
             var nameComparer = XNameComparer.GetFor(options);
             var actualIndex = 0;
-            foreach (var attribute in expected.Attributes)
+            foreach (var expected in expecteds)
             {
-                var indexOf = actual.Attributes.IndexOf(attribute, x => x.Attribute.Name, actualIndex, nameComparer);
+                var indexOf = actuals.IndexOf(expected, nameGetter, actualIndex, nameComparer);
                 if (indexOf < 0)
                 {
                     continue;
@@ -183,36 +218,8 @@
 
                 if (actualIndex > indexOf)
                 {
-                    var message = CreateMessage(attribute, actual.Attributes[indexOf], "  The order of attributes is incorrect.");
-                    throw new AssertException(message);
-                }
-
-                actualIndex = indexOf;
-            }
-        }
-
-        private static void CheckElementOrder(XElementAndSource expected, XElementAndSource actual, XmlAssertOptions options)
-        {
-            if (options.HasFlag(XmlAssertOptions.IgnoreElementOrder) ||
-                expected.Elements.Count == 0 ||
-                actual.Elements.Count == 0)
-            {
-                return;
-            }
-
-            var nameComparer = XNameComparer.GetFor(options);
-            var actualIndex = 0;
-            foreach (var expectedElement in expected.Elements)
-            {
-                var indexOf = actual.Elements.IndexOf(expectedElement, x => x.Element.Name, actualIndex, nameComparer);
-                if (indexOf < 0)
-                {
-                    continue;
-                }
-
-                if (indexOf < actualIndex)
-                {
-                    var message = CreateMessage(expectedElement, actual.Elements[indexOf], "  The order of elements is incorrect.");
+                    var actual = actuals[indexOf];
+                    var message = CreateMessage(expected, actual, errorMessage);
                     throw new AssertException(message);
                 }
 

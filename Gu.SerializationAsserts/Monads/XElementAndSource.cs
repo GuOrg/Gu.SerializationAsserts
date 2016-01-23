@@ -9,6 +9,11 @@
     [DebuggerDisplay("ElementName: {Element.Name}")]
     internal class XElementAndSource : IXAndSource
     {
+        private IReadOnlyList<XAttributeAndSource> allAttributes;
+        private IReadOnlyList<XAttributeAndSource> attributesToCheck;
+        private IReadOnlyList<XElementAndSource> allElements;
+        private IReadOnlyList<XElementAndSource> elementsToCheck;
+
         public XElementAndSource(string sourceXml, XElement element, XmlAssertOptions options)
         {
             Ensure.NotNull(element, nameof(element));
@@ -24,20 +29,24 @@
 
         public XmlAssertOptions Options { get; }
 
-        public bool IsEmpty => this.Attributes.Count == 0 && this.Elements.Count == 0 && string.IsNullOrEmpty(this.Element.Value);
+        public bool IsEmpty => this.AllAttributes.Count == 0 && this.AllElements.Count == 0 && string.IsNullOrEmpty(this.Element.Value);
 
-        public IReadOnlyList<XAttributeAndSource> Attributes => this.CreateAttributes();
+        public IReadOnlyList<XAttributeAndSource> AllAttributes => this.allAttributes ?? (this.allAttributes = this.GetAllAttributes());
 
-        public IReadOnlyList<XElementAndSource> Elements => this.CreateElements();
+        public IReadOnlyList<XAttributeAndSource> AttributesToCheck => this.attributesToCheck ?? (this.attributesToCheck = this.GetAttributesToCheck().ToList());
+
+        public IReadOnlyList<XElementAndSource> AllElements => this.allElements ?? (this.allElements = this.GetAllElements());
+
+        public IReadOnlyList<XElementAndSource> ElementsToCheck => this.elementsToCheck ?? (this.elementsToCheck = this.GetElementsToCheck().ToList());
 
         public int LineNumber => (this.Element as IXmlLineInfo)?.LineNumber ?? 0;
 
-        private IReadOnlyList<XAttributeAndSource> CreateAttributes()
+        private IReadOnlyList<XAttributeAndSource> GetAllAttributes()
         {
             var attributeAndSources = this.Element.Attributes()
                                           .Where(x => !(this.Options.HasFlag(XmlAssertOptions.IgnoreNamespaces) && x.IsNamespaceDeclaration))
                                           .Select(x => new XAttributeAndSource(this.SourceXml, x, this.Options));
-            if (this.Options.HasFlag(XmlAssertOptions.IgnoreAttributeOrder))
+            if (this.Options.IsSet(XmlAssertOptions.IgnoreAttributeOrder))
             {
                 var nameComparer = XNameComparer.GetFor(this.Options);
                 return attributeAndSources.OrderBy(x => x.Attribute.Name, nameComparer)
@@ -47,18 +56,51 @@
             return attributeAndSources.ToList();
         }
 
-        private IReadOnlyList<XElementAndSource> CreateElements()
+        private IEnumerable<XAttributeAndSource> GetAttributesToCheck()
         {
-            var elementAndSources = this.Element.Elements()
-                                        .Select(x => new XElementAndSource(this.SourceXml, x, this.Options));
-            if (this.Options.HasFlag(XmlAssertOptions.IgnoreElementOrder))
+            foreach (var attribute in this.AllAttributes)
+            {
+                if (attribute.Attribute.IsNamespaceDeclaration &&
+                    this.Options.IsSet(XmlAssertOptions.IgnoreNamespaces))
+                {
+                    continue;
+                }
+
+                if (string.IsNullOrEmpty(attribute.Attribute.Value) &&
+                    this.Options.IsSet(XmlAssertOptions.TreatEmptyAndMissingAttributesAsEqual))
+                {
+                    continue;
+                }
+
+                yield return attribute;
+            }
+        }
+
+        private IReadOnlyList<XElementAndSource> GetAllElements()
+        {
+            var elementAndSources = this.Element.Elements().Select(x => new XElementAndSource(this.SourceXml, x, this.Options));
+            if (this.Options.IsSet(XmlAssertOptions.IgnoreElementOrder))
             {
                 var nameComparer = XNameComparer.GetFor(this.Options);
                 return elementAndSources.OrderBy(x => x.Element.Name, nameComparer)
-                                          .ToList();
+                    .ToList();
             }
 
             return elementAndSources.ToList();
+        }
+
+        private IEnumerable<XElementAndSource> GetElementsToCheck()
+        {
+            foreach (var element in this.AllElements)
+            {
+                if (element.IsEmpty &&
+                    this.Options.IsSet(XmlAssertOptions.TreatEmptyAndMissingElemensAsEqual))
+                {
+                    continue;
+                }
+
+                yield return element;
+            }
         }
     }
 }

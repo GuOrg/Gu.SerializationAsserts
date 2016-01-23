@@ -12,7 +12,7 @@ namespace Gu.SerializationAsserts
         IgnoreAttributeOrder = 1 << 3,
         IgnoreOrder = IgnoreElementOrder | IgnoreAttributeOrder,
         TreatEmptyAndMissingElemensAsEqual = 1 << 4,
-        TreatEmptyAndMissingAttributesAsEqual = 1 << 4,
+        TreatEmptyAndMissingAttributesAsEqual = 1 << 5,
         TreatEmptyAndMissingAsEqual = TreatEmptyAndMissingElemensAsEqual | TreatEmptyAndMissingAttributesAsEqual,
     }
 }
