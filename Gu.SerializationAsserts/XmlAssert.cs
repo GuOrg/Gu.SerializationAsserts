@@ -245,10 +245,11 @@
             var actualLine = actual?.SourceXml.Line(actual.LineNumber).Trim();
             var index = expectedLine.FirstDiff(actualLine);
             var lineNumber = expected?.LineNumber ?? actual.LineNumber;
-            if (expected?.LineNumber != actual?.LineNumber &&
-                expectedLine == actualLine)
+            if (expectedLine == actualLine ||
+                actual == null ||
+                expected == null)
             {
-                index = -(lineNumber.ToString().Length + 2);
+                index = -1;
             }
 
             using (var writer = new StringWriter())
@@ -263,14 +264,46 @@
                 {
                     writer.WriteLine($"  Xml differ at line {lineNumber} index {index}.");
                 }
-                else
+                else if (expected != null && actual != null)
                 {
                     writer.WriteLine($"  Line {expected?.LineNumber} in expected is found at line {actual?.LineNumber} in actual.");
                 }
+                else if (expected != null)
+                {
+                    writer.WriteLine($"  Element at line {expected.LineNumber} in expected not found in actual.");
+                }
+                else if (actual != null)
+                {
+                    writer.WriteLine($"  Element at line {actual.LineNumber} in actual not found in expected.");
+                }
 
-                writer.WriteLine($"  Expected: {expected?.LineNumber}| {expectedLine}");
-                writer.WriteLine($"  But was:  {actual?.LineNumber.ToString() ?? new string('?', expected.LineNumber.ToString().Length)}| {actualLine ?? "Missing"}");
-                writer.Write($"  {new string('-', index + 13)}^");
+                if (expected == null)
+                {
+                    writer.WriteLine($"  Expected:  | No element");
+                }
+                else
+                {
+                    writer.WriteLine($"  Expected: {expected?.LineNumber}| {expectedLine}");
+                }
+
+                if (actual != null)
+                {
+                    writer.WriteLine($"  But was:  {actual.LineNumber.ToString()}| {actualLine}");
+                }
+                else
+                {
+                    writer.WriteLine($"  But was:  {new string('?', expected.LineNumber.ToString().Length)}| Missing");
+                }
+
+                if (index >= 0)
+                {
+                    writer.Write($"  {new string('-', index + 13)}^");
+                }
+                else
+                {
+                    writer.Write($"  {new string('-', 10)}^");
+                }
+
                 return writer.ToString();
             }
         }

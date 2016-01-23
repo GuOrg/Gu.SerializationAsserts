@@ -42,6 +42,7 @@
                       "    <Value Attribute=\"1\">2</Value>" +
                       "  </Outer>  " +
                       "</Dummy>";
+            XmlAssert.Equal(xml, xml);
             XmlAssert.Equal(xml, xml, XmlAssertOptions.Verbatim);
         }
 
@@ -117,6 +118,26 @@
             var actualXml = "<?xml version=\"1.0\" encoding=\"utf-8\"?><Dummy />";
             var expectedXml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><Dummy />";
             XmlAssert.Equal(expectedXml, actualXml);
+        }
+
+        [Test]
+        public void EqualWhenEmptyElements()
+        {
+            var xml1 = "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+                      "<Dummy xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">" +
+                      "    <Value></Value>" +
+                      "</Dummy>";
+
+            var xml2 = "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+          "<Dummy xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">" +
+          "    <Value />" +
+          "</Dummy>";
+            XmlAssert.Equal(xml1, xml2, XmlAssertOptions.IgnoreOrder);
+            XmlAssert.Equal(xml1, xml2, XmlAssertOptions.TreatEmptyAndMissingElemensAsEqual);
+            XmlAssert.Equal(xml1, xml2);
+            XmlAssert.Equal(xml2, xml1);
+            XmlAssert.Equal(xml1, xml2, XmlAssertOptions.Verbatim);
+            XmlAssert.Equal(xml2, xml1, XmlAssertOptions.Verbatim);
         }
 
         [Test]
@@ -250,6 +271,50 @@
         }
 
         [Test]
+        public void NotEqualWhenMissingElement1()
+        {
+            var expectedXml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n" +
+                              "<Dummy xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n" +
+                              "  <Value>2</Value>\r\n" +
+                              "  <Element>3</Element>\r\n" +
+                              "</Dummy>";
+
+            var actualXml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n" +
+                            "<Dummy xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n" +
+                            "  <Value>2</Value>\r\n" +
+                            "</Dummy>";
+
+            var xmlExt = Assert.Throws<AssertException>(() => XmlAssert.Equal(expectedXml, actualXml));
+            var expected = "  Element at line 4 in expected not found in actual.\r\n" +
+                           "  Expected: 4| <Element>3</Element>\r\n" +
+                           "  But was:  ?| Missing\r\n" +
+                           "  ----------^";
+            Assert.AreEqual(expected, xmlExt.Message);
+        }
+
+        [Test]
+        public void NotEqualWhenMissingElement2()
+        {
+            var expectedXml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n" +
+                              "<Dummy xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n" +
+                              "  <Value>2</Value>\r\n" +
+                              "</Dummy>";
+
+            var actualXml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n" +
+                            "<Dummy xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n" +
+                            "  <Value>2</Value>\r\n" +
+                            "  <Element>3</Element>\r\n" +
+                            "</Dummy>";
+
+            var xmlExt = Assert.Throws<AssertException>(() => XmlAssert.Equal(expectedXml, actualXml));
+            var expected = "  Element at line 4 in actual not found in expected.\r\n" +
+                           "  Expected:  | No element\r\n" +
+                           "  But was:  4| <Element>3</Element>\r\n" +
+                           "  ----------^";
+            Assert.AreEqual(expected, xmlExt.Message);
+        }
+
+        [Test]
         public void NotEqualWhenEmptyAndMissingElement1()
         {
             var expectedXml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n" +
@@ -270,10 +335,10 @@
             foreach (var actualXml in actualXmls)
             {
                 var xmlExt = Assert.Throws<AssertException>(() => XmlAssert.Equal(expectedXml, actualXml, XmlAssertOptions.Verbatim));
-                var expected = "  Xml differ at line 3 index 0.\r\n" +
+                var expected = "  Element at line 3 in expected not found in actual.\r\n" +
                                "  Expected: 3| <Value></Value>\r\n" +
                                "  But was:  ?| Missing\r\n" +
-                               "  -------------^";
+                               "  ----------^";
                 Assert.AreEqual(expected, xmlExt.Message);
             }
         }
@@ -298,10 +363,10 @@
             foreach (var actualXml in actualXmls)
             {
                 var xmlExt = Assert.Throws<AssertException>(() => XmlAssert.Equal(expectedXml, actualXml, XmlAssertOptions.Verbatim));
-                var expected = "  Xml differ at line 3 index 0.\r\n" +
+                var expected = "  Element at line 3 in expected not found in actual.\r\n" +
                                "  Expected: 3| <Value />\r\n" +
                                "  But was:  ?| Missing\r\n" +
-                               "  -------------^";
+                               "  ----------^";
                 Assert.AreEqual(expected, xmlExt.Message);
             }
         }
@@ -321,10 +386,10 @@
                                      "</Dummy>";
 
             var xmlExt = Assert.Throws<AssertException>(() => XmlAssert.Equal(expectedXml, actualXml, XmlAssertOptions.Verbatim));
-            var expected = "  Xml differ at line 4 index 0.\r\n" +
+            var expected = "  Element at line 4 in expected not found in actual.\r\n" +
                            "  Expected: 4| <Value />\r\n" +
                            "  But was:  ?| Missing\r\n" +
-                           "  -------------^";
+                           "  ----------^";
             Assert.AreEqual(expected, xmlExt.Message);
         }
 
