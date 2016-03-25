@@ -87,8 +87,18 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <ItemGroup>
+    <ProjectReference Include="..\Gu.SerializationAsserts.Newtonsoft.Json\Gu.SerializationAsserts.Newtonsoft.Json.csproj">
+      <Project>{a401521f-4c23-47d6-8570-9f6f5c65aae3}</Project>
+      <Name>Gu.SerializationAsserts.Newtonsoft.Json</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Gu.SerializationAsserts\Gu.SerializationAsserts.csproj">
+      <Project>{9f31dccf-9b87-425a-aa2f-cef6cb9ba4a1}</Project>
+      <Name>Gu.SerializationAsserts</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Choose>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v2.0' Or $(TargetFrameworkVersion) == 'v3.0' Or $(TargetFrameworkVersion) == 'v3.5' Or $(TargetFrameworkVersion) == 'v4.0' Or $(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1' Or $(TargetFrameworkVersion) == 'v4.5.2' Or $(TargetFrameworkVersion) == 'v4.5.3' Or $(TargetFrameworkVersion) == 'v4.6')">
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v2.0' Or $(TargetFrameworkVersion) == 'v3.0' Or $(TargetFrameworkVersion) == 'v3.5' Or $(TargetFrameworkVersion) == 'v4.0' Or $(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1' Or $(TargetFrameworkVersion) == 'v4.5.2' Or $(TargetFrameworkVersion) == 'v4.5.3' Or $(TargetFrameworkVersion) == 'v4.6' Or $(TargetFrameworkVersion) == 'v4.6.1')">
       <ItemGroup>
         <Reference Include="JetBrains.Annotations">
           <HintPath>..\packages\JetBrains.Annotations\lib\net20\JetBrains.Annotations.dll</HintPath>
@@ -144,7 +154,7 @@
         </Reference>
       </ItemGroup>
     </When>
-    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1' Or $(TargetFrameworkVersion) == 'v4.5.2' Or $(TargetFrameworkVersion) == 'v4.5.3' Or $(TargetFrameworkVersion) == 'v4.6')">
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1' Or $(TargetFrameworkVersion) == 'v4.5.2' Or $(TargetFrameworkVersion) == 'v4.5.3' Or $(TargetFrameworkVersion) == 'v4.6' Or $(TargetFrameworkVersion) == 'v4.6.1')">
       <ItemGroup>
         <Reference Include="Newtonsoft.Json">
           <HintPath>..\packages\Newtonsoft.Json\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -190,14 +200,5 @@
       <Paket>True</Paket>
     </Analyzer>
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Gu.SerializationAsserts.Newtonsoft.Json\Gu.SerializationAsserts.Newtonsoft.Json.csproj">
-      <Project>{a401521f-4c23-47d6-8570-9f6f5c65aae3}</Project>
-      <Name>Gu.SerializationAsserts.Newtonsoft.Json</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Gu.SerializationAsserts\Gu.SerializationAsserts.csproj">
-      <Project>{9f31dccf-9b87-425a-aa2f-cef6cb9ba4a1}</Project>
-      <Name>Gu.SerializationAsserts</Name>
-    </ProjectReference>
-  </ItemGroup>
+  <Import Project="..\.paket\paket.targets" />
 </Project>
