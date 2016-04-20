@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".paket", ".paket", "{D22F2B83-060F-40EA-95FE-A451A93A5011}"
 	ProjectSection(SolutionItems) = preProject
@@ -17,6 +17,13 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gu.SerializationAsserts.Newtonsoft.Json", "Gu.SerializationAsserts.Newtonsoft.Json\Gu.SerializationAsserts.Newtonsoft.Json.csproj", "{A401521F-4C23-47D6-8570-9F6F5C65AAE3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gu.SerializationAsserts.Newtonsoft.Json.Tests", "Gu.SerializationAsserts.Newtonsoft.Json.Tests\Gu.SerializationAsserts.Newtonsoft.Json.Tests.csproj", "{7A62B049-DEC4-433E-98E7-3FC7E4173614}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{6908448C-930E-4D1F-9726-964CD5D33913}"
+	ProjectSection(SolutionItems) = preProject
+		LICENSE.md = LICENSE.md
+		README.md = README.md
+		.paket\Readme.paket.md = .paket\Readme.paket.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
