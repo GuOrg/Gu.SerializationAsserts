@@ -128,7 +128,7 @@
         }
 
         // Using new here to hide it so it not called by mistake
-        private new static void Equals(object x, object y)
+        private static new void Equals(object x, object y)
         {
             throw new NotSupportedException($"{x}, {y}");
         }

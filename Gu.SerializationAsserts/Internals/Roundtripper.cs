@@ -1,8 +1,7 @@
-﻿using System.Xml.Serialization;
-
-namespace Gu.SerializationAsserts
+﻿namespace Gu.SerializationAsserts
 {
     using System;
+    using System.Xml.Serialization;
 
     internal static class Roundtripper
     {

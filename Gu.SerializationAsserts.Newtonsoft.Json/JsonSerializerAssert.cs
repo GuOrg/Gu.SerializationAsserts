@@ -3,9 +3,7 @@ namespace Gu.SerializationAsserts.Newtonsoft.Json
     using System;
     using global::Newtonsoft.Json;
 
-    /// <summary>
-    /// Test serialization using  <see cref="JsonSerializer"/>
-    /// </summary>
+    /// <summary> Test serialization using  <see cref="JsonSerializer"/> </summary>
     public static class JsonSerializerAssert
     {
         /// <summary>
@@ -40,11 +38,11 @@ namespace Gu.SerializationAsserts.Newtonsoft.Json
         /// <summary>
         /// 1 Serializes <paramref name="actual"/> to an Json string using <see cref="JsonSerializer"/>
         /// 2 Compares the Json with <paramref name="expectedJson"/>
-        /// 3 Creates a ContainerClass{T}
+        /// 3 Creates a <see cref="ContainerClass{T}"/>
         /// 4 Serializes it to Json.
         /// 5 Compares the Json
         /// 6 Deserializes it to container class
-        /// 7 Does 2 & 3 again, we repeat this to catch any errors from deserializing
+        /// 7 Does 2 &amp; 3 again, we repeat this to catch any errors from deserializing
         /// 8 Returns roundtripped instance
         /// </summary>
         /// <typeparam name="T">The type</typeparam>
@@ -62,11 +60,11 @@ namespace Gu.SerializationAsserts.Newtonsoft.Json
         /// <summary>
         /// 1 Serializes <paramref name="actual"/> to an Json string using <see cref="JsonSerializer"/>
         /// 2 Compares the Json with <paramref name="expectedJson"/>
-        /// 3 Creates a ContainerClass{T}
+        /// 3 Creates a <see cref="ContainerClass{T}"/>
         /// 4 Serializes it to Json.
         /// 5 Compares the Json
         /// 6 Deserializes it to container class
-        /// 7 Does 2 & 3 again, we repeat this to catch any errors from deserializing
+        /// 7 Does 2 &amp; 3 again, we repeat this to catch any errors from deserializing
         /// 8 Returns roundtripped instance
         /// </summary>
         /// <typeparam name="T">The type</typeparam>
@@ -237,7 +235,7 @@ namespace Gu.SerializationAsserts.Newtonsoft.Json
         }
 
         // Using new here to hide it so it not called by mistake
-        private new static void Equals(object x, object y)
+        private static new void Equals(object x, object y)
         {
             throw new NotSupportedException($"{x}, {y}");
         }

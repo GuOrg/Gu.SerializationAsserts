@@ -13,7 +13,7 @@
 
         public object Value { get; }
 
-        public FieldInfo Field { get; set; }
+        public FieldInfo Field { get; }
 
         public int Count { get; }
     }

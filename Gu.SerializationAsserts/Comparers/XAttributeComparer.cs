@@ -5,6 +5,7 @@
     using System.Collections.Generic;
     using System.Xml.Linq;
 
+    /// <inheritdoc/>
     public class XAttributeComparer : IEqualityComparer<XAttribute>
     {
         private static readonly ConcurrentDictionary<XmlAssertOptions, XAttributeComparer> Cache = new ConcurrentDictionary<XmlAssertOptions, XAttributeComparer>(XmlAssertOptionsComparer.Default);
@@ -17,11 +18,13 @@
             this.nameComparer = XNameComparer.GetFor(this.options);
         }
 
+        /// <summary>Gets an <see cref="XAttributeComparer"/> from cache.</summary>
         public static XAttributeComparer GetFor(XmlAssertOptions options)
         {
             return Cache.GetOrAdd(options, x => new XAttributeComparer(x));
         }
 
+        /// <inheritdoc/>
         public bool Equals(XAttribute x, XAttribute y)
         {
             if (x == null && y == null)
@@ -57,6 +60,7 @@
             return x.Value == y.Value;
         }
 
+        /// <inheritdoc/>
         public int GetHashCode(XAttribute obj)
         {
             Ensure.NotNull(obj, nameof(obj));

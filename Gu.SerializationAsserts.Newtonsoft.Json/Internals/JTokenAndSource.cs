@@ -22,7 +22,7 @@ namespace Gu.SerializationAsserts.Newtonsoft.Json
 
         internal JProperty JProperty => this.JToken as JProperty;
 
-        internal string PropertyName => JProperty?.Name;
+        internal string PropertyName => this.JProperty?.Name;
 
         internal string Json { get; }
 

@@ -6,12 +6,13 @@ namespace Gu.SerializationAsserts
     using System.IO;
     using System.Linq;
 
+    /// <summary>For comparing instances using a deep equals comparing fields.</summary>
     public static class FieldAssert
     {
         /// <summary>
         /// Checks:
         /// - All fields and nested fields.
-        /// - All elements of IEnumerable fields.
+        /// - All elements of Enumerables.
         /// </summary>
         /// <typeparam name="T">The type of <paramref name="x"/> and <paramref name="y"/></typeparam>
         /// <param name="x">The first value</param>
@@ -68,7 +69,7 @@ namespace Gu.SerializationAsserts
         }
 
         // Using new here to hide it so it not called by mistake
-        private new static void Equals(object x, object y)
+        private static new void Equals(object x, object y)
         {
             throw new NotSupportedException($"{x}, {y}");
         }

@@ -5,13 +5,24 @@
     using System.Linq;
     using System.Runtime.Serialization;
 
+    /// <summary>Exposes methods for assertions about attributes.</summary>
     public static partial class DataContractSerializerAssert
     {
+        /// <summary>
+        /// Checks that <typeparamref name="T"/> has <see cref="DataContract"/> defined.
+        /// Throws if not.
+        /// </summary>
+        /// <typeparam name="T">The type.</typeparam>
         public static void HasDataContractAttribute<T>()
         {
             HasDataContractAttribute(typeof(T));
         }
 
+        /// <summary>
+        /// Checks that <paramref name="type"/> has <see cref="DataContract"/> defined.
+        /// Throws if not.
+        /// </summary>
+        /// <param name="type">The type.</param>
         public static void HasDataContractAttribute(Type type)
         {
             if (!Attribute.IsDefined(type, typeof(DataContractAttribute)))
@@ -20,11 +31,21 @@
             }
         }
 
+        /// <summary>
+        /// Checks that all properties of <typeparamref name="T"/> has <see cref="DataMember"/> defined.
+        /// Throws if not.
+        /// </summary>
+        /// <typeparam name="T">The type.</typeparam>
         public static void AllPropertiesHasDataMemberAttributes<T>()
         {
             AllPropertiesHasDataMemberAttributes(typeof(T));
         }
 
+        /// <summary>
+        /// Checks that all properties of <paramref name="type"/> has <see cref="DataMember"/> defined.
+        /// Throws if not.
+        /// </summary>
+        /// <param name="type">The type.</param>
         public static void AllPropertiesHasDataMemberAttributes(Type type)
         {
             var withMissingAttributes = type.GetProperties()

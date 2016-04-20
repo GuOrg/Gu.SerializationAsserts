@@ -26,7 +26,7 @@
 
             int IEqualityComparer<JValue>.GetHashCode(JValue obj)
             {
-                throw new System.NotImplementedException();
+                throw new NotImplementedException();
             }
         }
     }

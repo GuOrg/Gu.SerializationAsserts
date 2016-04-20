@@ -3,9 +3,9 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
-    using System.Linq;
     using System.Xml.Linq;
 
+    /// <summary>For asserting xml strings.</summary>
     public static class XmlAssert
     {
         /// <summary>
@@ -266,7 +266,7 @@
                 }
                 else if (expected != null && actual != null)
                 {
-                    writer.WriteLine($"  Line {expected?.LineNumber} in expected is found at line {actual?.LineNumber} in actual.");
+                    writer.WriteLine($"  Line {expected.LineNumber} in expected is found at line {actual.LineNumber} in actual.");
                 }
                 else if (expected != null)
                 {
@@ -283,16 +283,16 @@
                 }
                 else
                 {
-                    writer.WriteLine($"  Expected: {expected?.LineNumber}| {expectedLine}");
+                    writer.WriteLine($"  Expected: {expected.LineNumber}| {expectedLine}");
                 }
 
                 if (actual != null)
                 {
-                    writer.WriteLine($"  But was:  {actual.LineNumber.ToString()}| {actualLine}");
+                    writer.WriteLine($"  But was:  {actual.LineNumber}| {actualLine}");
                 }
                 else
                 {
-                    writer.WriteLine($"  But was:  {new string('?', expected.LineNumber.ToString().Length)}| Missing");
+                    writer.WriteLine($"  But was:  {new string('?', expected?.LineNumber.ToString().Length ?? 0)}| Missing");
                 }
 
                 if (index >= 0)
@@ -309,7 +309,8 @@
         }
 
         // Using new here to hide it so it not called by mistake
-        private new static void Equals(object x, object y)
+        // ReSharper disable once UnusedMember.Local intentionally hiding equals
+        private static new void Equals(object x, object y)
         {
             throw new AssertException($"{x}, {y}");
         }

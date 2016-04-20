@@ -25,6 +25,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>Gu.SerializationAsserts.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -34,6 +35,8 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Release\Gu.SerializationAsserts.XML</DocumentationFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <CodeAnalysisRuleSet>Gu.SerializationAsserts.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'CreateNugetPackage|AnyCPU'">
     <OutputPath>bin\CreateNugetPackage\</OutputPath>
@@ -42,7 +45,7 @@
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>Gu.SerializationAsserts.ruleset</CodeAnalysisRuleSet>
     <DocumentationFile>bin\CreateNugetPackage\Gu.XmlTest</DocumentationFile>
     <RunCodeAnalysis>true</RunCodeAnalysis>
     <BuildPackage>true</BuildPackage>
@@ -86,7 +89,6 @@
     <Compile Include="Ensure\Ensure.Collections.cs" />
     <Compile Include="Ensure\Ensure.Compare.cs" />
     <Compile Include="Ensure\Ensure.cs" />
-    <Compile Include="Ensure\Ensure.Singleton.cs" />
     <Compile Include="Ensure\Ensure.String.cs" />
     <Compile Include="Internals\ContainerClass{T}.cs" />
     <Compile Include="Exceptions\ExceptionExt.cs" />
@@ -108,9 +110,9 @@
     <Compile Include="XmlSerializerAssert.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Gu.SerializationAsserts.ruleset" />
     <None Include="paket.references" />
     <None Include="paket.template" />
-    <None Include="stylecop.json" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -120,6 +122,7 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <Import Project="..\.paket\paket.targets" />
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v2.0' Or $(TargetFrameworkVersion) == 'v3.0' Or $(TargetFrameworkVersion) == 'v3.5' Or $(TargetFrameworkVersion) == 'v4.0' Or $(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1' Or $(TargetFrameworkVersion) == 'v4.5.2' Or $(TargetFrameworkVersion) == 'v4.5.3' Or $(TargetFrameworkVersion) == 'v4.6' Or $(TargetFrameworkVersion) == 'v4.6.1')">
       <ItemGroup>
@@ -160,5 +163,4 @@
       <Paket>True</Paket>
     </Analyzer>
   </ItemGroup>
-  <Import Project="..\.paket\paket.targets" />
 </Project>

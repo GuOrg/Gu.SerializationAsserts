@@ -3,9 +3,13 @@
     using System.Collections.Generic;
     using System.Xml.Linq;
 
+    /// <inheritdoc/>
     public class XNameComparer : IEqualityComparer<XName>, IComparer<XName>
     {
+        /// <summary>An <see cref="XNameComparer"/> that ignores namespaces.</summary>
         public static readonly XNameComparer IgnoringNamespaces = new XNameComparer(XmlAssertOptions.IgnoreNamespaces);
+
+        /// <summary>The default instance. Uses <see cref="XmlAssertOptions.Verbatim"/>.</summary>
         public static readonly XNameComparer Default = new XNameComparer(XmlAssertOptions.Verbatim);
 
         private readonly XmlAssertOptions options;
@@ -15,6 +19,7 @@
             this.options = options;
         }
 
+        /// <summary>Returns a cached <see cref="XNameComparer"/></summary>
         public static XNameComparer GetFor(XmlAssertOptions options)
         {
             if (options.HasFlag(XmlAssertOptions.IgnoreNamespaces))
@@ -25,6 +30,7 @@
             return Default;
         }
 
+        /// <inheritdoc/>
         public bool Equals(XName x, XName y)
         {
             if (x == null && y == null)
@@ -45,6 +51,7 @@
             return x == y;
         }
 
+        /// <inheritdoc/>
         public int GetHashCode(XName obj)
         {
             Ensure.NotNull(obj, nameof(obj));
@@ -56,6 +63,7 @@
             return obj.GetHashCode();
         }
 
+        /// <inheritdoc/>
         public int Compare(XName x, XName y)
         {
             if (x == y)

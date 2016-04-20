@@ -1,9 +1,11 @@
-﻿namespace Gu.SerializationAsserts
+﻿#pragma warning disable SA1600 // Elements must be documented
+namespace Gu.SerializationAsserts
 {
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
 
+    /// <summary>Ensures for numbers.</summary>
     internal static partial class Ensure
     {
         internal static void LessThan<T>(T value, T max, string parameterName)

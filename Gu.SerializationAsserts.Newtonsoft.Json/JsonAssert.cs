@@ -6,6 +6,7 @@
     using System.Linq;
     using global::Newtonsoft.Json.Linq;
 
+    /// <summary>For asserting that json stings are equal.</summary>
     public static class JsonAssert
     {
         /// <summary>
@@ -21,6 +22,13 @@
             Equal(expectedJson, actualJson, null, options);
         }
 
+        /// <summary>
+        /// Parses the Json and compares expected to actual.
+        /// </summary>
+        /// <param name="expected">The expected Json</param>
+        /// <param name="actual">The actual Json</param>
+        /// <param name="valueComparer">For custom value comparison.</param>
+        /// <param name="options">How to compare the Json</param>
         public static void Equal(
             string expected,
             string actual,
@@ -92,15 +100,15 @@
 
         private static void CheckElementOrder(JTokenAndSource expected, JTokenAndSource actual, JsonAssertOptions options)
         {
-            if (!options.HasFlag(JsonAssertOptions.Verbatim))
+            if (!options.HasFlag(JsonAssertOptions.Verbatim) || expected == null || actual == null)
             {
                 return;
             }
 
-            for (int i = 0; i < Math.Min(expected?.Children.Count ?? 0, actual?.Children.Count ?? 0); i++)
+            for (int i = 0; i < Math.Min(expected.Children.Count, actual.Children.Count); i++)
             {
                 if (expected.Children[i].JProperty?.Name != actual.Children[i].JProperty?.Name &&
-                    actual.Children.Any(x=>x.JProperty?.Name == expected.Children[i].JProperty?.Name))
+                    actual.Children.Any(x => x.JProperty?.Name == expected.Children[i].JProperty?.Name))
                 {
                     var message = CreateMessage(expected.Children[i], actual.Children[i], "  The order of elements is incorrect.");
                     throw new AssertException(message);
@@ -137,14 +145,14 @@
 
                 writer.WriteLine($"  Json differ at line {lineNumber} index {index}.");
                 writer.WriteLine($"  Expected: {expected?.LineNumber}| {expectedLine}");
-                writer.WriteLine($"  But was:  {actual?.LineNumber.ToString() ?? new string('?', expected.LineNumber.ToString().Length)}| {actualLine ?? "Missing"}");
+                writer.WriteLine($"  But was:  {actual?.LineNumber.ToString() ?? new string('?', expected?.LineNumber.ToString().Length ?? 0)}| {actualLine ?? "Missing"}");
                 writer.Write($"  {new string('-', index + 13)}^");
                 return writer.ToString();
             }
         }
 
         // Using new here to hide it so it not called by mistake
-        private new static void Equals(object x, object y)
+        private static new void Equals(object x, object y)
         {
             throw new AssertException($"{x}, {y}");
         }

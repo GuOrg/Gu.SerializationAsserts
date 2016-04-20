@@ -93,7 +93,8 @@
         {
             var actual = new ReadingOutsideEndElement { Value = 2 };
             var expectedXml = "<ReadingOutsideEndElement><Value>2</Value></ReadingOutsideEndElement>";
-            var ex = Assert.Throws<AssertException>(() => DataContractSerializerAssert.Equal(expectedXml, actual, XmlAssertOptions.IgnoreNamespaces | XmlAssertOptions.IgnoreDeclaration));
+            Assert.Throws<AssertException>(() => DataContractSerializerAssert.Equal(expectedXml, actual, XmlAssertOptions.IgnoreNamespaces | XmlAssertOptions.IgnoreDeclaration));
+            //var ex = Assert.Throws<AssertException>(() => DataContractSerializerAssert.Equal(expectedXml, actual, XmlAssertOptions.IgnoreNamespaces | XmlAssertOptions.IgnoreDeclaration));
             //var expectedMessage = "  Roundtrip of actual in ContainerClass Failed.\r\n" +
             //                      "  This means there is an error in serialization.\r\n" +
             //                      "  If you are implementing IXmlSerializable check that you handle ReadEndElement properly as it is a common source of bugs.";

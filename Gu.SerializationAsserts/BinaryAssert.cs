@@ -4,6 +4,7 @@ namespace Gu.SerializationAsserts
     using System.IO;
     using System.Runtime.Serialization.Formatters.Binary;
 
+    /// <summary>Asserions for <see cref="BinaryFormatter"/> </summary>
     public static class BinaryAssert
     {
         /// <summary>
@@ -82,6 +83,7 @@ namespace Gu.SerializationAsserts
             }
         }
 
+        /// <summary>Serializes <paramref name="o"/> and returns the bytes.</summary>
         internal static byte[] ToBytes(object o, string parameterName)
         {
             try
@@ -100,7 +102,7 @@ namespace Gu.SerializationAsserts
         }
 
         // Using new here to hide it so it not called by mistake
-        private new static void Equals(object x, object y)
+        private static new void Equals(object x, object y)
         {
             throw new NotSupportedException($"{x}, {y}");
         }

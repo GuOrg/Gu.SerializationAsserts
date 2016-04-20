@@ -1,15 +1,17 @@
-﻿namespace Gu.SerializationAsserts
+﻿#pragma warning disable SA1600 // Elements must be documented
+namespace Gu.SerializationAsserts
 {
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
 
+    /// <summary>Ensures for collections</summary>
     internal static partial class Ensure
     {
         internal static void NotNullOrEmpty<T>(IReadOnlyCollection<T> value, string parameterName)
         {
             Debug.Assert(!string.IsNullOrEmpty(parameterName), $"{nameof(parameterName)} cannot be null");
-            Ensure.NotNull(value, parameterName);
+            NotNull(value, parameterName);
 
             if (value.Count == 0)
             {
@@ -20,7 +22,7 @@
         internal static void MinCount<T>(IReadOnlyCollection<T> value, int min, string parameterName)
         {
             Debug.Assert(!string.IsNullOrEmpty(parameterName), $"{nameof(parameterName)} cannot be null");
-            Ensure.NotNull(value, parameterName);
+            NotNull(value, parameterName);
 
             if (value.Count < min)
             {
@@ -32,7 +34,7 @@
         internal static void MaxCount<T>(IReadOnlyCollection<T> value, int max, string parameterName)
         {
             Debug.Assert(!string.IsNullOrEmpty(parameterName), $"{nameof(parameterName)} cannot be null");
-            Ensure.NotNull(value, parameterName);
+            NotNull(value, parameterName);
 
             if (value.Count > max)
             {

@@ -5,15 +5,15 @@
     using System.Xml.Serialization;
 
     /// <summary>
-    /// This is for catching errors with ReadEndElement etc.
+    /// This class is used in serialization roundtrips.
+    /// The purpose is for catching errors with ReadEndElement etc.
     /// </summary>
-    /// <typeparam name="T">The type to contain</typeparam>
     [Serializable]
     [DataContract(Name = XmlName)]
     [XmlRoot(XmlName)]
     public class ContainerClass<T>
     {
-        public const string XmlName = "ContainerClass";
+        internal const string XmlName = "ContainerClass";
 
         public ContainerClass(T item)
         {

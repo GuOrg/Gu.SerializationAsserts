@@ -16,7 +16,7 @@
 
         internal bool HasCompared(object expected, object actual)
         {
-            return ReferenceEquals(expected, this.Expected) && 
+            return ReferenceEquals(expected, this.Expected) &&
                    ReferenceEquals(actual, this.Actual);
         }
     }

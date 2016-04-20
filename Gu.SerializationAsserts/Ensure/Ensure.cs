@@ -1,10 +1,13 @@
-﻿namespace Gu.SerializationAsserts
+﻿#pragma warning disable SA1600 // Elements must be documented
+// ReSharper disable once UnusedParameter.Global
+namespace Gu.SerializationAsserts
 {
     using System;
     using System.Diagnostics;
 
     using JetBrains.Annotations;
 
+    /// <summary>General ensures.</summary>
     internal static partial class Ensure
     {
         public static void IsTrue(bool condition, string parameterName, string message)

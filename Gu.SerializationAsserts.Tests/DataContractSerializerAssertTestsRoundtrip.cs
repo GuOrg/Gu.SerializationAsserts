@@ -42,7 +42,8 @@ namespace Gu.SerializationAsserts.Tests
         public void ReadingOutsideEndElementThrows()
         {
             var actual = new ReadingOutsideEndElement { Value = 2 };
-            var ex = Assert.Throws<AssertException>(() => DataContractSerializerAssert.Roundtrip(actual));
+            Assert.Throws<AssertException>(() => DataContractSerializerAssert.Roundtrip(actual));
+            //var ex = Assert.Throws<AssertException>(() => DataContractSerializerAssert.Roundtrip(actual));
             //var expectedMessage = "  Roundtrip of item in ContainerClass Failed.\r\n" +
             //                      "  This means there is an error in serialization.\r\n" +
             //                      "  If you are implementing IXmlSerializable check that you handle ReadEndElement properly as it is a common source of bugs.";

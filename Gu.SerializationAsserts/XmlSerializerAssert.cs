@@ -6,9 +6,7 @@ namespace Gu.SerializationAsserts
     using System.Xml.Linq;
     using System.Xml.Serialization;
 
-    /// <summary>
-    /// Test serialization using  <see cref="XmlSerializer"/>
-    /// </summary>
+    /// <summary>Test serialization using <see cref="XmlSerializer"/></summary>
     public static class XmlSerializerAssert
     {
         /// <summary>
@@ -28,11 +26,11 @@ namespace Gu.SerializationAsserts
         /// <summary>
         /// 1 Serializes <paramref name="actual"/> to an xml string using <see cref="XmlSerializer"/>
         /// 2 Compares the xml with <paramref name="expectedXml"/>
-        /// 3 Creates a ContainerClass{T} this is to catch errors in ReadEndElement() when implementing <see cref="IXmlSerializable"/>
+        /// 3 Creates a ContainerClass&lt;T&gt; this is to catch errors in ReadEndElement() when implementing <see cref="IXmlSerializable"/>
         /// 4 Serializes it to xml.
         /// 5 Compares the xml
         /// 6 Deserializes it to container class
-        /// 7 Does 2 & 3 again, we repeat this to catch any errors from deserializing
+        /// 7 Does 2 &amp; 3 again, we repeat this to catch any errors from deserializing
         /// 8 Returns roundtripped instance
         /// </summary>
         /// <typeparam name="T">The type</typeparam>
@@ -45,6 +43,25 @@ namespace Gu.SerializationAsserts
             return Equal(expectedXml, actual, null, null, options);
         }
 
+        /// <summary>
+        /// 1 Serializes <paramref name="actual"/> to an xml string using <see cref="XmlSerializer"/>
+        /// 2 Compares the xml with <paramref name="expectedXml"/>
+        /// 3 Creates a ContainerClass&lt;T&gt; this is to catch errors in ReadEndElement() when implementing <see cref="IXmlSerializable"/>
+        /// 4 Serializes it to xml.
+        /// 5 Compares the xml
+        /// 6 Deserializes it to container class
+        /// 7 Does 2 &amp; 3 again, we repeat this to catch any errors from deserializing
+        /// 8 Returns roundtripped instance
+        /// </summary>
+        /// <typeparam name="T">The type</typeparam>
+        /// <param name="expectedXml">The expected xml</param>
+        /// <param name="actual">The actual item</param>
+        /// <param name="elementComparer">
+        /// Custom element comparer
+        /// This comparer is used first, then the default comparer is used as fallback.
+        /// </param>
+        /// <param name="options">How to compare the xml</param>
+        /// <returns>The roundtripped instance</returns>
         public static T Equal<T>(
             string expectedXml,
             T actual,
@@ -54,6 +71,25 @@ namespace Gu.SerializationAsserts
             return Equal(expectedXml, actual, elementComparer, null, options);
         }
 
+        /// <summary>
+        /// 1 Serializes <paramref name="actual"/> to an xml string using <see cref="XmlSerializer"/>
+        /// 2 Compares the xml with <paramref name="expectedXml"/>
+        /// 3 Creates a ContainerClass&lt;T&gt; this is to catch errors in ReadEndElement() when implementing <see cref="IXmlSerializable"/>
+        /// 4 Serializes it to xml.
+        /// 5 Compares the xml
+        /// 6 Deserializes it to container class
+        /// 7 Does 2 &amp; 3 again, we repeat this to catch any errors from deserializing
+        /// 8 Returns roundtripped instance
+        /// </summary>
+        /// <typeparam name="T">The type</typeparam>
+        /// <param name="expectedXml">The expected xml</param>
+        /// <param name="actual">The actual item</param>
+        /// <param name="attributeComparer">
+        /// Custom attribute comparer
+        /// This comparer is used first, then the default comparer is used as fallback.
+        /// </param>
+        /// <param name="options">How to compare the xml</param>
+        /// <returns>The roundtripped instance</returns>
         public static T Equal<T>(
             string expectedXml,
             T actual,
@@ -65,6 +101,29 @@ namespace Gu.SerializationAsserts
             return Roundtrip(actual);
         }
 
+        /// <summary>
+        /// 1 Serializes <paramref name="actual"/> to an xml string using <see cref="XmlSerializer"/>
+        /// 2 Compares the xml with <paramref name="expectedXml"/>
+        /// 3 Creates a ContainerClass&lt;T&gt; this is to catch errors in ReadEndElement() when implementing <see cref="IXmlSerializable"/>
+        /// 4 Serializes it to xml.
+        /// 5 Compares the xml
+        /// 6 Deserializes it to container class
+        /// 7 Does 2 &amp; 3 again, we repeat this to catch any errors from deserializing
+        /// 8 Returns roundtripped instance
+        /// </summary>
+        /// <typeparam name="T">The type</typeparam>
+        /// <param name="expectedXml">The expected xml</param>
+        /// <param name="actual">The actual item</param>
+        /// <param name="elementComparer">
+        /// Custom element comparer
+        /// This comparer is used first, then the default comparer is used as fallback.
+        /// </param>
+        /// <param name="attributeComparer">
+        /// Custom attribute comparer
+        /// This comparer is used first, then the default comparer is used as fallback.
+        /// </param>
+        /// <param name="options">How to compare the xml</param>
+        /// <returns>The roundtripped instance</returns>
         public static T Equal<T>(
             string expectedXml,
             T actual,
@@ -172,8 +231,8 @@ namespace Gu.SerializationAsserts
             }
         }
 
-        // Using new here to hide it so it not called by mistake
-        private new static void Equals(object x, object y)
+        // ReSharper disable once UnusedMember.Local hiding object.Equals
+        private static new void Equals(object x, object y)
         {
             throw new NotSupportedException($"{x}, {y}");
         }

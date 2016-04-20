@@ -4,14 +4,17 @@
     using System.Collections.Generic;
     using System.Xml.Linq;
 
+    /// <inheritdoc/>
     public class XDeclarationComparer : IEqualityComparer<XDeclaration>
     {
+        /// <summary>The default instance.</summary>
         public static readonly XDeclarationComparer Default = new XDeclarationComparer();
 
         private XDeclarationComparer()
         {
         }
 
+        /// <inheritdoc/>
         public bool Equals(XDeclaration x, XDeclaration y)
         {
             if (x == null && y == null)
@@ -43,7 +46,7 @@
             return true;
         }
 
-        public int GetHashCode(XDeclaration obj)
+        int IEqualityComparer<XDeclaration>.GetHashCode(XDeclaration obj)
         {
             throw new NotSupportedException();
         }

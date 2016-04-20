@@ -108,10 +108,10 @@ namespace Gu.SerializationAsserts.Newtonsoft.Json.Tests
             [Test]
             public void NullAndMissingElement()
             {
-                var expectedJson = "{ \"A\": null, \"B\": 1 }";
-                var actualJson = "{ \"B\": 1 }";
+                ////var expectedJson = "{ \"A\": null, \"B\": 1 }";
+                ////var actualJson = "{ \"B\": 1 }";
                 Assert.Inconclusive("dunno if we want this");
-                //JsonAssert.Equal(expectedJson, actualJson, JsonAssertOptions.TreatNullAndMissingAsEqual);
+                ////JsonAssert.Equal(expectedJson, actualJson, JsonAssertOptions.TreatNullAndMissingAsEqual);
             }
         }
     }

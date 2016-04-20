@@ -6,9 +6,7 @@
     using System.Text;
     using System.Xml;
 
-    /// <summary>
-    /// Test serialization using  <see cref="DataContractSerializer"/>
-    /// </summary>
+    /// <summary>Test serialization using <see cref="DataContractSerializer"/>.</summary>
     public static partial class DataContractSerializerAssert
     {
         private static readonly XmlWriterSettings XmlWriterSettings = new XmlWriterSettings { Indent = true, IndentChars = "  " };
@@ -148,7 +146,7 @@
         }
 
         // Using new here to hide it so it not called by mistake
-        private new static void Equals(object x, object y)
+        private static new void Equals(object x, object y)
         {
             throw new AssertException($"Don't call this {x}, {y}");
         }

@@ -69,7 +69,7 @@ namespace Gu.SerializationAsserts
         }
 
         // Using new here to hide it so it not called by mistake
-        private new static void Equals(object x, object y)
+        private static new void Equals(object x, object y)
         {
             throw new AssertException($"Don't call this {x}, {y}");
         }

@@ -11,6 +11,7 @@
     /// <typeparam name="T">The type of the items to compare</typeparam>
     public class BinaryComparer<T> : IEqualityComparer<T>, IComparer
     {
+        /// <summary>The default instance.</summary>
         public static readonly BinaryComparer<T> Default = new BinaryComparer<T>();
 
         private BinaryComparer()
@@ -65,7 +66,16 @@
             }
         }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// nUnit uses IComparer for CollectionAssert
+        /// Note: this is not a comparer that makes sense for sorting.
+        /// </summary>
+        /// <param name="x">x value.</param>
+        /// <param name="y">y value.</param>
+        /// <returns>
+        /// 0 if <paramref name="x"/> and <paramref name="y"/> are equal.
+        /// -1 if not equal.
+        /// </returns>
         int IComparer.Compare(object x, object y)
         {
             return this.Equals((T)x, (T)y) ? 0 : 1;

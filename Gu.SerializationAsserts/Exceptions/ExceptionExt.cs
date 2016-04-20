@@ -4,6 +4,7 @@
     using System.CodeDom.Compiler;
     using System.IO;
 
+    /// <summary>Extension methods for <see cref="Exception"/>.</summary>
     public static class ExceptionExt
     {
         /// <summary>
@@ -20,14 +21,6 @@
             }
         }
 
-        internal static void WriteMessages(this StringWriter writer, Exception e)
-        {
-            using (var indentedWriter = new IndentedTextWriter(writer, "  "))
-            {
-                WriteMessages(indentedWriter, e);
-            }
-        }
-
         internal static void WriteMessages(this IndentedTextWriter writer, Exception e)
         {
             writer.Write(e.GetType().Name);
@@ -39,6 +32,14 @@
                 writer.WriteLine();
                 writer.Indent++;
                 WriteMessages(writer, innerException);
+            }
+        }
+
+        private static void WriteMessages(this StringWriter writer, Exception e)
+        {
+            using (var indentedWriter = new IndentedTextWriter(writer, "  "))
+            {
+                WriteMessages(indentedWriter, e);
             }
         }
     }

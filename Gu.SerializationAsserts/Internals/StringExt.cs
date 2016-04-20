@@ -6,13 +6,12 @@
 
     internal static class StringExt
     {
+        public static readonly string Missing = "Missing";
         private static readonly IReadOnlyDictionary<char, string> Escapes = new Dictionary<char, string>
                                                                                 {
                                                                                     { '\\', "\\\\" },
                                                                                     { '\"', "\\\"" },
                                                                                 };
-
-        public static readonly string Missing = "Missing";
 
         /// <summary>
         /// http://stackoverflow.com/a/324812/1069200
