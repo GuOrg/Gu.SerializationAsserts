@@ -16,8 +16,8 @@
       - [1.1.3. ToXml](#113-toxml)
       - [1.1.4. FromXml](#114-fromxml)
     - [1.2. DataContractSerializerAssert](#12-datacontractserializerassert)
-    - [1.2.1 HasDataContractAttribute&lt;T&gt;()](#121-hasdatacontractattribute&lt;t&gt;())
-    - [1.2.1 AllPropertiesHasDataMemberAttributes&lt;T&gt;()](#121-allpropertieshasdatamemberattributes&lt;t&gt;())
+    - [1.2.1 HasDataContractAttribute&lt;T&gt;()](#121-hasdatacontractattributet)
+    - [1.2.1 AllPropertiesHasDataMemberAttributes&lt;T&gt;()](#121-allpropertieshasdatamemberattributest)
     - [1.3. XmlAssertOptions](#13-xmlassertoptions)
       - [1.3.1 The options are:](#131-the-options-are)
   - [2. BinaryFormatterAssert](#2-binaryformatterassert)
@@ -25,7 +25,7 @@
     - [3.1 JsonAssert](#31-jsonassert)
     - [3.2 JsonSerializerAssert](#32-jsonserializerassert)
   - [4. FieldAssert](#4-fieldassert)
-  - [5. FieldComparer&lt;T&gt;](#5-fieldcomparer&lt;t&gt;)
+  - [5. FieldComparer&lt;T&gt;](#5-fieldcomparert)
 
 ## 1. Xml
 ### 1.1. XmlAssert
