@@ -1,4 +1,5 @@
-﻿namespace Gu.SerializationAsserts.Newtonsoft.Json.Tests
+﻿// ReSharper disable RedundantArgumentDefaultValue
+namespace Gu.SerializationAsserts.Newtonsoft.Json.Tests
 {
     using System;
     using Gu.SerializationAsserts.Newtonsoft.Json.Tests.Dtos;
@@ -55,7 +56,7 @@
         }
 
         [Test]
-        public void RoundtripWithExpectedJson()
+        public void RoundtripDummyWithExpectedJson()
         {
             var actual = new Dummy { Value = 2 };
             var expectedJson = "{\"Value\":2}";
@@ -69,6 +70,25 @@
             foreach (var roundtrip in roundtrips)
             {
                 Assert.AreEqual(2, roundtrip.Value);
+            }
+        }
+
+
+        [Test]
+        public void RoundtripWithDummyWithExpectedJson()
+        {
+            var actual = new WithDummy { Dummy = new Dummy { Value = 2 } };
+            var expectedJson = "{ Dummy: {\"Value\":2}}";
+            var roundtrips = new[]
+            {
+                JsonSerializerAssert.Equal(expectedJson, actual),
+                JsonSerializerAssert.Equal(expectedJson, actual, JsonAssertOptions.Default),
+                JsonSerializerAssert.Equal(expectedJson, actual, JsonAssertOptions.Verbatim),
+                JsonSerializerAssert.Roundtrip(actual)
+            };
+            foreach (var roundtrip in roundtrips)
+            {
+                Assert.AreEqual(2, roundtrip.Dummy.Value);
             }
         }
 

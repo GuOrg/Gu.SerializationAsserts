@@ -235,6 +235,7 @@ namespace Gu.SerializationAsserts.Newtonsoft.Json
         }
 
         // Using new here to hide it so it not called by mistake
+        // ReSharper disable once UnusedMember.Local
         private static new void Equals(object x, object y)
         {
             throw new NotSupportedException($"{x}, {y}");
