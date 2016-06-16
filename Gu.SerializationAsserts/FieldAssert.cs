@@ -6,6 +6,8 @@ namespace Gu.SerializationAsserts
     using System.IO;
     using System.Linq;
 
+    using Gu.State;
+
     /// <summary>For comparing instances using a deep equals comparing fields.</summary>
     public static class FieldAssert
     {
@@ -19,33 +21,30 @@ namespace Gu.SerializationAsserts
         /// <param name="y">The second value</param>
         public static void Equal<T>(T x, T y)
         {
-            var comparison = DeepEqualsNode.CreateFor(x, y);
-            if (comparison.Matches())
+            var diff = DiffBy.FieldValues(x, y);
+            if (diff.IsEmpty)
             {
                 return;
             }
 
             using (var writer = new StringWriter())
             {
-                var children = comparison.AllChildren()
-                                      .Where(c => !c.Children.Any() && !c.Matches())
-                                      .Take(6)
-                                      .ToArray();
-                if (children.Length == 1)
+                var count = diff.Diffs.Count;
+                if (count == 1)
                 {
                     writer.WriteLine("  Found this difference between expected and actual:");
                 }
-                else if (children.Length <= 5)
+                else if (count <= 5)
                 {
-                    writer.WriteLine($"  Fields differ between expected and actual, here are the {children.Length} differences:");
+                    writer.WriteLine($"  Fields differ between expected and actual, here are the {count} differences:");
                 }
-                else if (children.Length > 5)
+                else if (count > 5)
                 {
                     writer.WriteLine($"  Fields differ between expected and actual, here are the first 5 differences:");
                 }
 
-                var lastIndex = Math.Min(5, children.Length);
-                for (int i = 0; i < lastIndex; i++)
+                int i = 0;
+                foreach (var subDiff in diff.Diffs)
                 {
                     if (i != 0)
                     {
@@ -53,14 +52,18 @@ namespace Gu.SerializationAsserts
                         writer.WriteLine();
                     }
 
-                    var leaf = children[i];
-                    var path = GetPath(leaf);
-                    writer.Write("  expected");
-                    WritePath(writer, path, leaf.Expected.Value);
+                    i++;
+                    if (i > 5)
+                    {
+                        break;
+                    }
 
+                    writer.Write("  expected");
+                    writer.WritePath(subDiff, d => d.X);
                     writer.WriteLine();
+
                     writer.Write("    actual");
-                    WritePath(writer, path, leaf.Actual.Value);
+                    writer.WritePath(subDiff, d => d.Y);
                 }
 
                 var message = writer.ToString();
@@ -88,43 +91,30 @@ namespace Gu.SerializationAsserts
             return path;
         }
 
-        private static StringWriter WritePath(this StringWriter writer, IReadOnlyList<ICompared> path, object value)
+        private static StringWriter WritePath(this StringWriter writer, SubDiff diff, Func<SubDiff, object> valueGetter)
         {
-            foreach (var compared in path)
+            var fieldDiff = diff as FieldDiff;
+            if (fieldDiff != null)
             {
-                var field = compared as ComparedField;
-                if (field != null)
-                {
-                    if (field.ParentField != null)
-                    {
-                        writer.Write($".{field.ParentField.Name}");
-                    }
-
-                    continue;
-                }
-
-                var item = compared as ComparedItem;
-                if (item != null)
-                {
-                    writer.Write($"[{item.Index}]");
-                    continue;
-                }
-
-                var enumerable = compared as ComparedIEnumerable;
-                if (enumerable != null)
-                {
-                    writer.Write($".Count: {((IEnumerable)value).OfType<object>().Count()}");
-                    continue;
-                }
-
-                throw new InvalidOperationException();
+                writer.Write(".");
+                writer.Write(fieldDiff.FieldInfo.Name);
             }
 
-            if (!(path.Last() is ComparedIEnumerable))
+            var indexDiff = diff as IndexDiff;
+            if (indexDiff != null)
             {
-                writer.Write($": {value?.ToString() ?? "null"}");
+                writer.Write("[");
+                writer.Write(indexDiff.Index);
+                writer.Write("]");
             }
 
+            if (diff.Diffs.Count == 1)
+            {
+                return writer.WritePath(diff.Diffs.First(), valueGetter);
+            }
+
+            writer.Write(": ");
+            writer.Write(valueGetter(diff) ?? "null");
             return writer;
         }
     }

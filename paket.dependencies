@@ -4,3 +4,5 @@ nuget JetBrains.Annotations
 nuget NUnit @= 2.6.4
 nuget StyleCop.Analyzers
 nuget Newtonsoft.Json
+nuget Gu.State
+

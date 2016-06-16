@@ -68,6 +68,8 @@
     <Compile Include="Dtos\Dummy.cs" />
     <Compile Include="Dtos\Level.cs" />
     <Compile Include="Dtos\SerializableDummy.cs" />
+    <Compile Include="FieldsAssertTests.Simple.cs" />
+    <Compile Include="FieldsAssertTests.ReferenceLoops.cs" />
     <Compile Include="FieldsComparerTests.cs" />
     <Compile Include="Internals\StringExtTests.cs" />
     <Compile Include="Internals\TypeExtTests.cs" />
