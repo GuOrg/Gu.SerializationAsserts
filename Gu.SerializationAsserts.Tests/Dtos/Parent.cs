@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Gu.SerializationAsserts.Tests.Dtos
 {
-    public class Parent : IEnumerable<Child>
+    public class Parent
     {
         private readonly List<Child> children = new List<Child>();
 
@@ -18,6 +18,11 @@ namespace Gu.SerializationAsserts.Tests.Dtos
             this.Add(child);
         }
 
+        public Parent(params Child[] children)
+        {
+            this.AddRange(children);
+        }
+
         public int Value
         {
             get { return this.value; }
@@ -26,36 +31,18 @@ namespace Gu.SerializationAsserts.Tests.Dtos
 
         public IReadOnlyList<Child> Children => this.children;
 
+        public void AddRange(Child[] newChildren)
+        {
+            foreach (var child in newChildren)
+            {
+                this.Add(child);
+            }
+        }
+
         public void Add(Child child)
         {
             this.children.Add(child);
             child.Parent = this;
-        }
-
-        public IEnumerator<Child> GetEnumerator() => this.children.GetEnumerator();
-
-        IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
-    }
-
-    public class Child
-    {
-        private readonly int value;
-        private Parent parent;
-
-        public Child(int value)
-        {
-            this.value = value;
-        }
-
-        public int Value
-        {
-            get { return this.value; }
-        }
-
-        public Parent Parent
-        {
-            get { return this.parent; }
-            internal set { this.parent = value; }
         }
     }
 }

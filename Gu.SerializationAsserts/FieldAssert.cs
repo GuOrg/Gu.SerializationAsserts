@@ -78,19 +78,6 @@ namespace Gu.SerializationAsserts
             throw new NotSupportedException($"{x}, {y}");
         }
 
-        private static IReadOnlyList<ICompared> GetPath(this DeepEqualsNode deepEqualsNode)
-        {
-            var path = new List<ICompared>();
-            while (deepEqualsNode != null)
-            {
-                path.Add(deepEqualsNode.Expected);
-                deepEqualsNode = deepEqualsNode.Parent;
-            }
-
-            path.Reverse();
-            return path;
-        }
-
         private static StringWriter WritePath(this StringWriter writer, SubDiff diff, Func<SubDiff, object> valueGetter)
         {
             var fieldDiff = diff as FieldDiff;
@@ -108,14 +95,14 @@ namespace Gu.SerializationAsserts
                 writer.Write("]");
             }
 
-            if (diff.Diffs.Count == 1)
+            if (diff.Diffs.Count == 0)
             {
-                return writer.WritePath(diff.Diffs.First(), valueGetter);
+                writer.Write(": ");
+                writer.Write(valueGetter(diff) ?? "null");
+                return writer;
             }
 
-            writer.Write(": ");
-            writer.Write(valueGetter(diff) ?? "null");
-            return writer;
+            return writer.WritePath(diff.Diffs.First(), valueGetter);
         }
     }
 }

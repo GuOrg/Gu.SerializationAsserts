@@ -214,11 +214,12 @@ namespace Gu.SerializationAsserts.Tests
             Assert.AreEqual(-1, ((IComparer)comparer).Compare(l2, l1));
         }
 
+
         [Test]
         public void EqualParentChildren()
         {
-            var p1 = new Parent { new Child(1), new Child(2) };
-            var p2 = new Parent { new Child(1), new Child(2) };
+            var p1 = new Parent(new Child(1), new Child(2));
+            var p2 = new Parent(new Child(1), new Child(2));
 
             var comparer = FieldComparer<Parent>.Default;
             Assert.IsTrue(comparer.Equals(p1, p1));
@@ -232,8 +233,8 @@ namespace Gu.SerializationAsserts.Tests
         [Test]
         public void NotEqualParentChildren()
         {
-            var p1 = new Parent { new Child(1), new Child(2) };
-            var p2 = new Parent { new Child(1), new Child(5) };
+            var p1 = new Parent(new Child(1), new Child(2));
+            var p2 = new Parent(new Child(1), new Child(5));
             var comparer = FieldComparer<Parent>.Default;
             Assert.IsFalse(comparer.Equals(p1, p2));
             Assert.IsFalse(comparer.Equals(p2, p1));

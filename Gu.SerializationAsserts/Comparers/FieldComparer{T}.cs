@@ -3,6 +3,8 @@
     using System.Collections;
     using System.Collections.Generic;
 
+    using Gu.State;
+
     /// <summary>
     /// A deep equals checking nested fields.
     /// Handles collections and reference loops.
@@ -20,8 +22,7 @@
         /// <inheritdoc/>
         public bool Equals(T x, T y)
         {
-            var comparison = DeepEqualsNode.CreateFor(x, y);
-            return comparison.Matches();
+            return EqualBy.FieldValues(x, y);
         }
 
         /// <summary>
@@ -34,13 +35,9 @@
         /// </returns>
         int IComparer.Compare(object x, object y)
         {
-            var comparison = DeepEqualsNode.CreateFor(x, y);
-            if (comparison.Matches())
-            {
-                return 0;
-            }
-
-            return -1;
+            return EqualBy.FieldValues(x, y)
+                       ? 0
+                       : -1;
         }
 
         /// <inheritdoc/>

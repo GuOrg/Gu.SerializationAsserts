@@ -19,4 +19,20 @@
             set { this.value = value; }
         }
     }
+
+    public class TwoValueDummy
+    {
+        public TwoValueDummy()
+        {
+        }
+
+        public TwoValueDummy(string name, int value)
+        {
+            this.Name = name;
+            this.Value = value;
+        }
+
+        public string Name { get; set; }
+        public int Value { get; set; }
+    }
 }

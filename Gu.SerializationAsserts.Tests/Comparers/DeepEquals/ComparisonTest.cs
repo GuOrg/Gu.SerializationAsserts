@@ -77,8 +77,8 @@ namespace Gu.SerializationAsserts.Tests.Comparers.DeepEquals
         [Test, Explicit]
         public void Parents()
         {
-            var p1 = new Parent { new Child(1), new Child(2) };
-            var p2 = new Parent { new Child(1), new Child(2) };
+            var p1 = new Parent(new Child(1), new Child(2));
+            var p2 = new Parent(new Child(1), new Child(2));
             var comparison = DeepEqualsNode.CreateFor(p1, p2);
             var dump = Dump(comparison);
             Console.Write(dump);

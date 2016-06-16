@@ -56,6 +56,7 @@
     <Compile Include="DataContractSerializerAssertTestsRoundtrip.cs" />
     <Compile Include="DataContractSerializerAssertTests.Attibutes.cs" />
     <Compile Include="DataContractSerializerAssertTests.strings.cs" />
+    <Compile Include="Dtos\Child.cs" />
     <Compile Include="Dtos\DataContractDummy.cs" />
     <Compile Include="Dtos\ForgotReadElement.cs" />
     <Compile Include="Dtos\ForgotReadEndElement.cs" />
@@ -68,6 +69,7 @@
     <Compile Include="Dtos\Dummy.cs" />
     <Compile Include="Dtos\Level.cs" />
     <Compile Include="Dtos\SerializableDummy.cs" />
+    <Compile Include="FieldsAssertTests.Part.cs" />
     <Compile Include="FieldsAssertTests.Simple.cs" />
     <Compile Include="FieldsAssertTests.ReferenceLoops.cs" />
     <Compile Include="FieldsComparerTests.cs" />
