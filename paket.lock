@@ -1,6 +1,9 @@
 NUGET
   remote: http://www.nuget.org/api/v2
-  specs:
+    Gu.Units (0.9)
+    Gu.Units.Json (0.9)
+      Gu.Units (>= 0.9)
+      Newtonsoft.Json
     JetBrains.Annotations (10.1.4)
       System.Runtime (>= 4.0) - framework: dnxcore50
     Newtonsoft.Json (8.0.3)
