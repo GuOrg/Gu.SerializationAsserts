@@ -1,5 +1,7 @@
 namespace Gu.SerializationAsserts.Tests
 {
+    using System.Linq;
+
     using Gu.SerializationAsserts.Tests.Dtos;
 
     using NUnit.Framework;
@@ -114,6 +116,49 @@ namespace Gu.SerializationAsserts.Tests
                           "\r\n" +
                           "  expected[1]: 4\r\n" +
                           "    actual[1]: 2";
+                Assert.AreEqual(em2, ex2.Message);
+            }
+
+            [Test]
+            public void NotEqualArrayOfIntsSixDiffs()
+            {
+                var l1 = Enumerable.Range(0, 6).ToArray();
+                var l2 = Enumerable.Range(1, 6).ToArray();
+
+                var ex1 = Assert.Throws<AssertException>(() => FieldAssert.Equal(l1, l2));
+                var em1 = "  Fields differ between expected and actual, here are the first 5 differences:\r\n" +
+                          "  expected[0]: 0\r\n" +
+                          "    actual[0]: 1\r\n" +
+                          "\r\n" +
+                          "  expected[1]: 1\r\n" +
+                          "    actual[1]: 2\r\n" +
+                          "\r\n" +
+                          "  expected[2]: 2\r\n" +
+                          "    actual[2]: 3\r\n" +
+                          "\r\n" +
+                          "  expected[3]: 3\r\n" +
+                          "    actual[3]: 4\r\n" +
+                          "\r\n" +
+                          "  expected[4]: 4\r\n" +
+                          "    actual[4]: 5";
+                Assert.AreEqual(em1, ex1.Message);
+
+                var ex2 = Assert.Throws<AssertException>(() => FieldAssert.Equal(l2, l1));
+                var em2 = "  Fields differ between expected and actual, here are the first 5 differences:\r\n" +
+                          "  expected[0]: 1\r\n" +
+                          "    actual[0]: 0\r\n" +
+                          "\r\n" +
+                          "  expected[1]: 2\r\n" +
+                          "    actual[1]: 1\r\n" +
+                          "\r\n" +
+                          "  expected[2]: 3\r\n" +
+                          "    actual[2]: 2\r\n" +
+                          "\r\n" +
+                          "  expected[3]: 4\r\n" +
+                          "    actual[3]: 3\r\n" +
+                          "\r\n" +
+                          "  expected[4]: 5\r\n" +
+                          "    actual[4]: 4";
                 Assert.AreEqual(em2, ex2.Message);
             }
 

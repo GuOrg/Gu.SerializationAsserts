@@ -46,16 +46,15 @@ namespace Gu.SerializationAsserts
                 int i = 0;
                 foreach (var subDiff in diff.Diffs)
                 {
+                    if (i > 4)
+                    {
+                        break;
+                    }
+
                     if (i != 0)
                     {
                         writer.WriteLine();
                         writer.WriteLine();
-                    }
-
-                    i++;
-                    if (i > 5)
-                    {
-                        break;
                     }
 
                     writer.Write("  expected");
@@ -64,6 +63,7 @@ namespace Gu.SerializationAsserts
 
                     writer.Write("    actual");
                     writer.WritePath(subDiff, d => d.Y);
+                    i++;
                 }
 
                 var message = writer.ToString();
