@@ -22,6 +22,7 @@ namespace Gu.SerializationAsserts.Tests
             [Test]
             public void NotEqualParentChildrenOneDiff()
             {
+                Assert.Fail();
                 var p1 = new Parent(new Child(1), new Child(2));
                 var p2 = new Parent(new Child(1), new Child(5));
                 var ex1 = Assert.Throws<AssertException>(() => FieldAssert.Equal(p1, p2));
@@ -40,6 +41,7 @@ namespace Gu.SerializationAsserts.Tests
             [Test]
             public void NotEqualParentChildrenTwoDiffs()
             {
+                Assert.Fail();
                 var p1 = new Parent(new Child(1), new Child(2));
                 var p2 = new Parent(new Child(3), new Child(4));
                 var ex1 = Assert.Throws<AssertException>(() => FieldAssert.Equal(p1, p2));
