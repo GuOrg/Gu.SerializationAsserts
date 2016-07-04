@@ -2,7 +2,7 @@
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE.md)
 [![NuGet](https://img.shields.io/nuget/v/Gu.SerializationAsserts.svg)](https://www.nuget.org/packages/Gu.SerializationAsserts/)
 [![NuGet](https://img.shields.io/nuget/v/Gu.SerializationAsserts.Newtonsoft.Json.svg)](https://www.nuget.org/packages/Gu.SerializationAsserts.Newtonsoft.Json/)
-[![Build status](https://ci.appveyor.com/api/projects/status/9vyu94ma5vy25ueo?svg=true)](https://ci.appveyor.com/project/JohanLarsson/gu-serializationasserts)
+[![Build status](https://ci.appveyor.com/api/projects/status/9vyu94ma5vy25ueo/branch/master?svg=true)](https://ci.appveyor.com/project/JohanLarsson/gu-serializationasserts/branch/master)
 
 ## Contents
 
